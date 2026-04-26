@@ -633,7 +633,15 @@ function getCatLabel(key) {
 
 window.markSettingsDirty = () => { settingsDirty = true; };
 
-getRedirectResult(auth).catch(() => {});
+getRedirectResult(auth).then(result => {
+  if (result?.user) {
+    // User came back from redirect - onAuthStateChanged will handle the rest
+    console.log('Redirect sign-in successful:', result.user.displayName);
+  }
+}).catch(e => {
+  console.error('Redirect error:', e);
+  if (e.code !== 'auth/null-user') alert('Sign in error: ' + e.message);
+});
 
 const T = {
   en: { appTitle:"Ma'aser", loginTitle:"Welcome back", loginSub:"Sign in to manage your ma'aser obligations", loginBtn:"Sign in with Google", demoBtn:"Try a demo (no sign-in)", demoBanner:"Demo Mode • data is fake and not saved", exitDemo:"Exit", greeting:"Welcome back,", overview:"Overview", totalIncome:"Total Income", obligation:"Ma'aser", totalDonated:"Total Donated", due:"Balance Due", recent:"Recent", incomeTitle:"Income", donationsTitle:"Donations", schedulesTitle:"Recurring", save:"Save", cancel:"Cancel", delete:"Delete", desc:"Description", amount:"Amount ($)", date:"Date", paytype:"Payment Type", checknum:"Check Number", name:"Name", dayOfMonth:"Day of Month", maaserMode:"Ma'aser %", percent:"Percent (%)", fixed:"Fixed Amount ($)", category:"Category", status:"Status", cleared:"Cleared / Paid", pending:"Pending", transfer:"Bank Transfer", check:"Check", cash:"Cash", other:"Other", incomeOpt:"Income", donationOpt:"Donation", addIncome:"Add Income", addDonation:"Add Donation", addSchedule:"Add Recurring Entry", editIncome:"Edit Income", editDonation:"Edit Donation", editSchedule:"Edit Recurring Entry", emptyRecent:"No transactions yet", emptyIncome:"No income entries yet", emptyDonation:"No donations yet", emptySchedule:"No recurring entries yet", navOverview:"Overview", navIncome:"Income", navDonations:"Donations", navRecurring:"Recurring", signout:"Sign out?", fillAll:"Please fill required fields (amount and date)", deleteConfirm:"Delete this entry?", auto:"Auto", everyMonth:"Every month on day", flag:"🇮🇱", choiceTitle:"What to add?", choiceIncome:"Income", choiceIncomeSub:"Salary, bonus, freelance...", choiceDonation:"Donation", choiceDonationSub:"Tzedakah, shul, charity...", choiceRecurring:"Recurring", choiceRecurringSub:"Auto entry every month", search:"Search...", year:"Year", month:"Month", progress:"Progress", monthly:"Monthly Breakdown", alert100:"You've completed your ma'aser for this period!", catNone:"— None —", catShul:"Shul", catTzedakah:"Tzedakah", catEducation:"Education", catChesed:"Chesed", catFamily:"Family", catOther:"Other", menu:"Menu", menuExport:"Export to CSV", menuImport:"Import from CSV", menuSignout:"Sign out", importTitle:"Import from CSV", importSub:"Choose what to import and upload the matching template file.", downloadTpl:"📋 Download Template for This Type", importType:"Data type", importFile:"CSV file", importBtn:"Import", importSuccess:"Imported successfully!", importError:"Import failed. Please check the file format.", exportTitle:"Export to CSV", exportSub:"Choose what to export and which fields to include.", exportType:"Data type", exportFields:"Fields to include", exportAll:"Everything (separate files)", exportIncomeOnly:"Income only", exportDonationsOnly:"Donations only", exportSchedulesOnly:"Recurring only", exportBtn:"Download CSV", selectFields:"Please select at least one field", navSettings:"Settings", settingsTitle:"Settings", sgProfile:"Profile", sgCategories:"Donation Categories", sgAccount:"Account", sFirstName:"First Name", sLastName:"Last Name", sMaaserDefault:"Default Ma'aser %", sSave:"Save Profile", sAddCat:"+ Add", sSignout:"Sign out" },
@@ -668,9 +676,19 @@ function populateMonthSelector() {
 window.toggleLang = () => { lang = lang === 'en' ? 'he' : 'en'; applyLang(); };
 
 window.signIn = async () => {
+  provider.setCustomParameters({ prompt: 'select_account' });
   try {
-    await signInWithRedirect(auth, provider);
-  } catch(e) { alert('Sign in failed: ' + e.message); }
+    // Try popup first (works on most browsers)
+    await signInWithPopup(auth, provider);
+  } catch(e) {
+    if (e.code === 'auth/popup-blocked' || e.code === 'auth/popup-closed-by-user' || e.code === 'auth/cancelled-popup-request') {
+      // Popup blocked (iOS Safari standalone) - fall back to redirect
+      try { await signInWithRedirect(auth, provider); }
+      catch(e2) { alert('Sign in failed: ' + e2.message); }
+    } else if (e.code !== 'auth/cancelled-popup-request') {
+      alert('Sign in failed: ' + e.message);
+    }
+  }
 };
 
 window.signOut = async () => {
