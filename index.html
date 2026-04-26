@@ -224,6 +224,16 @@ document.currentScript.after(_link);
   .maaser-mode-options button { flex: 1; padding: 8px 12px; background: var(--bg); border: 1.5px solid var(--border); border-radius: 8px; cursor: pointer; font-family: 'Inter', sans-serif; font-size: 12px; font-weight: 600; color: var(--text-muted); }
   .maaser-mode-options button.active { background: var(--accent-light); border-color: var(--accent); color: var(--accent); }
 
+  .settings-group { background:#fff; border:1px solid var(--border); border-radius:var(--radius); padding:16px; box-shadow:var(--shadow-sm); }
+  .settings-group-title { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.08em; color:var(--text-muted); margin-bottom:14px; }
+  .cat-item { display:flex; align-items:center; gap:8px; padding:8px 10px; background:var(--bg); border-radius:8px; margin-bottom:6px; }
+  .cat-item-name { flex:1; font-size:13px; font-weight:500; }
+  .cat-badge-active { font-size:10px; background:var(--green-light); color:var(--green); border-radius:4px; padding:1px 6px; font-weight:600; }
+  .cat-badge-hidden { font-size:10px; background:var(--bg); color:var(--text-muted); border-radius:4px; padding:1px 6px; font-weight:600; border:1px solid var(--border); }
+  .cat-actions { display:flex; gap:4px; }
+  .cat-action { background:#fff; border:1px solid var(--border); border-radius:6px; padding:4px 8px; font-size:11px; font-weight:600; cursor:pointer; font-family:Inter; color:var(--text-muted); }
+  .cat-action:hover { color:var(--text); border-color:var(--text-muted); }
+  .cat-action.danger:hover { color:var(--red); border-color:var(--red); }
   body.rtl { direction: rtl; }
   body.rtl .tx-left, body.rtl .header-left, body.rtl .header-right,
   body.rtl .bal-row, body.rtl .due-banner, body.rtl .section-header,
@@ -353,6 +363,34 @@ document.currentScript.after(_link);
     </div>
   </div>
 
+  <div class="page" id="page-settings">
+    <div class="section" style="margin-top:20px">
+      <div class="section-header"><span class="section-title" id="lbl-settings-title">Settings</span></div>
+
+      <div class="settings-group">
+        <div class="settings-group-title" id="lbl-sg-profile">Profile</div>
+        <div class="field"><label id="lbl-s-firstname">First Name</label><input id="s-firstname" type="text" placeholder="Your first name" oninput="markSettingsDirty()" /></div>
+        <div class="field"><label id="lbl-s-lastname">Last Name</label><input id="s-lastname" type="text" placeholder="Your last name" oninput="markSettingsDirty()" /></div>
+        <div class="field"><label id="lbl-s-maaser-default">Default Ma'aser %</label><input id="s-maaser-default" type="number" value="10" min="1" max="100" oninput="markSettingsDirty()" /></div>
+        <button class="btn-primary" onclick="saveSettings()" id="btn-save-settings" style="margin-top:4px">Save Profile</button>
+      </div>
+
+      <div class="settings-group" style="margin-top:20px">
+        <div class="settings-group-title" id="lbl-sg-categories">Donation Categories</div>
+        <div id="categories-list"></div>
+        <div style="display:flex;gap:8px;margin-top:10px">
+          <input id="new-cat-input" type="text" placeholder="New category name..." style="flex:1;padding:10px 12px;border:1.5px solid var(--border);border-radius:8px;font-family:Inter;font-size:13px;outline:none;" />
+          <button onclick="addCategory()" style="padding:10px 16px;background:var(--accent);color:white;border:none;border-radius:8px;font-weight:600;cursor:pointer;font-family:Inter;white-space:nowrap" id="btn-add-cat">+ Add</button>
+        </div>
+      </div>
+
+      <div class="settings-group" style="margin-top:20px">
+        <div class="settings-group-title" id="lbl-sg-account">Account</div>
+        <button class="menu-item" onclick="signOut()" style="margin-top:4px"><span class="icon">↪</span> <span id="lbl-s-signout">Sign out</span></button>
+      </div>
+    </div>
+  </div>
+
   <button class="fab" onclick="openChoice()">+</button>
 
   <nav class="bottom-nav">
@@ -371,6 +409,10 @@ document.currentScript.after(_link);
     <button class="nav-btn" onclick="showPage('schedules')" id="nav-schedules">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 1 1-9-9c2.5 0 4.78.95 6.5 2.5L21 8M21 3v5h-5"/></svg>
       <span id="nav-lbl-schedules">Recurring</span>
+    </button>
+    <button class="nav-btn" onclick="showPage('settings')" id="nav-settings">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+      <span id="nav-lbl-settings">Settings</span>
     </button>
   </nav>
 </div>
@@ -406,7 +448,7 @@ document.currentScript.after(_link);
       <div class="field field-required"><label id="lbl-f-amount">Amount ($)</label><input id="f-income-amount" type="number" step="0.01" placeholder="0.00" /></div>
       <div class="field field-required"><label id="lbl-f-date">Date</label><input id="f-income-date" type="date" /></div>
     </div>
-    <div class="field"><label id="lbl-f-desc">Description</label><input id="f-income-desc" placeholder="e.g. Spotlight salary..." /></div>
+    <div class="field"><label id="lbl-f-desc">Description</label><input id="f-income-desc" placeholder="e.g. Monthly salary..." /></div>
     <div class="field">
       <label id="lbl-f-maaser-mode">Ma'aser %</label>
       <div class="maaser-mode-options">
@@ -446,15 +488,7 @@ document.currentScript.after(_link);
     <div class="field"><label id="lbl-f-desc2">Description</label><input id="f-donation-desc" placeholder="e.g. Shul, Tzedakah..." /></div>
     <div class="field">
       <label id="lbl-f-category">Category</label>
-      <select id="f-donation-category">
-        <option value="" id="opt-cat-none">— None —</option>
-        <option value="shul" id="opt-cat-shul">Shul</option>
-        <option value="tzedakah" id="opt-cat-tzedakah">Tzedakah</option>
-        <option value="education" id="opt-cat-education">Education</option>
-        <option value="chesed" id="opt-cat-chesed">Chesed</option>
-        <option value="family" id="opt-cat-family">Family</option>
-        <option value="other-cat" id="opt-cat-other">Other</option>
-      </select>
+      <select id="f-donation-category"><option value="" id="opt-cat-none">— None —</option></select>
     </div>
     <div class="field">
       <label id="lbl-f-status">Status</label>
@@ -576,12 +610,34 @@ let lang = 'en', recurType = 'income', maaserMode = 'pct';
 let editingId = null, editingType = null;
 let isDemo = false, demoData = { income: [], donations: [], schedules: [] };
 let incomeData = [], donationData = [], scheduleData = [];
+let userSettings = { firstName: '', lastName: '', maaserDefault: 10 };
+let settingsDirty = false;
+
+// Default categories
+const DEFAULT_CATEGORIES = [
+  { key:'shul', labelEn:'Shul', labelHe:'בית כנסת', active:true },
+  { key:'tzedakah', labelEn:'Tzedakah', labelHe:'צדקה', active:true },
+  { key:'education', labelEn:'Education', labelHe:'חינוך', active:true },
+  { key:'chesed', labelEn:'Chesed', labelHe:'חסד', active:true },
+  { key:'family', labelEn:'Family', labelHe:'משפחה', active:true },
+  { key:'other-cat', labelEn:'Other', labelHe:'אחר', active:true },
+];
+let categories = JSON.parse(localStorage.getItem('maaser_cats') || 'null') || DEFAULT_CATEGORIES.map(c=>({...c}));
+
+function saveCategories() { localStorage.setItem('maaser_cats', JSON.stringify(categories)); }
+function getCatLabel(key) {
+  const c = categories.find(c=>c.key===key);
+  if (!c) return key;
+  return lang === 'he' ? c.labelHe : c.labelEn;
+}
+
+window.markSettingsDirty = () => { settingsDirty = true; };
 
 getRedirectResult(auth).catch(() => {});
 
 const T = {
-  en: { appTitle:"Ma'aser", loginTitle:"Welcome back", loginSub:"Sign in to manage your ma'aser obligations", loginBtn:"Sign in with Google", demoBtn:"Try a demo (no sign-in)", demoBanner:"Demo Mode • data is fake and not saved", exitDemo:"Exit", greeting:"Welcome back,", overview:"Overview", totalIncome:"Total Income", obligation:"Ma'aser", totalDonated:"Total Donated", due:"Balance Due", recent:"Recent", incomeTitle:"Income", donationsTitle:"Donations", schedulesTitle:"Recurring", save:"Save", cancel:"Cancel", delete:"Delete", desc:"Description", amount:"Amount ($)", date:"Date", paytype:"Payment Type", checknum:"Check Number", name:"Name", dayOfMonth:"Day of Month", maaserMode:"Ma'aser %", percent:"Percent (%)", fixed:"Fixed Amount ($)", category:"Category", status:"Status", cleared:"Cleared / Paid", pending:"Pending", transfer:"Bank Transfer", check:"Check", cash:"Cash", other:"Other", incomeOpt:"Income", donationOpt:"Donation", addIncome:"Add Income", addDonation:"Add Donation", addSchedule:"Add Recurring Entry", editIncome:"Edit Income", editDonation:"Edit Donation", editSchedule:"Edit Recurring Entry", emptyRecent:"No transactions yet", emptyIncome:"No income entries yet", emptyDonation:"No donations yet", emptySchedule:"No recurring entries yet", navOverview:"Overview", navIncome:"Income", navDonations:"Donations", navRecurring:"Recurring", signout:"Sign out?", fillAll:"Please fill required fields (amount and date)", deleteConfirm:"Delete this entry?", auto:"Auto", everyMonth:"Every month on day", flag:"🇮🇱", choiceTitle:"What to add?", choiceIncome:"Income", choiceIncomeSub:"Salary, bonus, freelance...", choiceDonation:"Donation", choiceDonationSub:"Tzedakah, shul, charity...", choiceRecurring:"Recurring", choiceRecurringSub:"Auto entry every month", search:"Search...", year:"Year", month:"Month", progress:"Progress", monthly:"Monthly Breakdown", alert100:"You've completed your ma'aser for this period!", catNone:"— None —", catShul:"Shul", catTzedakah:"Tzedakah", catEducation:"Education", catChesed:"Chesed", catFamily:"Family", catOther:"Other", menu:"Menu", menuExport:"Export to CSV", menuImport:"Import from CSV", menuSignout:"Sign out", importTitle:"Import from CSV", importSub:"Choose what to import and upload the matching template file.", downloadTpl:"📋 Download Template for This Type", importType:"Data type", importFile:"CSV file", importBtn:"Import", importSuccess:"Imported successfully!", importError:"Import failed. Please check the file format.", exportTitle:"Export to CSV", exportSub:"Choose what to export and which fields to include.", exportType:"Data type", exportFields:"Fields to include", exportAll:"Everything (separate files)", exportIncomeOnly:"Income only", exportDonationsOnly:"Donations only", exportSchedulesOnly:"Recurring only", exportBtn:"Download CSV", selectFields:"Please select at least one field" },
-  he: { appTitle:"מעשרות", loginTitle:"ברוך הבא", loginSub:"התחבר כדי לנהל את המעשרות שלך", loginBtn:"התחבר עם גוגל", demoBtn:"נסה דמו (ללא התחברות)", demoBanner:"מצב דמו • הנתונים מומצאים ולא נשמרים", exitDemo:"יציאה", greeting:"ברוך הבא,", overview:"סיכום", totalIncome:'סה"כ הכנסות', obligation:"מעשר", totalDonated:'סה"כ תרומות', due:"יתרה לתשלום", recent:"אחרון", incomeTitle:"הכנסות", donationsTitle:"תרומות", schedulesTitle:"קבועות", save:"שמור", cancel:"ביטול", delete:"מחיקה", desc:"תיאור", amount:"סכום ($)", date:"תאריך", paytype:"אמצעי תשלום", checknum:"מספר צ'ק", name:"שם", dayOfMonth:"יום בחודש", maaserMode:"אחוז מעשר", percent:"אחוז (%)", fixed:"סכום קבוע ($)", category:"קטגוריה", status:"סטטוס", cleared:"שולם", pending:"ממתין", transfer:"העברה בנקאית", check:"צ'ק", cash:"מזומן", other:"אחר", incomeOpt:"הכנסה", donationOpt:"תרומה", addIncome:"הוספת הכנסה", addDonation:"הוספת תרומה", addSchedule:"הוספת עסקה קבועה", editIncome:"עריכת הכנסה", editDonation:"עריכת תרומה", editSchedule:"עריכת עסקה קבועה", emptyRecent:"אין עדיין פעולות", emptyIncome:"אין עדיין הכנסות", emptyDonation:"אין עדיין תרומות", emptySchedule:"אין עדיין עסקאות קבועות", navOverview:"סיכום", navIncome:"הכנסות", navDonations:"תרומות", navRecurring:"קבועות", signout:"להתנתק?", fillAll:"נא למלא שדות חובה (סכום ותאריך)", deleteConfirm:"למחוק את הרשומה?", auto:"אוטומטי", everyMonth:"כל חודש ב-", flag:"🇺🇸", choiceTitle:"מה להוסיף?", choiceIncome:"הכנסה", choiceIncomeSub:"משכורת, בונוס, פרילנס...", choiceDonation:"תרומה", choiceDonationSub:"צדקה, שיבל, חסד...", choiceRecurring:"קבועה", choiceRecurringSub:"כניסה אוטומטית כל חודש", search:"חיפוש...", year:"שנה", month:"חודש", progress:"התקדמות", monthly:"פילוח חודשי", alert100:"השלמת את המעשר לתקופה זו!", catNone:"— ללא —", catShul:"בית כנסת", catTzedakah:"צדקה", catEducation:"חינוך", catChesed:"חסד", catFamily:"משפחה", catOther:"אחר", menu:"תפריט", menuExport:"ייצוא ל-CSV", menuImport:"ייבוא מ-CSV", menuSignout:"התנתקות", importTitle:"ייבוא מ-CSV", importSub:"בחר מה לייבא והעלה את התבנית המתאימה.", downloadTpl:"📋 הורדת תבנית לסוג זה", importType:"סוג נתונים", importFile:"קובץ CSV", importBtn:"ייבוא", importSuccess:"הייבוא בוצע בהצלחה!", importError:"הייבוא נכשל. בדוק את פורמט הקובץ.", exportTitle:"ייצוא ל-CSV", exportSub:"בחר מה לייצא ואיזה שדות לכלול.", exportType:"סוג נתונים", exportFields:"שדות לכלול", exportAll:"הכל (קבצים נפרדים)", exportIncomeOnly:"רק הכנסות", exportDonationsOnly:"רק תרומות", exportSchedulesOnly:"רק קבועות", exportBtn:"הורדת CSV", selectFields:"נא לבחור לפחות שדה אחד" }
+  en: { appTitle:"Ma'aser", loginTitle:"Welcome back", loginSub:"Sign in to manage your ma'aser obligations", loginBtn:"Sign in with Google", demoBtn:"Try a demo (no sign-in)", demoBanner:"Demo Mode • data is fake and not saved", exitDemo:"Exit", greeting:"Welcome back,", overview:"Overview", totalIncome:"Total Income", obligation:"Ma'aser", totalDonated:"Total Donated", due:"Balance Due", recent:"Recent", incomeTitle:"Income", donationsTitle:"Donations", schedulesTitle:"Recurring", save:"Save", cancel:"Cancel", delete:"Delete", desc:"Description", amount:"Amount ($)", date:"Date", paytype:"Payment Type", checknum:"Check Number", name:"Name", dayOfMonth:"Day of Month", maaserMode:"Ma'aser %", percent:"Percent (%)", fixed:"Fixed Amount ($)", category:"Category", status:"Status", cleared:"Cleared / Paid", pending:"Pending", transfer:"Bank Transfer", check:"Check", cash:"Cash", other:"Other", incomeOpt:"Income", donationOpt:"Donation", addIncome:"Add Income", addDonation:"Add Donation", addSchedule:"Add Recurring Entry", editIncome:"Edit Income", editDonation:"Edit Donation", editSchedule:"Edit Recurring Entry", emptyRecent:"No transactions yet", emptyIncome:"No income entries yet", emptyDonation:"No donations yet", emptySchedule:"No recurring entries yet", navOverview:"Overview", navIncome:"Income", navDonations:"Donations", navRecurring:"Recurring", signout:"Sign out?", fillAll:"Please fill required fields (amount and date)", deleteConfirm:"Delete this entry?", auto:"Auto", everyMonth:"Every month on day", flag:"🇮🇱", choiceTitle:"What to add?", choiceIncome:"Income", choiceIncomeSub:"Salary, bonus, freelance...", choiceDonation:"Donation", choiceDonationSub:"Tzedakah, shul, charity...", choiceRecurring:"Recurring", choiceRecurringSub:"Auto entry every month", search:"Search...", year:"Year", month:"Month", progress:"Progress", monthly:"Monthly Breakdown", alert100:"You've completed your ma'aser for this period!", catNone:"— None —", catShul:"Shul", catTzedakah:"Tzedakah", catEducation:"Education", catChesed:"Chesed", catFamily:"Family", catOther:"Other", menu:"Menu", menuExport:"Export to CSV", menuImport:"Import from CSV", menuSignout:"Sign out", importTitle:"Import from CSV", importSub:"Choose what to import and upload the matching template file.", downloadTpl:"📋 Download Template for This Type", importType:"Data type", importFile:"CSV file", importBtn:"Import", importSuccess:"Imported successfully!", importError:"Import failed. Please check the file format.", exportTitle:"Export to CSV", exportSub:"Choose what to export and which fields to include.", exportType:"Data type", exportFields:"Fields to include", exportAll:"Everything (separate files)", exportIncomeOnly:"Income only", exportDonationsOnly:"Donations only", exportSchedulesOnly:"Recurring only", exportBtn:"Download CSV", selectFields:"Please select at least one field", navSettings:"Settings", settingsTitle:"Settings", sgProfile:"Profile", sgCategories:"Donation Categories", sgAccount:"Account", sFirstName:"First Name", sLastName:"Last Name", sMaaserDefault:"Default Ma'aser %", sSave:"Save Profile", sAddCat:"+ Add", sSignout:"Sign out" },
+  he: { appTitle:"מעשרות", loginTitle:"ברוך הבא", loginSub:"התחבר כדי לנהל את המעשרות שלך", loginBtn:"התחבר עם גוגל", demoBtn:"נסה דמו (ללא התחברות)", demoBanner:"מצב דמו • הנתונים מומצאים ולא נשמרים", exitDemo:"יציאה", greeting:"ברוך הבא,", overview:"סיכום", totalIncome:'סה"כ הכנסות', obligation:"מעשר", totalDonated:'סה"כ תרומות', due:"יתרה לתשלום", recent:"אחרון", incomeTitle:"הכנסות", donationsTitle:"תרומות", schedulesTitle:"קבועות", save:"שמור", cancel:"ביטול", delete:"מחיקה", desc:"תיאור", amount:"סכום ($)", date:"תאריך", paytype:"אמצעי תשלום", checknum:"מספר צ'ק", name:"שם", dayOfMonth:"יום בחודש", maaserMode:"אחוז מעשר", percent:"אחוז (%)", fixed:"סכום קבוע ($)", category:"קטגוריה", status:"סטטוס", cleared:"שולם", pending:"ממתין", transfer:"העברה בנקאית", check:"צ'ק", cash:"מזומן", other:"אחר", incomeOpt:"הכנסה", donationOpt:"תרומה", addIncome:"הוספת הכנסה", addDonation:"הוספת תרומה", addSchedule:"הוספת עסקה קבועה", editIncome:"עריכת הכנסה", editDonation:"עריכת תרומה", editSchedule:"עריכת עסקה קבועה", emptyRecent:"אין עדיין פעולות", emptyIncome:"אין עדיין הכנסות", emptyDonation:"אין עדיין תרומות", emptySchedule:"אין עדיין עסקאות קבועות", navOverview:"סיכום", navIncome:"הכנסות", navDonations:"תרומות", navRecurring:"קבועות", signout:"להתנתק?", fillAll:"נא למלא שדות חובה (סכום ותאריך)", deleteConfirm:"למחוק את הרשומה?", auto:"אוטומטי", everyMonth:"כל חודש ב-", flag:"🇺🇸", choiceTitle:"מה להוסיף?", choiceIncome:"הכנסה", choiceIncomeSub:"משכורת, בונוס, פרילנס...", choiceDonation:"תרומה", choiceDonationSub:"צדקה, שיבל, חסד...", choiceRecurring:"קבועה", choiceRecurringSub:"כניסה אוטומטית כל חודש", search:"חיפוש...", year:"שנה", month:"חודש", progress:"התקדמות", monthly:"פילוח חודשי", alert100:"השלמת את המעשר לתקופה זו!", catNone:"— ללא —", catShul:"בית כנסת", catTzedakah:"צדקה", catEducation:"חינוך", catChesed:"חסד", catFamily:"משפחה", catOther:"אחר", menu:"תפריט", menuExport:"ייצוא ל-CSV", menuImport:"ייבוא מ-CSV", menuSignout:"התנתקות", importTitle:"ייבוא מ-CSV", importSub:"בחר מה לייבא והעלה את התבנית המתאימה.", downloadTpl:"📋 הורדת תבנית לסוג זה", importType:"סוג נתונים", importFile:"קובץ CSV", importBtn:"ייבוא", importSuccess:"הייבוא בוצע בהצלחה!", importError:"הייבוא נכשל. בדוק את פורמט הקובץ.", exportTitle:"ייצוא ל-CSV", exportSub:"בחר מה לייצא ואיזה שדות לכלול.", exportType:"סוג נתונים", exportFields:"שדות לכלול", exportAll:"הכל (קבצים נפרדים)", exportIncomeOnly:"רק הכנסות", exportDonationsOnly:"רק תרומות", exportSchedulesOnly:"רק קבועות", exportBtn:"הורדת CSV", selectFields:"נא לבחור לפחות שדה אחד", navSettings:"הגדרות", settingsTitle:"הגדרות", sgProfile:"פרופיל", sgCategories:"קטגוריות תרומות", sgAccount:"חשבון", sFirstName:"שם פרטי", sLastName:"שם משפחה", sMaaserDefault:"אחוז מעשר ברירת מחדל", sSave:"שמור פרופיל", sAddCat:"+ הוסף", sSignout:"התנתקות" }
 };
 
 function tr(k) { return T[lang][k] || k; }
@@ -590,7 +646,7 @@ const monthNames = { en: ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep',
 
 function applyLang() {
   document.body.classList.toggle('rtl', lang === 'he');
-  const ids = { 'app-title':'appTitle','login-title':'loginTitle','login-sub':'loginSub','login-btn-text':'loginBtn','btn-demo-text':'demoBtn','demo-banner-text':'demoBanner','btn-exit-demo':'exitDemo','greeting-text':'greeting','lbl-overview':'overview','lbl-income':'totalIncome','lbl-obligation':'obligation','lbl-donated':'totalDonated','lbl-due':'due','lbl-recent':'recent','lbl-income-title':'incomeTitle','lbl-donations-title':'donationsTitle','lbl-schedules-title':'schedulesTitle','nav-lbl-dashboard':'navOverview','nav-lbl-income':'navIncome','nav-lbl-donations':'navDonations','nav-lbl-schedules':'navRecurring','lbl-f-desc':'desc','lbl-f-amount':'amount','lbl-f-date':'date','lbl-f-paytype':'paytype','lbl-f-checknum':'checknum','lbl-f-desc2':'desc','lbl-f-amount2':'amount','lbl-f-date2':'date','lbl-f-sname':'name','lbl-f-samount':'amount','lbl-f-day':'dayOfMonth','lbl-f-recur-paytype':'paytype','lbl-f-maaser-mode':'maaserMode','lbl-f-maaser-pct':'percent','lbl-f-maaser-fixed':'fixed','lbl-f-category':'category','lbl-f-status':'status','btn-save-income':'save','btn-cancel-income':'cancel','btn-delete-income':'delete','btn-save-donation':'save','btn-cancel-donation':'cancel','btn-delete-donation':'delete','btn-save-schedule':'save','btn-cancel-schedule':'cancel','btn-delete-schedule':'delete','opt-transfer':'transfer','opt-check':'check','opt-cash':'cash','opt-other':'other','opt-r-transfer':'transfer','opt-r-check':'check','opt-r-cash':'cash','opt-r-other':'other','lbl-recur-income':'incomeOpt','lbl-recur-donation':'donationOpt','modal-choice-title':'choiceTitle','lbl-choice-income':'choiceIncome','lbl-choice-income-sub':'choiceIncomeSub','lbl-choice-donation':'choiceDonation','lbl-choice-donation-sub':'choiceDonationSub','lbl-choice-recurring':'choiceRecurring','lbl-choice-recurring-sub':'choiceRecurringSub','view-year':'year','view-month':'month','lbl-progress':'progress','lbl-monthly':'monthly','alert-100-text':'alert100','opt-cat-none':'catNone','opt-cat-shul':'catShul','opt-cat-tzedakah':'catTzedakah','opt-cat-education':'catEducation','opt-cat-chesed':'catChesed','opt-cat-family':'catFamily','opt-cat-other':'catOther','opt-status-cleared':'cleared','opt-status-pending':'pending','modal-menu-title':'menu','menu-export':'menuExport','menu-import':'menuImport','menu-signout':'menuSignout','modal-import-title':'importTitle','modal-import-sub':'importSub','btn-download-tpl':'downloadTpl','lbl-import-type':'importType','lbl-import-file':'importFile','btn-import-do':'importBtn','btn-import-cancel':'cancel','opt-imp-income':'incomeOpt','opt-imp-donations':'donationsTitle','modal-export-title':'exportTitle','modal-export-sub':'exportSub','lbl-export-type':'exportType','lbl-export-fields':'exportFields','opt-exp-all':'exportAll','opt-exp-income':'exportIncomeOnly','opt-exp-donations':'exportDonationsOnly','opt-exp-schedules':'exportSchedulesOnly','btn-export-do':'exportBtn','btn-export-cancel':'cancel' };
+  const ids = { 'app-title':'appTitle','login-title':'loginTitle','login-sub':'loginSub','login-btn-text':'loginBtn','btn-demo-text':'demoBtn','demo-banner-text':'demoBanner','btn-exit-demo':'exitDemo','greeting-text':'greeting','lbl-overview':'overview','lbl-income':'totalIncome','lbl-obligation':'obligation','lbl-donated':'totalDonated','lbl-due':'due','lbl-recent':'recent','lbl-income-title':'incomeTitle','lbl-donations-title':'donationsTitle','lbl-schedules-title':'schedulesTitle','nav-lbl-dashboard':'navOverview','nav-lbl-income':'navIncome','nav-lbl-donations':'navDonations','nav-lbl-schedules':'navRecurring','lbl-f-desc':'desc','lbl-f-amount':'amount','lbl-f-date':'date','lbl-f-paytype':'paytype','lbl-f-checknum':'checknum','lbl-f-desc2':'desc','lbl-f-amount2':'amount','lbl-f-date2':'date','lbl-f-sname':'name','lbl-f-samount':'amount','lbl-f-day':'dayOfMonth','lbl-f-recur-paytype':'paytype','lbl-f-maaser-mode':'maaserMode','lbl-f-maaser-pct':'percent','lbl-f-maaser-fixed':'fixed','lbl-f-category':'category','lbl-f-status':'status','btn-save-income':'save','btn-cancel-income':'cancel','btn-delete-income':'delete','btn-save-donation':'save','btn-cancel-donation':'cancel','btn-delete-donation':'delete','btn-save-schedule':'save','btn-cancel-schedule':'cancel','btn-delete-schedule':'delete','opt-transfer':'transfer','opt-check':'check','opt-cash':'cash','opt-other':'other','opt-r-transfer':'transfer','opt-r-check':'check','opt-r-cash':'cash','opt-r-other':'other','lbl-recur-income':'incomeOpt','lbl-recur-donation':'donationOpt','modal-choice-title':'choiceTitle','lbl-choice-income':'choiceIncome','lbl-choice-income-sub':'choiceIncomeSub','lbl-choice-donation':'choiceDonation','lbl-choice-donation-sub':'choiceDonationSub','lbl-choice-recurring':'choiceRecurring','lbl-choice-recurring-sub':'choiceRecurringSub','view-year':'year','view-month':'month','lbl-progress':'progress','lbl-monthly':'monthly','alert-100-text':'alert100','opt-cat-none':'catNone','opt-cat-shul':'catShul','opt-cat-tzedakah':'catTzedakah','opt-cat-education':'catEducation','opt-cat-chesed':'catChesed','opt-cat-family':'catFamily','opt-cat-other':'catOther','opt-status-cleared':'cleared','opt-status-pending':'pending','modal-menu-title':'menu','menu-export':'menuExport','menu-import':'menuImport','menu-signout':'menuSignout','modal-import-title':'importTitle','modal-import-sub':'importSub','btn-download-tpl':'downloadTpl','lbl-import-type':'importType','lbl-import-file':'importFile','btn-import-do':'importBtn','btn-import-cancel':'cancel','opt-imp-income':'incomeOpt','opt-imp-donations':'donationsTitle','modal-export-title':'exportTitle','modal-export-sub':'exportSub','lbl-export-type':'exportType','lbl-export-fields':'exportFields','opt-exp-all':'exportAll','opt-exp-income':'exportIncomeOnly','opt-exp-donations':'exportDonationsOnly','opt-exp-schedules':'exportSchedulesOnly','btn-export-do':'exportBtn','btn-export-cancel':'cancel','nav-lbl-settings':'navSettings','lbl-settings-title':'settingsTitle','lbl-sg-profile':'sgProfile','lbl-sg-categories':'sgCategories','lbl-sg-account':'sgAccount','lbl-s-firstname':'sFirstName','lbl-s-lastname':'sLastName','lbl-s-maaser-default':'sMaaserDefault','btn-save-settings':'sSave','btn-add-cat':'sAddCat','lbl-s-signout':'sSignout' };
   Object.entries(ids).forEach(([id, key]) => { const el = document.getElementById(id); if (el) el.textContent = tr(key); });
   document.getElementById('lang-btn').textContent = tr('flag');
   ['empty-recent-msg','empty-income-msg','empty-donation-msg','empty-schedule-msg'].forEach(id => {
@@ -612,10 +668,8 @@ function populateMonthSelector() {
 window.toggleLang = () => { lang = lang === 'en' ? 'he' : 'en'; applyLang(); };
 
 window.signIn = async () => {
-  const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
   try {
-    if (isMobile) await signInWithRedirect(auth, provider);
-    else await signInWithPopup(auth, provider);
+    await signInWithRedirect(auth, provider);
   } catch(e) { alert('Sign in failed: ' + e.message); }
 };
 
@@ -631,25 +685,25 @@ window.enterDemo = () => {
   const y = today.getFullYear();
   demoData = {
     income: [
-      { id:'d1', desc:'Spotlight salary', amount:5000, date:`${y}-04-24`, paytype:'check', checknum:'5182', maaserPct:10, createdAt:Date.now() },
-      { id:'d2', desc:'Spotlight salary', amount:5000, date:`${y}-04-14`, paytype:'check', checknum:'5179', maaserPct:10, createdAt:Date.now() },
-      { id:'d3', desc:'Spotlight salary', amount:5000, date:`${y}-03-27`, paytype:'check', checknum:'5174', maaserPct:10, createdAt:Date.now() },
-      { id:'d4', desc:'Bnos Menachem', amount:927.36, date:`${y}-03-25`, paytype:'check', checknum:'47172', maaserPct:10, createdAt:Date.now() },
-      { id:'d5', desc:'Freelance project', amount:1500, date:`${y}-02-15`, paytype:'transfer', maaserPct:10, createdAt:Date.now() },
-      { id:'d6', desc:'Spotlight bonus', amount:2500, date:`${y}-01-10`, paytype:'transfer', maaserPct:10, createdAt:Date.now() },
+      { id:'d1', desc:'Monthly salary', amount:5000, date:`${y}-04-24`, paytype:'check', checknum:'1042', maaserPct:10, createdAt:Date.now() },
+      { id:'d2', desc:'Monthly salary', amount:5000, date:`${y}-04-01`, paytype:'check', checknum:'1039', maaserPct:10, createdAt:Date.now() },
+      { id:'d3', desc:'Monthly salary', amount:5000, date:`${y}-03-01`, paytype:'check', checknum:'1036', maaserPct:10, createdAt:Date.now() },
+      { id:'d4', desc:'Freelance project', amount:1200, date:`${y}-03-15`, paytype:'transfer', maaserPct:10, createdAt:Date.now() },
+      { id:'d5', desc:'Freelance project', amount:800, date:`${y}-02-10`, paytype:'transfer', maaserPct:10, createdAt:Date.now() },
+      { id:'d6', desc:'Year-end bonus', amount:3000, date:`${y}-01-15`, paytype:'transfer', maaserPct:10, createdAt:Date.now() },
     ],
     donations: [
-      { id:'g1', desc:'Shul membership', amount:100, date:`${y}-04-22`, category:'shul', status:'cleared', createdAt:Date.now() },
-      { id:'g2', desc:'Yeshivas erev', amount:360, date:`${y}-04-21`, category:'education', status:'cleared', createdAt:Date.now() },
-      { id:'g3', desc:'Keren Yesomim', amount:18, date:`${y}-04-21`, category:'chesed', status:'cleared', createdAt:Date.now() },
-      { id:'g4', desc:'Yaras', amount:100, date:`${y}-04-14`, category:'tzedakah', status:'cleared', createdAt:Date.now() },
-      { id:'g5', desc:'Areivim', amount:42, date:`${y}-04-14`, category:'tzedakah', status:'cleared', createdAt:Date.now() },
-      { id:'g6', desc:'Chasdei Lev', amount:210, date:`${y}-04-14`, category:'chesed', status:'cleared', createdAt:Date.now() },
-      { id:'g7', desc:'Shul aliya', amount:60, date:`${y}-03-16`, category:'shul', status:'cleared', createdAt:Date.now() },
-      { id:'g8', desc:'Yaras', amount:100, date:`${y}-03-26`, category:'tzedakah', status:'cleared', createdAt:Date.now() },
+      { id:'g1', desc:'Shul membership dues', amount:120, date:`${y}-04-22`, category:'shul', status:'cleared', createdAt:Date.now() },
+      { id:'g2', desc:'Torah study program', amount:360, date:`${y}-04-21`, category:'education', status:'cleared', createdAt:Date.now() },
+      { id:'g3', desc:'Local food bank', amount:50, date:`${y}-04-21`, category:'chesed', status:'cleared', createdAt:Date.now() },
+      { id:'g4', desc:'Tzedakah fund', amount:100, date:`${y}-04-14`, category:'tzedakah', status:'cleared', createdAt:Date.now() },
+      { id:'g5', desc:'Chesed organization', amount:42, date:`${y}-04-14`, category:'chesed', status:'cleared', createdAt:Date.now() },
+      { id:'g6', desc:'Family in need', amount:200, date:`${y}-04-14`, category:'family', status:'cleared', createdAt:Date.now() },
+      { id:'g7', desc:'Shul aliya pledge', amount:60, date:`${y}-03-16`, category:'shul', status:'cleared', createdAt:Date.now() },
+      { id:'g8', desc:'Tzedakah fund', amount:100, date:`${y}-03-26`, category:'tzedakah', status:'pending', createdAt:Date.now() },
     ],
     schedules: [
-      { id:'s1', name:'Shul membership', amount:100, day:1, type:'donation', startDate:`${y}-01-01` },
+      { id:'s1', name:'Shul membership', amount:120, day:1, type:'donation', startDate:`${y}-01-01` },
     ]
   };
   document.getElementById('demo-banner').style.display = 'block';
@@ -658,7 +712,9 @@ window.enterDemo = () => {
   document.getElementById('greeting-name').textContent = lang === 'en' ? 'Demo User' : 'משתמש דמו';
   document.getElementById('user-avatar').textContent = 'D';
   document.getElementById('year-display').textContent = currentYear;
+  history.replaceState(null, '', '?demo=true');
   populateMonthSelector();
+  refreshDonationCategorySelect();
   loadAll();
 };
 
@@ -668,7 +724,13 @@ window.exitDemo = () => {
   document.getElementById('demo-banner').style.display = 'none';
   document.getElementById('login-screen').style.display = 'flex';
   document.getElementById('app').style.display = 'none';
+  history.replaceState(null, '', location.pathname);
 };
+
+// Auto-enter demo if ?demo=true in URL
+if (new URLSearchParams(location.search).get('demo') === 'true') {
+  window.addEventListener('DOMContentLoaded', () => enterDemo());
+}
 
 onAuthStateChanged(auth, async user => {
   if (isDemo) return;
@@ -676,13 +738,18 @@ onAuthStateChanged(auth, async user => {
   if (user) {
     document.getElementById('login-screen').style.display = 'none';
     document.getElementById('app').style.display = 'block';
-    const firstName = (user.displayName || 'User').split(' ')[0];
+    await loadUserSettings();
+    const firstName = userSettings.firstName || (user.displayName || 'User').split(' ')[0];
     document.getElementById('greeting-name').textContent = firstName;
     document.getElementById('user-avatar').textContent = firstName.charAt(0).toUpperCase();
     document.getElementById('year-display').textContent = currentYear;
     populateMonthSelector();
+    refreshDonationCategorySelect();
     await processSchedules();
     await loadAll();
+    // Restore page from URL
+    const urlPage = new URLSearchParams(location.search).get('page');
+    if (urlPage && document.getElementById('page-'+urlPage)) showPage(urlPage);
   } else {
     document.getElementById('login-screen').style.display = 'flex';
     document.getElementById('app').style.display = 'none';
@@ -792,7 +859,15 @@ async function processSchedules() {
 }
 
 const fmt = n => '$' + parseFloat(n).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
-const fmtDate = d => new Date(d+'T00:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
+const fmtDate = (d, t) => {
+  const dateStr = new Date(d+'T00:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
+  if (t && t !== '00:00:00') {
+    const [h, m] = t.split(':');
+    const hr = parseInt(h), ampm = hr >= 12 ? 'PM' : 'AM';
+    return dateStr + ' · ' + (hr % 12 || 12) + ':' + m + ' ' + ampm;
+  }
+  return dateStr;
+};
 
 function renderTxList(containerId, data, type, emptyKey) {
   const el = document.getElementById(containerId);
@@ -806,7 +881,7 @@ function renderTxList(containerId, data, type, emptyKey) {
     } else if (item.paytype) {
       badges.push(`<span class="tx-badge">${tr(item.paytype)}</span>`);
     }
-    if (item.category) badges.push(`<span class="tx-badge cat">${tr('cat'+item.category.charAt(0).toUpperCase()+item.category.slice(1).replace('-cat',''))}</span>`);
+    if (item.category) badges.push(`<span class="tx-badge cat">${getCatLabel(item.category)}</span>`);
     if (item.status === 'pending') badges.push(`<span class="tx-badge pending">⏳ ${tr('pending')}</span>`);
     if (item.auto) badges.push(`<span class="tx-badge auto">⟳ ${tr('auto')}</span>`);
     return `<div class="tx-card" onclick="editItem('${type}','${item.id}')">
@@ -815,7 +890,7 @@ function renderTxList(containerId, data, type, emptyKey) {
         <div class="tx-info">
           <div class="tx-desc">${item.desc || '—'}</div>
           ${checkLine}
-          <div class="tx-meta">${fmtDate(item.date)} ${badges.join(' ')}</div>
+          <div class="tx-meta">${fmtDate(item.date, item.time)} ${badges.join(' ')}</div>
         </div>
       </div>
       <div class="tx-right">
@@ -876,7 +951,7 @@ function renderRecent() {
       <div class="tx-info">
         <div class="tx-desc">${item.desc || '—'}</div>
         ${checkLine}
-        <div class="tx-meta">${fmtDate(item.date)} ${badge}</div>
+        <div class="tx-meta">${fmtDate(item.date, item.time)} ${badge}</div>
       </div>
     </div>
     <div class="tx-right">
@@ -1086,7 +1161,87 @@ window.showPage = page => {
   document.querySelectorAll('.nav-btn').forEach(n=>n.classList.remove('active'));
   document.getElementById('page-'+page).classList.add('active');
   document.getElementById('nav-'+page).classList.add('active');
+  // Update URL without reload
+  const params = new URLSearchParams(location.search);
+  if (isDemo) params.set('demo','true');
+  params.set('page', page);
+  history.replaceState(null,'','?'+params.toString());
+  // Load settings page
+  if (page === 'settings') renderSettingsPage();
 };
+
+window.renderSettingsPage = () => {
+  // Load profile from Firestore or demo
+  document.getElementById('s-firstname').value = userSettings.firstName || '';
+  document.getElementById('s-lastname').value = userSettings.lastName || '';
+  document.getElementById('s-maaser-default').value = userSettings.maaserDefault || 10;
+  renderCategoriesList();
+};
+
+window.renderCategoriesList = () => {
+  const el = document.getElementById('categories-list');
+  el.innerHTML = categories.map((c,i) => {
+    const lbl = lang==='he' ? c.labelHe : c.labelEn;
+    const badge = c.active
+      ? `<span class="cat-badge-active">${lang==='he'?'פעיל':'Active'}</span>`
+      : `<span class="cat-badge-hidden">${lang==='he'?'מוסתר':'Hidden'}</span>`;
+    const toggleLabel = c.active ? (lang==='he'?'הסתר':'Hide') : (lang==='he'?'הצג':'Show');
+    return `<div class="cat-item">
+      <span class="cat-item-name">${lbl}</span>
+      ${badge}
+      <div class="cat-actions">
+        <button class="cat-action" onclick="toggleCategory(${i})">${toggleLabel}</button>
+        ${!DEFAULT_CATEGORIES.find(d=>d.key===c.key) ? `<button class="cat-action danger" onclick="deleteCategory(${i})">✕</button>` : ''}
+      </div>
+    </div>`;
+  }).join('');
+};
+
+window.toggleCategory = i => { categories[i].active = !categories[i].active; saveCategories(); renderCategoriesList(); refreshDonationCategorySelect(); };
+window.deleteCategory = i => { categories.splice(i,1); saveCategories(); renderCategoriesList(); refreshDonationCategorySelect(); };
+window.addCategory = () => {
+  const input = document.getElementById('new-cat-input');
+  const name = input.value.trim();
+  if (!name) return;
+  const key = 'cat-' + Date.now();
+  categories.push({ key, labelEn: name, labelHe: name, active: true });
+  saveCategories(); input.value = ''; renderCategoriesList(); refreshDonationCategorySelect();
+};
+
+function refreshDonationCategorySelect() {
+  const sel = document.getElementById('f-donation-category');
+  if (!sel) return;
+  const cur = sel.value;
+  sel.innerHTML = `<option value="">${tr('catNone')}</option>` +
+    categories.filter(c=>c.active).map(c=>
+      `<option value="${c.key}">${lang==='he'?c.labelHe:c.labelEn}</option>`
+    ).join('');
+  sel.value = cur;
+}
+
+window.saveSettings = async () => {
+  userSettings.firstName = document.getElementById('s-firstname').value.trim();
+  userSettings.lastName = document.getElementById('s-lastname').value.trim();
+  userSettings.maaserDefault = parseFloat(document.getElementById('s-maaser-default').value) || 10;
+  if (!isDemo && currentUser) {
+    const { doc: fsDoc, setDoc } = await import("https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js");
+    await setDoc(fsDoc(db,'users',currentUser.uid,'settings','profile'), userSettings, {merge:true});
+  }
+  const displayName = [userSettings.firstName, userSettings.lastName].filter(Boolean).join(' ') || (currentUser?.displayName?.split(' ')[0] || 'User');
+  document.getElementById('greeting-name').textContent = displayName;
+  document.getElementById('user-avatar').textContent = (userSettings.firstName || displayName).charAt(0).toUpperCase();
+  settingsDirty = false;
+  alert(lang==='he' ? 'נשמר!' : 'Saved!');
+};
+
+async function loadUserSettings() {
+  if (isDemo || !currentUser) return;
+  try {
+    const { doc: fsDoc, getDoc } = await import("https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js");
+    const snap = await getDoc(fsDoc(db,'users',currentUser.uid,'settings','profile'));
+    if (snap.exists()) { userSettings = {...userSettings,...snap.data()}; }
+  } catch(e) {}
+}
 
 window.openChoice = () => document.getElementById('modal-choice').classList.add('open');
 window.openMenu = () => document.getElementById('modal-menu').classList.add('open');
@@ -1100,7 +1255,7 @@ window.openModal = type => {
     ['f-income-desc','f-income-amount','f-income-checknum','f-income-maaser-fixed'].forEach(id => document.getElementById(id).value = '');
     document.getElementById('f-income-date').value = today;
     document.getElementById('f-income-paytype').value = 'transfer';
-    document.getElementById('f-income-maaser-pct').value = 10;
+    document.getElementById('f-income-maaser-pct').value = userSettings.maaserDefault || 10;
     maaserMode = 'pct'; updateMaaserModeUI();
     onPayTypeChange();
     document.getElementById('btn-delete-income').style.display = 'none';
@@ -1293,34 +1448,51 @@ window.importCSV = async () => {
   try {
     const text = await file.text();
     const lines = text.replace(/^\ufeff/, '').split('\n').map(l => l.trim()).filter(l => l);
-    if (!lines.length) { alert(tr('importError')); return; }
-    const header = parseCSVLine(lines[0]).map(h => h.trim().toLowerCase());
+    if (lines.length < 2) { alert(tr('importError')); return; }
+    const header = parseCSVLine(lines[0]).map(h => h.trim().toLowerCase().replace(/"/g,''));
     let count = 0;
     for (let li = 1; li < lines.length; li++) {
       const cols = parseCSVLine(lines[li]);
       const row = {};
-      header.forEach((h, i) => { row[h] = (cols[i] || '').trim(); });
-      if (!row.date || !row.amount) continue;
+      header.forEach((h, i) => { row[h] = (cols[i] || '').trim().replace(/^"|"$/g,''); });
+
+      // Support both our format and Ma'aser Money format
+      const desc = row.description || row.desc || '';
+      const rawDate = row.date || '';
+      if (!rawDate || !row.amount) continue;
+
+      // Parse date - handles both "2026-04-24 16:41:26" and "2026-04-24"
+      const dateParts = rawDate.split(' ');
+      const dateStr = dateParts[0]; // YYYY-MM-DD
+      const timeStr = dateParts[1] || '00:00:00';
+      const createdAt = new Date(rawDate.replace(' ', 'T')).getTime() || Date.now();
+
+      // Generate unique ID
+      const uid = 'i' + createdAt + Math.random().toString(36).slice(2,7);
+
       if (type === 'income') {
-        const d = { date: row.date, amount: parseFloat(row.amount), desc: row.description || '', paytype: row.paytype || 'transfer', createdAt: Date.now() };
+        const pct = row.maaserpct || row.percent
+          ? parseFloat(row.maaserpct || row.percent) * (row.percent && parseFloat(row.percent) < 1 ? 100 : 1)
+          : userSettings.maaserDefault || 10;
+        const d = { date: dateStr, time: timeStr, amount: parseFloat(row.amount), desc, paytype: row.paytype || 'transfer', maaserPct: pct, createdAt, uid };
         if (row.checknum) d.checknum = row.checknum;
         if (row.maaserfixed) d.maaserFixed = parseFloat(row.maaserfixed);
-        else d.maaserPct = row.maaserpct ? parseFloat(row.maaserpct) : 10;
-        if (isDemo) demoData.income.push({ id: 'd'+Date.now()+count, ...d });
+        if (isDemo) demoData.income.push({ id: uid, ...d });
         else await addDoc(collection(db,'users',currentUser.uid,'income'), d);
       } else {
-        const d = { date: row.date, amount: parseFloat(row.amount), desc: row.description || '', status: row.status || 'cleared', createdAt: Date.now() };
+        const d = { date: dateStr, time: timeStr, amount: parseFloat(row.amount), desc, status: row.status || 'cleared', createdAt, uid };
         if (row.category) d.category = row.category;
-        if (isDemo) demoData.donations.push({ id: 'g'+Date.now()+count, ...d });
+        if (isDemo) demoData.donations.push({ id: uid, ...d });
         else await addDoc(collection(db,'users',currentUser.uid,'donations'), d);
       }
       count++;
     }
+    if (count === 0) { alert(tr('importError') + ' (0 rows found - check column headers)'); return; }
     closeModal('import');
     document.getElementById('import-file').value = '';
     alert(tr('importSuccess') + ' (' + count + ')');
     await loadAll();
-  } catch (e) { console.error(e); alert(tr('importError')); }
+  } catch (e) { console.error(e); alert(tr('importError') + ': ' + e.message); }
 };
 
 function parseCSVLine(line) {
