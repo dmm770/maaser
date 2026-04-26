@@ -123,6 +123,7 @@
   .tx-dot.recurring { background: var(--accent2-light); }
   .tx-info { min-width: 0; flex: 1; }
   .tx-desc { font-size: 14px; font-weight: 500; margin-bottom: 2px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .tx-checknum { font-size: 11px; font-weight: 500; color: var(--accent2); margin-bottom: 2px; letter-spacing: 0.02em; }
   .tx-meta { font-size: 11px; color: var(--text-muted); display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
   .tx-badge { background: var(--bg); border-radius: 4px; padding: 1px 6px; font-size: 10px; font-weight: 500; color: var(--text-muted); border: 1px solid var(--border); }
   .tx-badge.auto { background: var(--accent2-light); color: var(--accent2); border-color: transparent; }
@@ -775,9 +776,9 @@ function renderTxList(containerId, data, type, emptyKey) {
   const icon = type === 'income' ? '💰' : '🤲';
   el.innerHTML = data.map(item => {
     const badges = [];
-    let descPrefix = '';
+    let checkLine = '';
     if (type === 'income' && item.paytype === 'check' && item.checknum) {
-      descPrefix = `${tr('check')} #${item.checknum} • `;
+      checkLine = `<div class="tx-checknum">${tr('check')} #${item.checknum}</div>`;
     } else if (item.paytype) {
       badges.push(`<span class="tx-badge">${tr(item.paytype)}</span>`);
     }
@@ -787,7 +788,11 @@ function renderTxList(containerId, data, type, emptyKey) {
     return `<div class="tx-card" onclick="editItem('${type}','${item.id}')">
       <div class="tx-left">
         <div class="tx-dot ${type}">${icon}</div>
-        <div class="tx-info"><div class="tx-desc">${descPrefix}${item.desc || '—'}</div><div class="tx-meta">${fmtDate(item.date)} ${badges.join(' ')}</div></div>
+        <div class="tx-info">
+          <div class="tx-desc">${item.desc || '—'}</div>
+          ${checkLine}
+          <div class="tx-meta">${fmtDate(item.date)} ${badges.join(' ')}</div>
+        </div>
       </div>
       <div class="tx-right">
         <span class="tx-amount ${type}">${fmt(item.amount)}</span>
@@ -837,12 +842,19 @@ function renderRecent() {
   const icons = {income:'💰',donation:'🤲'};
   el.innerHTML = all.map(item => {
     const badge = item.auto ? `<span class="tx-badge auto">⟳ ${tr('auto')}</span>` : '';
-    let descPrefix = '';
+    let checkLine = '';
     if (item.type === 'income' && item.paytype === 'check' && item.checknum) {
-      descPrefix = `${tr('check')} #${item.checknum} • `;
+      checkLine = `<div class="tx-checknum">${tr('check')} #${item.checknum}</div>`;
     }
     return `<div class="tx-card" onclick="editItem('${item.type}','${item.id}')">
-    <div class="tx-left"><div class="tx-dot ${item.type}">${icons[item.type]}</div><div class="tx-info"><div class="tx-desc">${descPrefix}${item.desc || '—'}</div><div class="tx-meta">${fmtDate(item.date)} ${badge}</div></div></div>
+    <div class="tx-left">
+      <div class="tx-dot ${item.type}">${icons[item.type]}</div>
+      <div class="tx-info">
+        <div class="tx-desc">${item.desc || '—'}</div>
+        ${checkLine}
+        <div class="tx-meta">${fmtDate(item.date)} ${badge}</div>
+      </div>
+    </div>
     <div class="tx-right">
       <span class="tx-amount ${item.type}">${fmt(item.amount)}</span>
       <div class="tx-actions">
