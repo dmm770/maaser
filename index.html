@@ -1,603 +1,359 @@
 <!DOCTYPE html>
-<html lang="en" dir="ltr">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Ma'aser Tracker</title>
-<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%231a1f36'/%3E%3Ctext x='50' y='72' font-family='Inter,Arial,sans-serif' font-size='70' font-weight='700' fill='white' text-anchor='middle'%3E%24%3C/text%3E%3C/svg%3E">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg: #f7f4ef;
+    --bg: #f5f6fa;
     --card: #ffffff;
-    --accent: #2d6a4f;
-    --accent-light: #e8f5ee;
-    --accent2: #b5884c;
-    --text: #1a1a1a;
-    --text-muted: #7a7a72;
-    --border: #e8e4dc;
-    --danger: #c0392b;
-    --income: #2d6a4f;
-    --donation: #b5884c;
-    --shadow: 0 2px 16px rgba(0,0,0,0.07);
-    --radius: 16px;
+    --border: #e8eaed;
+    --accent: #1a1f36;
+    --accent2: #3d5afe;
+    --accent-light: #eef1ff;
+    --text: #1a1f36;
+    --text-muted: #8f95a3;
+    --green: #00875a;
+    --green-light: #e3f5ef;
+    --red: #de350b;
+    --gold: #b8860b;
+    --gold-light: #fef9e7;
+    --shadow-sm: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+    --shadow-lg: 0 10px 30px rgba(26,31,54,0.25);
+    --radius: 12px;
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  body {
-    font-family: 'DM Sans', sans-serif;
-    background: var(--bg);
-    color: var(--text);
-    min-height: 100vh;
-  }
+  body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; font-size: 14px; }
 
-  /* LOGIN */
-  #login-screen {
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 24px;
-    background: linear-gradient(145deg, #f7f4ef 0%, #e8f5ee 100%);
-  }
-  .login-card {
-    background: var(--card);
-    border-radius: 24px;
-    padding: 48px 40px;
-    max-width: 400px;
-    width: 100%;
-    box-shadow: 0 8px 40px rgba(0,0,0,0.1);
-    text-align: center;
-  }
-  .login-logo {
-    width: 72px; height: 72px;
-    background: var(--accent);
-    border-radius: 20px;
-    display: flex; align-items: center; justify-content: center;
-    margin: 0 auto 24px;
-    font-family: 'DM Serif Display', serif;
-    color: white;
-    font-size: 28px;
-  }
-  .login-title {
-    font-family: 'DM Serif Display', serif;
-    font-size: 28px;
-    margin-bottom: 8px;
-    color: var(--text);
-  }
-  .login-sub {
-    color: var(--text-muted);
-    font-size: 15px;
-    margin-bottom: 32px;
-    line-height: 1.5;
-  }
-  .btn-google {
-    display: flex; align-items: center; justify-content: center; gap: 12px;
-    width: 100%;
-    padding: 14px 24px;
-    background: var(--text);
-    color: white;
-    border: none;
-    border-radius: 12px;
-    font-size: 15px;
-    font-weight: 500;
-    cursor: pointer;
-    font-family: 'DM Sans', sans-serif;
-    transition: opacity 0.2s;
-  }
-  .btn-google:hover { opacity: 0.85; }
-  .btn-google svg { width: 20px; height: 20px; }
+  #login-screen { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 24px; background: #fff; }
+  .login-card { max-width: 360px; width: 100%; text-align: center; }
+  .login-wordmark { font-size: 12px; font-weight: 600; letter-spacing: 0.15em; color: var(--text-muted); text-transform: uppercase; margin-bottom: 48px; }
+  .login-icon { width: 56px; height: 56px; background: var(--accent); border-radius: 14px; display: flex; align-items: center; justify-content: center; margin: 0 auto 24px; font-size: 26px; color: white; font-weight: 700; }
+  .login-title { font-size: 24px; font-weight: 700; margin-bottom: 8px; }
+  .login-sub { color: var(--text-muted); font-size: 14px; margin-bottom: 40px; line-height: 1.6; }
+  .btn-google { display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; padding: 13px 20px; background: var(--accent); color: white; border: none; border-radius: 10px; font-size: 14px; font-weight: 600; cursor: pointer; font-family: 'Inter', sans-serif; }
+  .btn-google svg { width: 18px; height: 18px; }
 
-  /* APP */
-  #app { display: none; max-width: 480px; margin: 0 auto; padding: 0 0 100px; }
+  #app { display: none; max-width: 430px; margin: 0 auto; padding-bottom: 80px; position: relative; }
 
-  /* HEADER */
-  .app-header {
-    background: var(--card);
-    padding: 16px 20px;
-    display: flex; align-items: center; justify-content: space-between;
-    position: sticky; top: 0; z-index: 100;
-    border-bottom: 1px solid var(--border);
-  }
-  .app-header h1 {
-    font-family: 'DM Serif Display', serif;
-    font-size: 22px;
-    color: var(--accent);
-  }
-  .header-actions { display: flex; gap: 8px; align-items: center; }
-  .lang-btn {
-    background: var(--accent-light);
-    border: none;
-    border-radius: 8px;
-    padding: 6px 12px;
-    font-size: 13px;
-    font-weight: 600;
-    color: var(--accent);
-    cursor: pointer;
-    font-family: 'DM Sans', sans-serif;
-  }
-  .avatar {
-    width: 32px; height: 32px;
-    background: var(--accent);
-    border-radius: 50%;
-    display: flex; align-items: center; justify-content: center;
-    color: white; font-size: 13px; font-weight: 600;
-    cursor: pointer;
-  }
+  .app-header { background: #fff; padding: 14px 20px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 100; }
+  .header-left { display: flex; align-items: center; gap: 10px; }
+  .header-logo { width: 30px; height: 30px; background: var(--accent); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; font-size: 15px; }
+  .header-name { font-weight: 700; font-size: 15px; }
+  .header-right { display: flex; align-items: center; gap: 8px; }
+  .lang-flag { background: none; border: none; cursor: pointer; padding: 4px; font-size: 22px; line-height: 1; display: flex; align-items: center; justify-content: center; }
+  .avatar { width: 30px; height: 30px; background: var(--accent2); border-radius: 50%; color: white; font-size: 12px; font-weight: 600; display: flex; align-items: center; justify-content: center; cursor: pointer; }
 
-  /* BALANCE CARD */
-  .balance-card {
-    margin: 20px 16px;
-    background: var(--accent);
-    border-radius: var(--radius);
-    padding: 28px 24px;
-    color: white;
-  }
-  .balance-label {
-    font-size: 12px;
-    font-weight: 500;
-    opacity: 0.7;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    margin-bottom: 4px;
-  }
-  .balance-rows { display: flex; flex-direction: column; gap: 10px; }
-  .balance-row {
-    display: flex; justify-content: space-between; align-items: center;
-    padding: 10px 0;
-    border-bottom: 1px solid rgba(255,255,255,0.15);
-  }
-  .balance-row:last-child { border-bottom: none; }
-  .balance-row-label { font-size: 14px; opacity: 0.85; }
-  .balance-row-amount { font-size: 16px; font-weight: 600; }
-  .due-row {
-    background: rgba(255,255,255,0.15);
-    border-radius: 10px;
-    padding: 12px 14px;
-    margin-top: 4px;
-    display: flex; justify-content: space-between; align-items: center;
-  }
-  .due-label { font-size: 15px; font-weight: 600; }
-  .due-amount { font-size: 22px; font-weight: 700; }
-  .due-positive { color: #ff6b6b; }
-  .due-zero { color: #a8e6cf; }
+  .year-bar { background: #fff; border-bottom: 1px solid var(--border); padding: 10px 20px; display: flex; align-items: center; gap: 12px; }
+  .year-nav { background: none; border: none; cursor: pointer; color: var(--text-muted); font-size: 16px; padding: 2px 6px; }
+  .year-label { font-size: 13px; font-weight: 600; }
 
-  /* SECTION */
-  .section { margin: 0 16px 20px; }
-  .section-header {
-    display: flex; align-items: center; justify-content: space-between;
-    margin-bottom: 12px;
-  }
-  .section-title {
-    font-family: 'DM Serif Display', serif;
-    font-size: 18px;
-  }
-  .btn-add {
-    background: var(--accent);
-    color: white;
-    border: none;
-    border-radius: 10px;
-    padding: 7px 14px;
-    font-size: 13px;
-    font-weight: 600;
-    cursor: pointer;
-    font-family: 'DM Sans', sans-serif;
-    display: flex; align-items: center; gap: 4px;
-  }
+  .balance-section { padding: 16px; }
+  .balance-card { background: var(--accent); border-radius: var(--radius); padding: 24px 20px; color: white; }
+  .balance-card-label { font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; opacity: 0.6; margin-bottom: 16px; }
+  .bal-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.1); }
+  .bal-row:last-child { border-bottom: none; }
+  .bal-row-label { font-size: 13px; opacity: 0.75; }
+  .bal-row-val { font-size: 14px; font-weight: 600; }
+  .due-banner { margin-top: 14px; background: rgba(255,255,255,0.12); border-radius: 8px; padding: 12px 16px; display: flex; justify-content: space-between; align-items: center; }
+  .due-label { font-size: 13px; font-weight: 600; }
+  .due-amount { font-size: 20px; font-weight: 700; }
+  .due-positive { color: #ff8f73; }
+  .due-credit { color: #79f2c0; }
 
-  /* TRANSACTION LIST */
-  .tx-list { display: flex; flex-direction: column; gap: 8px; }
-  .tx-item {
-    background: var(--card);
-    border-radius: 12px;
-    padding: 14px 16px;
-    display: flex; align-items: center; justify-content: space-between;
-    box-shadow: var(--shadow);
-  }
-  .tx-left { display: flex; align-items: center; gap: 12px; }
-  .tx-icon {
-    width: 38px; height: 38px;
-    border-radius: 10px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 16px;
-    flex-shrink: 0;
-  }
-  .tx-icon.income { background: #e8f5ee; }
-  .tx-icon.donation { background: #fef3e2; }
-  .tx-info {}
-  .tx-desc { font-size: 14px; font-weight: 500; margin-bottom: 2px; }
-  .tx-date { font-size: 12px; color: var(--text-muted); }
+  .section { padding: 0 16px 16px; }
+  .section-header { display: flex; align-items: center; justify-content: space-between; padding: 16px 0 10px; }
+  .section-title { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-muted); }
+  .btn-add { background: var(--accent2); color: white; border: none; border-radius: 8px; padding: 7px 14px; font-size: 12px; font-weight: 600; cursor: pointer; font-family: 'Inter', sans-serif; display: flex; align-items: center; gap: 4px; }
+
+  .card-list { display: flex; flex-direction: column; gap: 6px; }
+  .tx-card { background: #fff; border-radius: var(--radius); padding: 14px 16px; display: flex; align-items: center; justify-content: space-between; box-shadow: var(--shadow-sm); border: 1px solid var(--border); cursor: pointer; transition: transform 0.1s, box-shadow 0.15s; }
+  .tx-card:active { transform: scale(0.98); }
+  .tx-card.no-tap { cursor: default; }
+  .tx-card.no-tap:active { transform: none; }
+  .tx-left { display: flex; align-items: center; gap: 12px; flex: 1; min-width: 0; }
+  .tx-dot { width: 36px; height: 36px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 15px; flex-shrink: 0; }
+  .tx-dot.income { background: var(--green-light); }
+  .tx-dot.donation { background: var(--gold-light); }
+  .tx-dot.recurring { background: var(--accent-light); }
+  .tx-info { min-width: 0; flex: 1; }
+  .tx-desc { font-size: 14px; font-weight: 500; margin-bottom: 2px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .tx-meta { font-size: 11px; color: var(--text-muted); display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
+  .tx-badge { background: var(--bg); border-radius: 4px; padding: 1px 6px; font-size: 10px; font-weight: 500; color: var(--text-muted); border: 1px solid var(--border); }
+  .tx-badge.auto { background: var(--accent-light); color: var(--accent2); border-color: transparent; }
   .tx-right { display: flex; align-items: center; gap: 10px; }
-  .tx-amount { font-size: 15px; font-weight: 600; }
-  .tx-amount.income { color: var(--income); }
-  .tx-amount.donation { color: var(--donation); }
-  .tx-delete {
-    background: none; border: none; cursor: pointer;
-    color: #ccc; font-size: 16px; padding: 4px;
-    transition: color 0.2s;
-  }
-  .tx-delete:hover { color: var(--danger); }
-  .empty-state {
-    text-align: center;
-    padding: 32px;
-    color: var(--text-muted);
-    font-size: 14px;
-    background: var(--card);
-    border-radius: 12px;
-  }
+  .tx-amount { font-size: 14px; font-weight: 700; white-space: nowrap; }
+  .tx-amount.income { color: var(--green); }
+  .tx-amount.donation { color: var(--gold); }
+  .tx-amount.recurring { color: var(--accent2); }
+  .empty-state { background: #fff; border-radius: var(--radius); border: 1px dashed var(--border); padding: 32px; text-align: center; color: var(--text-muted); font-size: 13px; }
 
-  /* SCHEDULES */
-  .schedule-item {
-    background: var(--card);
-    border-radius: 12px;
-    padding: 14px 16px;
-    display: flex; align-items: center; justify-content: space-between;
-    box-shadow: var(--shadow);
-  }
-  .schedule-left { display: flex; align-items: center; gap: 12px; }
-  .schedule-icon {
-    width: 38px; height: 38px;
-    background: #fef3e2;
-    border-radius: 10px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 16px;
-  }
-  .schedule-name { font-size: 14px; font-weight: 500; margin-bottom: 2px; }
-  .schedule-freq { font-size: 12px; color: var(--text-muted); }
-  .schedule-right { display: flex; align-items: center; gap: 10px; }
-  .schedule-amount { font-size: 15px; font-weight: 600; color: var(--donation); }
+  /* FAB */
+  .fab { position: fixed; bottom: 90px; left: 50%; transform: translateX(150px); width: 56px; height: 56px; border-radius: 50%; background: var(--accent2); color: white; border: none; box-shadow: var(--shadow-lg); cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 28px; font-weight: 300; z-index: 99; transition: transform 0.15s; }
+  .fab:active { transform: translateX(150px) scale(0.92); }
+  @media (max-width: 460px) { .fab { transform: translateX(0); right: 20px; left: auto; } .fab:active { transform: scale(0.92); } }
 
-  /* BOTTOM NAV */
-  .bottom-nav {
-    position: fixed; bottom: 0; left: 50%; transform: translateX(-50%);
-    width: 100%; max-width: 480px;
-    background: var(--card);
-    border-top: 1px solid var(--border);
-    display: flex;
-    z-index: 100;
-  }
-  .nav-item {
-    flex: 1;
-    display: flex; flex-direction: column; align-items: center; justify-content: center;
-    padding: 10px 0 14px;
-    cursor: pointer;
-    border: none; background: none;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 11px;
-    color: var(--text-muted);
-    transition: color 0.2s;
-    gap: 4px;
-  }
-  .nav-item.active { color: var(--accent); }
-  .nav-icon { font-size: 20px; }
+  .bottom-nav { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 430px; background: #fff; border-top: 1px solid var(--border); display: flex; z-index: 100; }
+  .nav-btn { flex: 1; display: flex; flex-direction: column; align-items: center; padding: 10px 0 14px; border: none; background: none; cursor: pointer; font-family: 'Inter', sans-serif; font-size: 10px; font-weight: 500; color: var(--text-muted); gap: 4px; }
+  .nav-btn.active { color: var(--accent2); }
+  .nav-btn svg { width: 20px; height: 20px; }
 
-  /* MODAL */
-  .modal-overlay {
-    position: fixed; inset: 0;
-    background: rgba(0,0,0,0.5);
-    z-index: 200;
-    display: none;
-    align-items: flex-end;
-    justify-content: center;
-  }
-  .modal-overlay.open { display: flex; }
-  .modal {
-    background: var(--card);
-    border-radius: 24px 24px 0 0;
-    padding: 28px 24px 40px;
-    width: 100%; max-width: 480px;
-    animation: slideUp 0.3s ease;
-  }
-  @keyframes slideUp {
-    from { transform: translateY(100%); }
-    to { transform: translateY(0); }
-  }
-  .modal-title {
-    font-family: 'DM Serif Display', serif;
-    font-size: 20px;
-    margin-bottom: 24px;
-  }
-  .form-group { margin-bottom: 16px; }
-  .form-label {
-    display: block;
-    font-size: 13px;
-    font-weight: 500;
-    color: var(--text-muted);
-    margin-bottom: 6px;
-  }
-  .form-input, .form-select {
-    width: 100%;
-    padding: 12px 14px;
-    border: 1.5px solid var(--border);
-    border-radius: 10px;
-    font-size: 15px;
-    font-family: 'DM Sans', sans-serif;
-    background: var(--bg);
-    color: var(--text);
-    outline: none;
-    transition: border-color 0.2s;
-  }
-  .form-input:focus, .form-select:focus { border-color: var(--accent); }
-  .form-row { display: flex; gap: 12px; }
-  .form-row .form-group { flex: 1; }
-  .btn-submit {
-    width: 100%;
-    padding: 14px;
-    background: var(--accent);
-    color: white;
-    border: none;
-    border-radius: 12px;
-    font-size: 16px;
-    font-weight: 600;
-    cursor: pointer;
-    font-family: 'DM Sans', sans-serif;
-    margin-top: 8px;
-  }
-  .btn-cancel {
-    width: 100%;
-    padding: 12px;
-    background: none;
-    color: var(--text-muted);
-    border: none;
-    border-radius: 12px;
-    font-size: 14px;
-    cursor: pointer;
-    font-family: 'DM Sans', sans-serif;
-    margin-top: 4px;
-  }
-
-  /* PAGES */
   .page { display: none; }
   .page.active { display: block; }
 
-  /* RTL support */
+  .overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 200; display: none; align-items: flex-end; justify-content: center; }
+  .overlay.open { display: flex; }
+  .modal { background: #fff; border-radius: 20px 20px 0 0; padding: 24px 20px 40px; width: 100%; max-width: 430px; animation: up 0.25s ease; max-height: 90vh; overflow-y: auto; }
+  @keyframes up { from { transform: translateY(100%); } to { transform: translateY(0); } }
+  .modal-handle { width: 36px; height: 4px; background: var(--border); border-radius: 2px; margin: 0 auto 20px; }
+  .modal-title { font-size: 17px; font-weight: 700; margin-bottom: 20px; }
+  .field { margin-bottom: 14px; }
+  .field label { display: block; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-muted); margin-bottom: 6px; }
+  .field input, .field select { width: 100%; padding: 11px 14px; border: 1.5px solid var(--border); border-radius: 8px; font-size: 14px; font-family: 'Inter', sans-serif; background: #fff; color: var(--text); outline: none; }
+  .field input:focus, .field select:focus { border-color: var(--accent2); }
+  .field-row { display: flex; gap: 10px; }
+  .field-row .field { flex: 1; }
+  .btn-primary { width: 100%; padding: 13px; background: var(--accent); color: white; border: none; border-radius: 10px; font-size: 14px; font-weight: 600; cursor: pointer; font-family: 'Inter', sans-serif; margin-top: 6px; }
+  .btn-secondary { width: 100%; padding: 11px; background: none; color: var(--text-muted); border: none; border-radius: 10px; font-size: 13px; cursor: pointer; font-family: 'Inter', sans-serif; }
+  .btn-danger { width: 100%; padding: 11px; background: none; color: var(--red); border: none; border-radius: 10px; font-size: 13px; font-weight: 600; cursor: pointer; font-family: 'Inter', sans-serif; }
+  #check-number-field { display: none; }
+
+  /* Choice modal */
+  .choice-list { display: flex; flex-direction: column; gap: 8px; }
+  .choice-btn { width: 100%; padding: 16px; background: var(--bg); border: 1.5px solid var(--border); border-radius: 12px; cursor: pointer; display: flex; align-items: center; gap: 14px; font-family: 'Inter', sans-serif; transition: border-color 0.15s, background 0.15s; }
+  .choice-btn:hover { border-color: var(--accent2); background: var(--accent-light); }
+  .choice-icon { width: 42px; height: 42px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
+  .choice-icon.income { background: var(--green-light); }
+  .choice-icon.donation { background: var(--gold-light); }
+  .choice-icon.recurring { background: var(--accent-light); }
+  .choice-text { text-align: left; flex: 1; }
+  .choice-title { font-size: 14px; font-weight: 600; margin-bottom: 2px; }
+  .choice-sub { font-size: 12px; color: var(--text-muted); }
+
   body.rtl { direction: rtl; }
-  body.rtl .tx-left { flex-direction: row-reverse; }
-  body.rtl .balance-row { flex-direction: row-reverse; }
-  body.rtl .schedule-left { flex-direction: row-reverse; }
-  body.rtl .section-header { flex-direction: row-reverse; }
-  body.rtl .due-row { flex-direction: row-reverse; }
-  body.rtl .tx-right { flex-direction: row-reverse; }
-  body.rtl .schedule-right { flex-direction: row-reverse; }
+  body.rtl .tx-left, body.rtl .header-left, body.rtl .header-right,
+  body.rtl .bal-row, body.rtl .due-banner, body.rtl .section-header,
+  body.rtl .tx-right, body.rtl .tx-meta { flex-direction: row-reverse; }
+  body.rtl .choice-text { text-align: right; }
 
-  .year-selector {
-    display: flex; align-items: center; gap: 8px;
-    background: var(--card);
-    border-radius: 10px;
-    padding: 6px 10px;
-    margin: 0 16px 16px;
-    box-shadow: var(--shadow);
-    width: fit-content;
-  }
-  .year-btn {
-    background: none; border: none; cursor: pointer;
-    font-size: 18px; color: var(--accent); padding: 0 4px;
-  }
-  .year-display { font-weight: 600; font-size: 15px; }
-
-  .badge {
-    display: inline-block;
-    background: var(--accent-light);
-    color: var(--accent);
-    border-radius: 6px;
-    padding: 2px 8px;
-    font-size: 11px;
-    font-weight: 600;
-    margin-left: 6px;
-  }
-
-  .loading {
-    text-align: center;
-    padding: 40px;
-    color: var(--text-muted);
-  }
+  .type-toggle { display: flex; gap: 8px; margin-bottom: 16px; background: var(--bg); padding: 4px; border-radius: 10px; }
+  .type-toggle button { flex: 1; padding: 8px; border: none; background: none; border-radius: 7px; font-size: 13px; font-weight: 600; cursor: pointer; color: var(--text-muted); font-family: 'Inter', sans-serif; }
+  .type-toggle button.active { background: #fff; color: var(--text); box-shadow: var(--shadow-sm); }
 </style>
 </head>
 <body>
 
-<!-- LOGIN -->
 <div id="login-screen">
   <div class="login-card">
-    <div class="login-logo">מ</div>
-    <h1 class="login-title" id="login-title">Ma'aser Tracker</h1>
-    <p class="login-sub" id="login-sub">Track your ma'aser with clarity and confidence</p>
+    <div class="login-wordmark">Ma'aser Tracker</div>
+    <div class="login-icon">$</div>
+    <h1 class="login-title" id="login-title">Welcome back</h1>
+    <p class="login-sub" id="login-sub">Sign in to manage your ma'aser obligations</p>
     <button class="btn-google" onclick="signIn()">
-      <svg viewBox="0 0 24 24" fill="none">
-        <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
-        <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
-        <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"/>
-        <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
-      </svg>
+      <svg viewBox="0 0 24 24"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
       <span id="login-btn-text">Sign in with Google</span>
     </button>
   </div>
 </div>
 
-<!-- APP -->
 <div id="app">
-  <div class="app-header">
-    <h1 id="app-title">Ma'aser</h1>
-    <div class="header-actions">
-      <button class="lang-btn" onclick="toggleLang()" id="lang-btn">עב</button>
+  <header class="app-header">
+    <div class="header-left">
+      <div class="header-logo">$</div>
+      <span class="header-name" id="app-title">Ma'aser</span>
+    </div>
+    <div class="header-right">
+      <button class="lang-flag" onclick="toggleLang()" id="lang-btn" title="Language">🇮🇱</button>
       <div class="avatar" id="user-avatar" onclick="signOut()">M</div>
     </div>
+  </header>
+
+  <div class="page active" id="page-dashboard">
+    <div class="year-bar">
+      <button class="year-nav" onclick="changeYear(-1)">‹</button>
+      <span class="year-label" id="year-display">2026</span>
+      <button class="year-nav" onclick="changeYear(1)">›</button>
+    </div>
+    <div class="balance-section">
+      <div class="balance-card">
+        <div class="balance-card-label" id="lbl-overview">Overview</div>
+        <div class="bal-row"><span class="bal-row-label" id="lbl-income">Total Income</span><span class="bal-row-val" id="bal-income">$0.00</span></div>
+        <div class="bal-row"><span class="bal-row-label" id="lbl-obligation">Ma'aser (10%)</span><span class="bal-row-val" id="bal-obligation">$0.00</span></div>
+        <div class="bal-row"><span class="bal-row-label" id="lbl-donated">Total Donated</span><span class="bal-row-val" id="bal-donated">$0.00</span></div>
+        <div class="due-banner">
+          <span class="due-label" id="lbl-due">Balance Due</span>
+          <span class="due-amount" id="bal-due">$0.00</span>
+        </div>
+      </div>
+    </div>
+    <div class="section">
+      <div class="section-header"><span class="section-title" id="lbl-recent">Recent</span></div>
+      <div class="card-list" id="recent-list"><div class="empty-state" id="empty-recent-msg">No transactions yet</div></div>
+    </div>
   </div>
 
-  <!-- BOTTOM NAV -->
-  <nav class="bottom-nav">
-    <button class="nav-item active" onclick="showPage('dashboard')" id="nav-dashboard">
-      <span class="nav-icon">⚖️</span>
-      <span id="nav-label-dashboard">Balance</span>
-    </button>
-    <button class="nav-item" onclick="showPage('income')" id="nav-income">
-      <span class="nav-icon">💰</span>
-      <span id="nav-label-income">Income</span>
-    </button>
-    <button class="nav-item" onclick="showPage('donations')" id="nav-donations">
-      <span class="nav-icon">🤲</span>
-      <span id="nav-label-donations">Donations</span>
-    </button>
-    <button class="nav-item" onclick="showPage('schedules')" id="nav-schedules">
-      <span class="nav-icon">🔄</span>
-      <span id="nav-label-schedules">Schedules</span>
-    </button>
-  </nav>
-
-  <!-- DASHBOARD PAGE -->
-  <div class="page active" id="page-dashboard">
-    <div class="year-selector">
-      <button class="year-btn" onclick="changeYear(-1)">‹</button>
-      <span class="year-display" id="year-display">2026</span>
-      <button class="year-btn" onclick="changeYear(1)">›</button>
-    </div>
-    <div class="balance-card">
-      <div class="balance-rows">
-        <div class="balance-row">
-          <span class="balance-row-label" id="lbl-income">Income</span>
-          <span class="balance-row-amount" id="bal-income">$0.00</span>
-        </div>
-        <div class="balance-row">
-          <span class="balance-row-label" id="lbl-maaser-obligation">Ma'aser (10%)</span>
-          <span class="balance-row-amount" id="bal-obligation">$0.00</span>
-        </div>
-        <div class="balance-row">
-          <span class="balance-row-label" id="lbl-donated">Donated</span>
-          <span class="balance-row-amount" id="bal-donated">$0.00</span>
-        </div>
-      </div>
-      <div class="due-row" style="margin-top:16px;">
-        <span class="due-label" id="lbl-due">Ma'aser Due</span>
-        <span class="due-amount" id="bal-due">$0.00</span>
-      </div>
-    </div>
-
+  <div class="page" id="page-income">
     <div class="section">
       <div class="section-header">
-        <span class="section-title" id="lbl-recent">Recent Activity</span>
-      </div>
-      <div class="tx-list" id="recent-list">
-        <div class="empty-state" id="lbl-empty-recent">No transactions yet</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- INCOME PAGE -->
-  <div class="page" id="page-income">
-    <div class="section" style="margin-top:20px;">
-      <div class="section-header">
         <span class="section-title" id="lbl-income-title">Income</span>
-        <button class="btn-add" onclick="openModal('income')">+ <span id="lbl-add">Add</span></button>
       </div>
-      <div class="tx-list" id="income-list">
-        <div class="empty-state" id="lbl-empty-income">No income entries yet</div>
-      </div>
+      <div class="card-list" id="income-list"><div class="empty-state" id="empty-income-msg">No income entries yet</div></div>
     </div>
   </div>
 
-  <!-- DONATIONS PAGE -->
   <div class="page" id="page-donations">
-    <div class="section" style="margin-top:20px;">
+    <div class="section">
       <div class="section-header">
         <span class="section-title" id="lbl-donations-title">Donations</span>
-        <button class="btn-add" onclick="openModal('donation')">+ <span id="lbl-add2">Add</span></button>
       </div>
-      <div class="tx-list" id="donation-list">
-        <div class="empty-state" id="lbl-empty-donations">No donations yet</div>
-      </div>
+      <div class="card-list" id="donation-list"><div class="empty-state" id="empty-donation-msg">No donations yet</div></div>
     </div>
   </div>
 
-  <!-- SCHEDULES PAGE -->
   <div class="page" id="page-schedules">
-    <div class="section" style="margin-top:20px;">
+    <div class="section">
       <div class="section-header">
-        <span class="section-title" id="lbl-schedules-title">Schedules</span>
-        <button class="btn-add" onclick="openModal('schedule')">+ <span id="lbl-add3">Add</span></button>
+        <span class="section-title" id="lbl-schedules-title">Recurring</span>
       </div>
-      <div class="tx-list" id="schedule-list">
-        <div class="empty-state" id="lbl-empty-schedules">No recurring donations yet</div>
-      </div>
+      <div class="card-list" id="schedule-list"><div class="empty-state" id="empty-schedule-msg">No recurring entries yet</div></div>
     </div>
   </div>
+
+  <button class="fab" onclick="openChoice()" title="Add">+</button>
+
+  <nav class="bottom-nav">
+    <button class="nav-btn active" onclick="showPage('dashboard')" id="nav-dashboard">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+      <span id="nav-lbl-dashboard">Overview</span>
+    </button>
+    <button class="nav-btn" onclick="showPage('income')" id="nav-income">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+      <span id="nav-lbl-income">Income</span>
+    </button>
+    <button class="nav-btn" onclick="showPage('donations')" id="nav-donations">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+      <span id="nav-lbl-donations">Donations</span>
+    </button>
+    <button class="nav-btn" onclick="showPage('schedules')" id="nav-schedules">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 1 1-9-9c2.5 0 4.78.95 6.5 2.5L21 8M21 3v5h-5"/></svg>
+      <span id="nav-lbl-schedules">Recurring</span>
+    </button>
+  </nav>
 </div>
 
-<!-- MODALS -->
-<div class="modal-overlay" id="modal-income">
+<!-- CHOICE MODAL -->
+<div class="overlay" id="modal-choice">
   <div class="modal">
-    <h2 class="modal-title" id="modal-income-title">Add Income</h2>
-    <div class="form-group">
-      <label class="form-label" id="lbl-description">Description</label>
-      <input class="form-input" id="income-desc" placeholder="e.g. Salary, Bonus..." />
+    <div class="modal-handle"></div>
+    <div class="modal-title" id="modal-choice-title">What to add?</div>
+    <div class="choice-list">
+      <button class="choice-btn" onclick="closeModal('choice'); openModal('income');">
+        <div class="choice-icon income">💰</div>
+        <div class="choice-text">
+          <div class="choice-title" id="lbl-choice-income">Income</div>
+          <div class="choice-sub" id="lbl-choice-income-sub">Salary, bonus, freelance...</div>
+        </div>
+      </button>
+      <button class="choice-btn" onclick="closeModal('choice'); openModal('donation');">
+        <div class="choice-icon donation">🤲</div>
+        <div class="choice-text">
+          <div class="choice-title" id="lbl-choice-donation">Donation</div>
+          <div class="choice-sub" id="lbl-choice-donation-sub">Tzedakah, shul, charity...</div>
+        </div>
+      </button>
+      <button class="choice-btn" onclick="closeModal('choice'); openModal('schedule');">
+        <div class="choice-icon recurring">⟳</div>
+        <div class="choice-text">
+          <div class="choice-title" id="lbl-choice-recurring">Recurring</div>
+          <div class="choice-sub" id="lbl-choice-recurring-sub">Auto entry every month</div>
+        </div>
+      </button>
     </div>
-    <div class="form-row">
-      <div class="form-group">
-        <label class="form-label" id="lbl-amount">Amount ($)</label>
-        <input class="form-input" id="income-amount" type="number" placeholder="0.00" />
-      </div>
-      <div class="form-group">
-        <label class="form-label" id="lbl-date">Date</label>
-        <input class="form-input" id="income-date" type="date" />
-      </div>
-    </div>
-    <button class="btn-submit" onclick="saveIncome()" id="btn-save-income">Save</button>
-    <button class="btn-cancel" onclick="closeModal('income')" id="btn-cancel-income">Cancel</button>
   </div>
 </div>
 
-<div class="modal-overlay" id="modal-donation">
+<!-- INCOME MODAL -->
+<div class="overlay" id="modal-income">
   <div class="modal">
-    <h2 class="modal-title" id="modal-donation-title">Add Donation</h2>
-    <div class="form-group">
-      <label class="form-label" id="lbl-desc2">Description</label>
-      <input class="form-input" id="donation-desc" placeholder="e.g. Shul, Tzedakah..." />
+    <div class="modal-handle"></div>
+    <div class="modal-title" id="modal-income-title">Add Income</div>
+    <div class="field"><label id="lbl-f-desc">Description</label><input id="f-income-desc" placeholder="e.g. Spotlight salary..." /></div>
+    <div class="field-row">
+      <div class="field"><label id="lbl-f-amount">Amount ($)</label><input id="f-income-amount" type="number" placeholder="0.00" /></div>
+      <div class="field"><label id="lbl-f-date">Date</label><input id="f-income-date" type="date" /></div>
     </div>
-    <div class="form-row">
-      <div class="form-group">
-        <label class="form-label" id="lbl-amount2">Amount ($)</label>
-        <input class="form-input" id="donation-amount" type="number" placeholder="0.00" />
-      </div>
-      <div class="form-group">
-        <label class="form-label" id="lbl-date2">Date</label>
-        <input class="form-input" id="donation-date" type="date" />
-      </div>
+    <div class="field">
+      <label id="lbl-f-paytype">Payment Type</label>
+      <select id="f-income-paytype" onchange="onPayTypeChange()">
+        <option value="transfer" id="opt-transfer">Bank Transfer</option>
+        <option value="check" id="opt-check">Check</option>
+        <option value="cash" id="opt-cash">Cash</option>
+        <option value="other" id="opt-other">Other</option>
+      </select>
     </div>
-    <button class="btn-submit" onclick="saveDonation()" id="btn-save-donation">Save</button>
-    <button class="btn-cancel" onclick="closeModal('donation')" id="btn-cancel-donation">Cancel</button>
+    <div class="field" id="check-number-field">
+      <label id="lbl-f-checknum">Check Number</label>
+      <input id="f-income-checknum" placeholder="e.g. 5182" />
+    </div>
+    <button class="btn-primary" onclick="saveIncome()" id="btn-save-income">Save</button>
+    <button class="btn-danger" onclick="deleteFromModal('income')" id="btn-delete-income" style="display:none">Delete</button>
+    <button class="btn-secondary" onclick="closeModal('income')" id="btn-cancel-income">Cancel</button>
   </div>
 </div>
 
-<div class="modal-overlay" id="modal-schedule">
+<!-- DONATION MODAL -->
+<div class="overlay" id="modal-donation">
   <div class="modal">
-    <h2 class="modal-title" id="modal-schedule-title">Add Recurring Donation</h2>
-    <div class="form-group">
-      <label class="form-label" id="lbl-sched-name">Name</label>
-      <input class="form-input" id="schedule-name" placeholder="e.g. Shul membership..." />
+    <div class="modal-handle"></div>
+    <div class="modal-title" id="modal-donation-title">Add Donation</div>
+    <div class="field"><label id="lbl-f-desc2">Description</label><input id="f-donation-desc" placeholder="e.g. Shul, Tzedakah..." /></div>
+    <div class="field-row">
+      <div class="field"><label id="lbl-f-amount2">Amount ($)</label><input id="f-donation-amount" type="number" placeholder="0.00" /></div>
+      <div class="field"><label id="lbl-f-date2">Date</label><input id="f-donation-date" type="date" /></div>
     </div>
-    <div class="form-row">
-      <div class="form-group">
-        <label class="form-label" id="lbl-sched-amount">Amount ($)</label>
-        <input class="form-input" id="schedule-amount" type="number" placeholder="0.00" />
-      </div>
-      <div class="form-group">
-        <label class="form-label" id="lbl-sched-freq">Frequency</label>
-        <select class="form-select" id="schedule-freq">
-          <option value="monthly">Monthly</option>
-          <option value="weekly">Weekly</option>
-          <option value="yearly">Yearly</option>
-        </select>
-      </div>
-    </div>
-    <button class="btn-submit" onclick="saveSchedule()" id="btn-save-schedule">Save</button>
-    <button class="btn-cancel" onclick="closeModal('schedule')" id="btn-cancel-schedule">Cancel</button>
+    <button class="btn-primary" onclick="saveDonation()" id="btn-save-donation">Save</button>
+    <button class="btn-danger" onclick="deleteFromModal('donation')" id="btn-delete-donation" style="display:none">Delete</button>
+    <button class="btn-secondary" onclick="closeModal('donation')" id="btn-cancel-donation">Cancel</button>
   </div>
 </div>
 
-<!-- Firebase -->
+<!-- SCHEDULE MODAL -->
+<div class="overlay" id="modal-schedule">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title" id="modal-schedule-title">Add Recurring Entry</div>
+    <div class="type-toggle">
+      <button id="recur-type-income" onclick="setRecurType('income')" class="active">💰 <span id="lbl-recur-income">Income</span></button>
+      <button id="recur-type-donation" onclick="setRecurType('donation')">🤲 <span id="lbl-recur-donation">Donation</span></button>
+    </div>
+    <div class="field"><label id="lbl-f-sname">Name</label><input id="f-schedule-name" placeholder="e.g. Salary, Shul membership..." /></div>
+    <div class="field-row">
+      <div class="field"><label id="lbl-f-samount">Amount ($)</label><input id="f-schedule-amount" type="number" placeholder="0.00" /></div>
+      <div class="field"><label id="lbl-f-day">Day of Month</label><input id="f-schedule-day" type="number" min="1" max="28" placeholder="1-28" /></div>
+    </div>
+    <div class="field" id="recur-paytype-field">
+      <label id="lbl-f-recur-paytype">Payment Type</label>
+      <select id="f-recur-paytype">
+        <option value="transfer" id="opt-r-transfer">Bank Transfer</option>
+        <option value="check" id="opt-r-check">Check</option>
+        <option value="cash" id="opt-r-cash">Cash</option>
+        <option value="other" id="opt-r-other">Other</option>
+      </select>
+    </div>
+    <button class="btn-primary" onclick="saveSchedule()" id="btn-save-schedule">Save</button>
+    <button class="btn-danger" onclick="deleteFromModal('schedule')" id="btn-delete-schedule" style="display:none">Delete</button>
+    <button class="btn-secondary" onclick="closeModal('schedule')" id="btn-cancel-schedule">Cancel</button>
+  </div>
+</div>
+
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getAuth, GoogleAuthProvider, signInWithPopup, signOut as fbSignOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, query, where, orderBy } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { getAuth, GoogleAuthProvider, signInWithRedirect, signInWithPopup, getRedirectResult, signOut as fbSignOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, updateDoc, orderBy, query } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-// ===== YOUR FIREBASE CONFIG =====
 const firebaseConfig = {
   apiKey: "AIzaSyDOdbVrMphTHqSnTYB1CipuURAbmj_S5uk",
   authDomain: "maaser-2f0fb.firebaseapp.com",
@@ -612,400 +368,342 @@ const auth = getAuth(app);
 const db = getFirestore(app);
 const provider = new GoogleAuthProvider();
 
-let currentUser = null;
-let currentYear = new Date().getFullYear();
-let lang = 'en';
+let currentUser = null, currentYear = new Date().getFullYear(), lang = 'en', recurType = 'income';
+let editingId = null, editingType = null;
 
-// TRANSLATIONS
-const t = {
-  en: {
-    appTitle: "Ma'aser",
-    loginTitle: "Ma'aser Tracker",
-    loginSub: "Track your ma'aser with clarity and confidence",
-    loginBtn: "Sign in with Google",
-    balance: "Balance",
-    income: "Income",
-    maaser10: "Ma'aser (10%)",
-    donated: "Donated",
-    due: "Ma'aser Due",
-    recent: "Recent Activity",
-    incomeTitle: "Income",
-    donationsTitle: "Donations",
-    schedulesTitle: "Schedules",
-    add: "Add",
-    save: "Save",
-    cancel: "Cancel",
-    description: "Description",
-    amount: "Amount ($)",
-    date: "Date",
-    name: "Name",
-    frequency: "Frequency",
-    monthly: "Monthly",
-    weekly: "Weekly",
-    yearly: "Yearly",
-    addIncome: "Add Income",
-    addDonation: "Add Donation",
-    addSchedule: "Add Recurring Donation",
-    emptyRecent: "No transactions yet",
-    emptyIncome: "No income entries yet",
-    emptyDonations: "No donations yet",
-    emptySchedules: "No recurring donations yet",
-    navBalance: "Balance",
-    navIncome: "Income",
-    navDonations: "Donations",
-    navSchedules: "Schedules",
-    incomePlaceholder: "e.g. Salary, Bonus...",
-    donationPlaceholder: "e.g. Shul, Tzedakah...",
-    schedulePlaceholder: "e.g. Shul membership...",
-  },
-  he: {
-    appTitle: "מעשרות",
-    loginTitle: "מעקב מעשרות",
-    loginSub: "עקוב אחרי המעשרות שלך בקלות ובבהירות",
-    loginBtn: "התחבר עם גוגל",
-    balance: "יתרה",
-    income: "הכנסות",
-    maaser10: "מעשר (10%)",
-    donated: "תרמת",
-    due: "מעשר לתשלום",
-    recent: "פעילות אחרונה",
-    incomeTitle: "הכנסות",
-    donationsTitle: "תרומות",
-    schedulesTitle: "קבועות",
-    add: "הוסף",
-    save: "שמור",
-    cancel: "ביטול",
-    description: "תיאור",
-    amount: "סכום ($)",
-    date: "תאריך",
-    name: "שם",
-    frequency: "תדירות",
-    monthly: "חודשי",
-    weekly: "שבועי",
-    yearly: "שנתי",
-    addIncome: "הוסף הכנסה",
-    addDonation: "הוסף תרומה",
-    addSchedule: "הוסף תרומה קבועה",
-    emptyRecent: "אין עדיין פעולות",
-    emptyIncome: "אין עדיין הכנסות",
-    emptyDonations: "אין עדיין תרומות",
-    emptySchedules: "אין עדיין תרומות קבועות",
-    navBalance: "יתרה",
-    navIncome: "הכנסות",
-    navDonations: "תרומות",
-    navSchedules: "קבועות",
-    incomePlaceholder: "למשל: משכורת, בונוס...",
-    donationPlaceholder: "למשל: שיבל, צדקה...",
-    schedulePlaceholder: "למשל: חברות בשיבל...",
-  }
+getRedirectResult(auth).catch(() => {});
+
+const T = {
+  en: { appTitle:"Ma'aser", loginTitle:"Welcome back", loginSub:"Sign in to manage your ma'aser obligations", loginBtn:"Sign in with Google", overview:"Overview", totalIncome:"Total Income", obligation:"Ma'aser (10%)", totalDonated:"Total Donated", due:"Balance Due", recent:"Recent", incomeTitle:"Income", donationsTitle:"Donations", schedulesTitle:"Recurring", save:"Save", cancel:"Cancel", delete:"Delete", desc:"Description", amount:"Amount ($)", date:"Date", paytype:"Payment Type", checknum:"Check Number", name:"Name", dayOfMonth:"Day of Month", transfer:"Bank Transfer", check:"Check", cash:"Cash", other:"Other", incomeOpt:"Income", donationOpt:"Donation", addIncome:"Add Income", addDonation:"Add Donation", addSchedule:"Add Recurring Entry", editIncome:"Edit Income", editDonation:"Edit Donation", editSchedule:"Edit Recurring Entry", emptyRecent:"No transactions yet", emptyIncome:"No income entries yet", emptyDonation:"No donations yet", emptySchedule:"No recurring entries yet", navOverview:"Overview", navIncome:"Income", navDonations:"Donations", navRecurring:"Recurring", signout:"Sign out?", fillAll:"Please fill all fields", deleteConfirm:"Delete this entry?", auto:"Auto", everyMonth:"Every month on day", flag:"🇮🇱", choiceTitle:"What to add?", choiceIncome:"Income", choiceIncomeSub:"Salary, bonus, freelance...", choiceDonation:"Donation", choiceDonationSub:"Tzedakah, shul, charity...", choiceRecurring:"Recurring", choiceRecurringSub:"Auto entry every month" },
+  he: { appTitle:"מעשרות", loginTitle:"ברוך הבא", loginSub:"התחבר כדי לנהל את המעשרות שלך", loginBtn:"התחבר עם גוגל", overview:"סיכום", totalIncome:'סה"כ הכנסות', obligation:"מעשר (10%)", totalDonated:'סה"כ תרומות', due:"יתרה לתשלום", recent:"אחרון", incomeTitle:"הכנסות", donationsTitle:"תרומות", schedulesTitle:"קבועות", save:"שמור", cancel:"ביטול", delete:"מחיקה", desc:"תיאור", amount:"סכום ($)", date:"תאריך", paytype:"אמצעי תשלום", checknum:"מספר צ'ק", name:"שם", dayOfMonth:"יום בחודש", transfer:"העברה בנקאית", check:"צ'ק", cash:"מזומן", other:"אחר", incomeOpt:"הכנסה", donationOpt:"תרומה", addIncome:"הוספת הכנסה", addDonation:"הוספת תרומה", addSchedule:"הוספת עסקה קבועה", editIncome:"עריכת הכנסה", editDonation:"עריכת תרומה", editSchedule:"עריכת עסקה קבועה", emptyRecent:"אין עדיין פעולות", emptyIncome:"אין עדיין הכנסות", emptyDonation:"אין עדיין תרומות", emptySchedule:"אין עדיין עסקאות קבועות", navOverview:"סיכום", navIncome:"הכנסות", navDonations:"תרומות", navRecurring:"קבועות", signout:"להתנתק?", fillAll:"נא למלא את כל השדות", deleteConfirm:"למחוק את הרשומה?", auto:"אוטומטי", everyMonth:"כל חודש ב-", flag:"🇺🇸", choiceTitle:"מה להוסיף?", choiceIncome:"הכנסה", choiceIncomeSub:"משכורת, בונוס, פרילנס...", choiceDonation:"תרומה", choiceDonationSub:"צדקה, שיבל, חסד...", choiceRecurring:"קבועה", choiceRecurringSub:"כניסה אוטומטית כל חודש" }
 };
 
-function tr(key) { return t[lang][key] || key; }
+function tr(k) { return T[lang][k] || k; }
 
 function applyLang() {
   document.body.classList.toggle('rtl', lang === 'he');
-  document.getElementById('app-title').textContent = tr('appTitle');
-  document.getElementById('login-title').textContent = tr('loginTitle');
-  document.getElementById('login-sub').textContent = tr('loginSub');
-  document.getElementById('login-btn-text').textContent = tr('loginBtn');
-  document.getElementById('lang-btn').textContent = lang === 'en' ? 'עב' : 'EN';
-  document.getElementById('lbl-income').textContent = tr('income');
-  document.getElementById('lbl-maaser-obligation').textContent = tr('maaser10');
-  document.getElementById('lbl-donated').textContent = tr('donated');
-  document.getElementById('lbl-due').textContent = tr('due');
-  document.getElementById('lbl-recent').textContent = tr('recent');
-  document.getElementById('lbl-income-title').textContent = tr('incomeTitle');
-  document.getElementById('lbl-donations-title').textContent = tr('donationsTitle');
-  document.getElementById('lbl-schedules-title').textContent = tr('schedulesTitle');
-  document.getElementById('lbl-add').textContent = tr('add');
-  document.getElementById('lbl-add2').textContent = tr('add');
-  document.getElementById('lbl-add3').textContent = tr('add');
-  document.getElementById('nav-label-dashboard').textContent = tr('navBalance');
-  document.getElementById('nav-label-income').textContent = tr('navIncome');
-  document.getElementById('nav-label-donations').textContent = tr('navDonations');
-  document.getElementById('nav-label-schedules').textContent = tr('navSchedules');
-  document.getElementById('modal-income-title').textContent = tr('addIncome');
-  document.getElementById('modal-donation-title').textContent = tr('addDonation');
-  document.getElementById('modal-schedule-title').textContent = tr('addSchedule');
-  document.getElementById('lbl-description').textContent = tr('description');
-  document.getElementById('lbl-amount').textContent = tr('amount');
-  document.getElementById('lbl-date').textContent = tr('date');
-  document.getElementById('lbl-desc2').textContent = tr('description');
-  document.getElementById('lbl-amount2').textContent = tr('amount');
-  document.getElementById('lbl-date2').textContent = tr('date');
-  document.getElementById('lbl-sched-name').textContent = tr('name');
-  document.getElementById('lbl-sched-amount').textContent = tr('amount');
-  document.getElementById('lbl-sched-freq').textContent = tr('frequency');
-  document.getElementById('btn-save-income').textContent = tr('save');
-  document.getElementById('btn-cancel-income').textContent = tr('cancel');
-  document.getElementById('btn-save-donation').textContent = tr('save');
-  document.getElementById('btn-cancel-donation').textContent = tr('cancel');
-  document.getElementById('btn-save-schedule').textContent = tr('save');
-  document.getElementById('btn-cancel-schedule').textContent = tr('cancel');
-  document.getElementById('income-desc').placeholder = tr('incomePlaceholder');
-  document.getElementById('donation-desc').placeholder = tr('donationPlaceholder');
-  document.getElementById('schedule-name').placeholder = tr('schedulePlaceholder');
-  // Update select options
-  const freqSel = document.getElementById('schedule-freq');
-  freqSel.options[0].text = tr('monthly');
-  freqSel.options[1].text = tr('weekly');
-  freqSel.options[2].text = tr('yearly');
+  const ids = { 'app-title':'appTitle','login-title':'loginTitle','login-sub':'loginSub','login-btn-text':'loginBtn','lbl-overview':'overview','lbl-income':'totalIncome','lbl-obligation':'obligation','lbl-donated':'totalDonated','lbl-due':'due','lbl-recent':'recent','lbl-income-title':'incomeTitle','lbl-donations-title':'donationsTitle','lbl-schedules-title':'schedulesTitle','nav-lbl-dashboard':'navOverview','nav-lbl-income':'navIncome','nav-lbl-donations':'navDonations','nav-lbl-schedules':'navRecurring','lbl-f-desc':'desc','lbl-f-amount':'amount','lbl-f-date':'date','lbl-f-paytype':'paytype','lbl-f-checknum':'checknum','lbl-f-desc2':'desc','lbl-f-amount2':'amount','lbl-f-date2':'date','lbl-f-sname':'name','lbl-f-samount':'amount','lbl-f-day':'dayOfMonth','lbl-f-recur-paytype':'paytype','btn-save-income':'save','btn-cancel-income':'cancel','btn-delete-income':'delete','btn-save-donation':'save','btn-cancel-donation':'cancel','btn-delete-donation':'delete','btn-save-schedule':'save','btn-cancel-schedule':'cancel','btn-delete-schedule':'delete','opt-transfer':'transfer','opt-check':'check','opt-cash':'cash','opt-other':'other','opt-r-transfer':'transfer','opt-r-check':'check','opt-r-cash':'cash','opt-r-other':'other','lbl-recur-income':'incomeOpt','lbl-recur-donation':'donationOpt','modal-choice-title':'choiceTitle','lbl-choice-income':'choiceIncome','lbl-choice-income-sub':'choiceIncomeSub','lbl-choice-donation':'choiceDonation','lbl-choice-donation-sub':'choiceDonationSub','lbl-choice-recurring':'choiceRecurring','lbl-choice-recurring-sub':'choiceRecurringSub' };
+  Object.entries(ids).forEach(([id, key]) => { const el = document.getElementById(id); if (el) el.textContent = tr(key); });
+  document.getElementById('lang-btn').textContent = tr('flag');
+  const empties = { 'empty-recent-msg':'emptyRecent','empty-income-msg':'emptyIncome','empty-donation-msg':'emptyDonation','empty-schedule-msg':'emptySchedule' };
+  Object.entries(empties).forEach(([id, key]) => { const el = document.getElementById(id); if (el) el.textContent = tr(key); });
   if (currentUser) loadAll();
 }
 
-window.toggleLang = function() {
-  lang = lang === 'en' ? 'he' : 'en';
-  applyLang();
-}
+window.toggleLang = () => { lang = lang === 'en' ? 'he' : 'en'; applyLang(); };
 
-window.signIn = async function() {
-  try { await signInWithPopup(auth, provider); }
-  catch(e) { alert('Sign in failed: ' + e.message); }
-}
+window.signIn = async () => {
+  const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+  try {
+    if (isMobile) { await signInWithRedirect(auth, provider); }
+    else { await signInWithPopup(auth, provider); }
+  } catch(e) { alert('Sign in failed: ' + e.message); }
+};
 
-window.signOut = async function() {
-  if (confirm(lang === 'en' ? 'Sign out?' : 'להתנתק?')) {
-    await fbSignOut(auth);
-  }
-}
+window.signOut = async () => { if (confirm(tr('signout'))) await fbSignOut(auth); };
 
-onAuthStateChanged(auth, user => {
+onAuthStateChanged(auth, async user => {
   currentUser = user;
   if (user) {
     document.getElementById('login-screen').style.display = 'none';
     document.getElementById('app').style.display = 'block';
-    const initials = user.displayName ? user.displayName.charAt(0).toUpperCase() : 'M';
-    document.getElementById('user-avatar').textContent = initials;
+    document.getElementById('user-avatar').textContent = (user.displayName || 'M').charAt(0).toUpperCase();
     document.getElementById('year-display').textContent = currentYear;
-    loadAll();
+    await processSchedules();
+    await loadAll();
   } else {
     document.getElementById('login-screen').style.display = 'flex';
     document.getElementById('app').style.display = 'none';
   }
 });
 
-window.changeYear = function(delta) {
-  currentYear += delta;
-  document.getElementById('year-display').textContent = currentYear;
-  loadAll();
-}
+window.changeYear = d => { currentYear += d; document.getElementById('year-display').textContent = currentYear; loadAll(); };
+
+let incomeData = [], donationData = [], scheduleData = [];
 
 async function loadAll() {
   await Promise.all([loadIncome(), loadDonations(), loadSchedules()]);
-  updateBalance();
-  loadRecent();
+  updateBalance(); renderRecent();
 }
 
-let incomeData = [];
-let donationData = [];
-let scheduleData = [];
-
 async function loadIncome() {
+  const snap = await getDocs(query(collection(db,'users',currentUser.uid,'income'), orderBy('date','desc')));
   incomeData = [];
-  const q = query(
-    collection(db, 'users', currentUser.uid, 'income'),
-    orderBy('date', 'desc')
-  );
-  const snap = await getDocs(q);
-  snap.forEach(d => incomeData.push({ id: d.id, ...d.data() }));
-  incomeData = incomeData.filter(i => new Date(i.date).getFullYear() === currentYear);
-  renderList('income-list', incomeData, 'income', 'lbl-empty-income');
+  snap.forEach(d => incomeData.push({id:d.id,...d.data()}));
+  incomeData = incomeData.filter(i => new Date(i.date+'T00:00:00').getFullYear() === currentYear);
+  renderTxList('income-list', incomeData, 'income', 'emptyIncome');
 }
 
 async function loadDonations() {
+  const snap = await getDocs(query(collection(db,'users',currentUser.uid,'donations'), orderBy('date','desc')));
   donationData = [];
-  const q = query(
-    collection(db, 'users', currentUser.uid, 'donations'),
-    orderBy('date', 'desc')
-  );
-  const snap = await getDocs(q);
-  snap.forEach(d => donationData.push({ id: d.id, ...d.data() }));
-  donationData = donationData.filter(i => new Date(i.date).getFullYear() === currentYear);
-  renderList('donation-list', donationData, 'donation', 'lbl-empty-donations');
+  snap.forEach(d => donationData.push({id:d.id,...d.data()}));
+  donationData = donationData.filter(i => new Date(i.date+'T00:00:00').getFullYear() === currentYear);
+  renderTxList('donation-list', donationData, 'donation', 'emptyDonation');
 }
 
 async function loadSchedules() {
+  const snap = await getDocs(collection(db,'users',currentUser.uid,'schedules'));
   scheduleData = [];
-  const snap = await getDocs(collection(db, 'users', currentUser.uid, 'schedules'));
-  snap.forEach(d => scheduleData.push({ id: d.id, ...d.data() }));
+  snap.forEach(d => scheduleData.push({id:d.id,...d.data()}));
   renderSchedules();
 }
 
-function renderList(containerId, data, type, emptyId) {
-  const container = document.getElementById(containerId);
-  if (!data.length) {
-    container.innerHTML = `<div class="empty-state">${tr(emptyId.replace('lbl-','').replace(/-/g,'').replace('empty','empty').replace('income','emptyIncome').replace('donations','emptyDonations').replace('schedules','emptySchedules') || 'emptyIncome')}</div>`;
-    // simpler:
-    const emptyKeys = { 'lbl-empty-income': 'emptyIncome', 'lbl-empty-donations': 'emptyDonations', 'lbl-empty-schedules': 'emptySchedules', 'lbl-empty-recent': 'emptyRecent' };
-    container.innerHTML = `<div class="empty-state">${tr(emptyKeys[emptyId] || 'emptyIncome')}</div>`;
-    return;
+async function processSchedules() {
+  const snap = await getDocs(collection(db,'users',currentUser.uid,'schedules'));
+  const today = new Date();
+  today.setHours(0,0,0,0);
+  for (const d of snap.docs) {
+    const sched = { id: d.id, ...d.data() };
+    let lastProcessed = sched.lastProcessed ? new Date(sched.lastProcessed+'T00:00:00') : null;
+    const startDate = sched.startDate ? new Date(sched.startDate+'T00:00:00') : new Date();
+    startDate.setHours(0,0,0,0);
+    let cursor = lastProcessed ? new Date(lastProcessed.getFullYear(), lastProcessed.getMonth() + 1, sched.day) : new Date(startDate.getFullYear(), startDate.getMonth(), sched.day);
+    if (!lastProcessed && cursor < startDate) cursor = new Date(startDate.getFullYear(), startDate.getMonth() + 1, sched.day);
+    const dueDates = [];
+    while (cursor <= today) { dueDates.push(new Date(cursor)); cursor = new Date(cursor.getFullYear(), cursor.getMonth() + 1, sched.day); }
+    for (const dt of dueDates) {
+      const dateStr = dt.toISOString().split('T')[0];
+      const targetCol = sched.type === 'income' ? 'income' : 'donations';
+      const data = { desc: sched.name, amount: sched.amount, date: dateStr, fromSchedule: sched.id, auto: true };
+      if (sched.type === 'income' && sched.paytype) data.paytype = sched.paytype;
+      await addDoc(collection(db,'users',currentUser.uid,targetCol), data);
+    }
+    if (dueDates.length > 0) {
+      const lastDate = dueDates[dueDates.length-1].toISOString().split('T')[0];
+      await updateDoc(doc(db,'users',currentUser.uid,'schedules',sched.id), { lastProcessed: lastDate });
+    }
   }
+}
+
+const fmt = n => '$' + parseFloat(n).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
+const fmtDate = d => new Date(d+'T00:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
+
+function renderTxList(containerId, data, type, emptyKey) {
+  const el = document.getElementById(containerId);
+  if (!data.length) { el.innerHTML = `<div class="empty-state">${tr(emptyKey)}</div>`; return; }
   const icon = type === 'income' ? '💰' : '🤲';
-  container.innerHTML = data.map(item => `
-    <div class="tx-item">
+  el.innerHTML = data.map(item => {
+    const badges = [];
+    if (item.paytype) badges.push(`<span class="tx-badge">${tr(item.paytype)}${item.checknum ? ' #'+item.checknum : ''}</span>`);
+    if (item.auto) badges.push(`<span class="tx-badge auto">⟳ ${tr('auto')}</span>`);
+    return `<div class="tx-card" onclick="editItem('${type}','${item.id}')">
       <div class="tx-left">
-        <div class="tx-icon ${type}">${icon}</div>
-        <div class="tx-info">
-          <div class="tx-desc">${item.desc}</div>
-          <div class="tx-date">${formatDate(item.date)}</div>
-        </div>
+        <div class="tx-dot ${type}">${icon}</div>
+        <div class="tx-info"><div class="tx-desc">${item.desc}</div><div class="tx-meta">${fmtDate(item.date)} ${badges.join(' ')}</div></div>
       </div>
       <div class="tx-right">
-        <span class="tx-amount ${type}">$${parseFloat(item.amount).toLocaleString('en-US', {minimumFractionDigits:2, maximumFractionDigits:2})}</span>
-        <button class="tx-delete" onclick="deleteItem('${type}', '${item.id}')">✕</button>
+        <span class="tx-amount ${type}">${fmt(item.amount)}</span>
       </div>
-    </div>
-  `).join('');
+    </div>`;
+  }).join('');
 }
 
 function renderSchedules() {
-  const container = document.getElementById('schedule-list');
-  if (!scheduleData.length) {
-    container.innerHTML = `<div class="empty-state">${tr('emptySchedules')}</div>`;
-    return;
-  }
-  const freqLabels = { monthly: tr('monthly'), weekly: tr('weekly'), yearly: tr('yearly') };
-  container.innerHTML = scheduleData.map(item => `
-    <div class="schedule-item">
-      <div class="schedule-left">
-        <div class="schedule-icon">🔄</div>
-        <div>
-          <div class="schedule-name">${item.name}</div>
-          <div class="schedule-freq">${freqLabels[item.freq] || item.freq}</div>
-        </div>
-      </div>
-      <div class="schedule-right">
-        <span class="schedule-amount">$${parseFloat(item.amount).toLocaleString('en-US', {minimumFractionDigits:2, maximumFractionDigits:2})}</span>
-        <button class="tx-delete" onclick="deleteItem('schedule', '${item.id}')">✕</button>
-      </div>
+  const el = document.getElementById('schedule-list');
+  if (!scheduleData.length) { el.innerHTML = `<div class="empty-state">${tr('emptySchedule')}</div>`; return; }
+  el.innerHTML = scheduleData.map(item => {
+    const icon = item.type === 'income' ? '💰' : '🤲';
+    return `<div class="tx-card" onclick="editItem('schedule','${item.id}')">
+    <div class="tx-left">
+      <div class="tx-dot ${item.type}">${icon}</div>
+      <div class="tx-info"><div class="tx-desc">${item.name}</div><div class="tx-meta">${tr('everyMonth')} ${item.day} • ${tr(item.type === 'income' ? 'incomeOpt' : 'donationOpt')}</div></div>
     </div>
-  `).join('');
+    <div class="tx-right">
+      <span class="tx-amount ${item.type}">${fmt(item.amount)}</span>
+    </div>
+  </div>`;
+  }).join('');
 }
 
-function loadRecent() {
-  const all = [
-    ...incomeData.map(i => ({ ...i, type: 'income' })),
-    ...donationData.map(i => ({ ...i, type: 'donation' }))
-  ].sort((a, b) => new Date(b.date) - new Date(a.date)).slice(0, 10);
-  renderList('recent-list', all, null, 'lbl-empty-recent');
-  if (all.length) {
-    const container = document.getElementById('recent-list');
-    const icon_map = { income: '💰', donation: '🤲' };
-    container.innerHTML = all.map(item => `
-      <div class="tx-item">
-        <div class="tx-left">
-          <div class="tx-icon ${item.type}">${icon_map[item.type]}</div>
-          <div class="tx-info">
-            <div class="tx-desc">${item.desc || item.name}</div>
-            <div class="tx-date">${formatDate(item.date)}</div>
-          </div>
-        </div>
-        <div class="tx-right">
-          <span class="tx-amount ${item.type}">$${parseFloat(item.amount).toLocaleString('en-US', {minimumFractionDigits:2, maximumFractionDigits:2})}</span>
-        </div>
-      </div>
-    `).join('');
-  }
+function renderRecent() {
+  const all = [...incomeData.map(i=>({...i,type:'income'})),...donationData.map(i=>({...i,type:'donation'}))].sort((a,b)=>new Date(b.date)-new Date(a.date)).slice(0,8);
+  const el = document.getElementById('recent-list');
+  if (!all.length) { el.innerHTML = `<div class="empty-state">${tr('emptyRecent')}</div>`; return; }
+  const icons = {income:'💰',donation:'🤲'};
+  el.innerHTML = all.map(item => {
+    const badge = item.auto ? `<span class="tx-badge auto">⟳ ${tr('auto')}</span>` : '';
+    return `<div class="tx-card" onclick="editItem('${item.type}','${item.id}')">
+    <div class="tx-left"><div class="tx-dot ${item.type}">${icons[item.type]}</div><div class="tx-info"><div class="tx-desc">${item.desc}</div><div class="tx-meta">${fmtDate(item.date)} ${badge}</div></div></div>
+    <div class="tx-right"><span class="tx-amount ${item.type}">${fmt(item.amount)}</span></div>
+  </div>`;
+  }).join('');
 }
 
 function updateBalance() {
-  const totalIncome = incomeData.reduce((s, i) => s + parseFloat(i.amount), 0);
-  const totalDonated = donationData.reduce((s, i) => s + parseFloat(i.amount), 0);
-  const obligation = totalIncome * 0.10;
-  const due = obligation - totalDonated;
-
-  document.getElementById('bal-income').textContent = '$' + totalIncome.toLocaleString('en-US', {minimumFractionDigits:2, maximumFractionDigits:2});
-  document.getElementById('bal-obligation').textContent = '$' + obligation.toLocaleString('en-US', {minimumFractionDigits:2, maximumFractionDigits:2});
-  document.getElementById('bal-donated').textContent = '$' + totalDonated.toLocaleString('en-US', {minimumFractionDigits:2, maximumFractionDigits:2});
-
+  const income = incomeData.reduce((s,i)=>s+parseFloat(i.amount),0);
+  const donated = donationData.reduce((s,i)=>s+parseFloat(i.amount),0);
+  const obligation = income * 0.1;
+  const due = obligation - donated;
+  document.getElementById('bal-income').textContent = fmt(income);
+  document.getElementById('bal-obligation').textContent = fmt(obligation);
+  document.getElementById('bal-donated').textContent = fmt(donated);
   const dueEl = document.getElementById('bal-due');
-  dueEl.textContent = '$' + Math.abs(due).toLocaleString('en-US', {minimumFractionDigits:2, maximumFractionDigits:2});
-  dueEl.className = 'due-amount ' + (due > 0 ? 'due-positive' : 'due-zero');
-  if (due < 0) dueEl.textContent = '+$' + Math.abs(due).toLocaleString('en-US', {minimumFractionDigits:2, maximumFractionDigits:2});
+  dueEl.textContent = due < 0 ? '+'+fmt(Math.abs(due)) : fmt(due);
+  dueEl.className = 'due-amount ' + (due > 0 ? 'due-positive' : 'due-credit');
 }
 
-function formatDate(dateStr) {
-  const d = new Date(dateStr + 'T00:00:00');
-  return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
-}
+window.editItem = (type, id) => {
+  editingType = type; editingId = id;
+  if (type === 'income') {
+    const item = incomeData.find(i => i.id === id);
+    if (!item) return;
+    document.getElementById('modal-income-title').textContent = tr('editIncome');
+    document.getElementById('f-income-desc').value = item.desc || '';
+    document.getElementById('f-income-amount').value = item.amount || '';
+    document.getElementById('f-income-date').value = item.date || '';
+    document.getElementById('f-income-paytype').value = item.paytype || 'transfer';
+    document.getElementById('f-income-checknum').value = item.checknum || '';
+    onPayTypeChange();
+    document.getElementById('btn-delete-income').style.display = 'block';
+    document.getElementById('modal-income').classList.add('open');
+  } else if (type === 'donation') {
+    const item = donationData.find(i => i.id === id);
+    if (!item) return;
+    document.getElementById('modal-donation-title').textContent = tr('editDonation');
+    document.getElementById('f-donation-desc').value = item.desc || '';
+    document.getElementById('f-donation-amount').value = item.amount || '';
+    document.getElementById('f-donation-date').value = item.date || '';
+    document.getElementById('btn-delete-donation').style.display = 'block';
+    document.getElementById('modal-donation').classList.add('open');
+  } else if (type === 'schedule') {
+    const item = scheduleData.find(i => i.id === id);
+    if (!item) return;
+    recurType = item.type || 'income';
+    updateRecurUI();
+    document.getElementById('modal-schedule-title').textContent = tr('editSchedule');
+    document.getElementById('f-schedule-name').value = item.name || '';
+    document.getElementById('f-schedule-amount').value = item.amount || '';
+    document.getElementById('f-schedule-day').value = item.day || '';
+    document.getElementById('f-recur-paytype').value = item.paytype || 'transfer';
+    document.getElementById('btn-delete-schedule').style.display = 'block';
+    document.getElementById('modal-schedule').classList.add('open');
+  }
+};
 
-window.saveIncome = async function() {
-  const desc = document.getElementById('income-desc').value.trim();
-  const amount = document.getElementById('income-amount').value;
-  const date = document.getElementById('income-date').value;
-  if (!desc || !amount || !date) { alert(lang === 'en' ? 'Please fill all fields' : 'נא למלא את כל השדות'); return; }
-  await addDoc(collection(db, 'users', currentUser.uid, 'income'), { desc, amount: parseFloat(amount), date });
+window.saveIncome = async () => {
+  const desc = document.getElementById('f-income-desc').value.trim();
+  const amount = document.getElementById('f-income-amount').value;
+  const date = document.getElementById('f-income-date').value;
+  const paytype = document.getElementById('f-income-paytype').value;
+  const checknum = document.getElementById('f-income-checknum').value.trim();
+  if (!desc||!amount||!date) { alert(tr('fillAll')); return; }
+  const data = {desc, amount:parseFloat(amount), date, paytype};
+  if (paytype==='check'&&checknum) data.checknum = checknum;
+  if (editingId && editingType === 'income') {
+    await updateDoc(doc(db,'users',currentUser.uid,'income',editingId), data);
+  } else {
+    await addDoc(collection(db,'users',currentUser.uid,'income'), data);
+  }
   closeModal('income');
-  document.getElementById('income-desc').value = '';
-  document.getElementById('income-amount').value = '';
-  await loadIncome();
-  updateBalance();
-  loadRecent();
-}
+  await loadIncome(); updateBalance(); renderRecent();
+};
 
-window.saveDonation = async function() {
-  const desc = document.getElementById('donation-desc').value.trim();
-  const amount = document.getElementById('donation-amount').value;
-  const date = document.getElementById('donation-date').value;
-  if (!desc || !amount || !date) { alert(lang === 'en' ? 'Please fill all fields' : 'נא למלא את כל השדות'); return; }
-  await addDoc(collection(db, 'users', currentUser.uid, 'donations'), { desc, amount: parseFloat(amount), date });
+window.saveDonation = async () => {
+  const desc = document.getElementById('f-donation-desc').value.trim();
+  const amount = document.getElementById('f-donation-amount').value;
+  const date = document.getElementById('f-donation-date').value;
+  if (!desc||!amount||!date) { alert(tr('fillAll')); return; }
+  const data = {desc, amount:parseFloat(amount), date};
+  if (editingId && editingType === 'donation') {
+    await updateDoc(doc(db,'users',currentUser.uid,'donations',editingId), data);
+  } else {
+    await addDoc(collection(db,'users',currentUser.uid,'donations'), data);
+  }
   closeModal('donation');
-  document.getElementById('donation-desc').value = '';
-  document.getElementById('donation-amount').value = '';
-  await loadDonations();
-  updateBalance();
-  loadRecent();
-}
+  await loadDonations(); updateBalance(); renderRecent();
+};
 
-window.saveSchedule = async function() {
-  const name = document.getElementById('schedule-name').value.trim();
-  const amount = document.getElementById('schedule-amount').value;
-  const freq = document.getElementById('schedule-freq').value;
-  if (!name || !amount) { alert(lang === 'en' ? 'Please fill all fields' : 'נא למלא את כל השדות'); return; }
-  await addDoc(collection(db, 'users', currentUser.uid, 'schedules'), { name, amount: parseFloat(amount), freq });
+window.saveSchedule = async () => {
+  const name = document.getElementById('f-schedule-name').value.trim();
+  const amount = document.getElementById('f-schedule-amount').value;
+  const day = parseInt(document.getElementById('f-schedule-day').value);
+  const paytype = document.getElementById('f-recur-paytype').value;
+  if (!name||!amount||!day||day<1||day>28) { alert(tr('fillAll')); return; }
+  const data = { name, amount:parseFloat(amount), day, type: recurType };
+  if (recurType === 'income') data.paytype = paytype;
+  if (editingId && editingType === 'schedule') {
+    await updateDoc(doc(db,'users',currentUser.uid,'schedules',editingId), data);
+  } else {
+    const today = new Date().toISOString().split('T')[0];
+    data.startDate = today;
+    data.createdAt = today;
+    await addDoc(collection(db,'users',currentUser.uid,'schedules'), data);
+  }
   closeModal('schedule');
-  document.getElementById('schedule-name').value = '';
-  document.getElementById('schedule-amount').value = '';
-  await loadSchedules();
-}
+  await processSchedules();
+  await loadAll();
+};
 
-window.deleteItem = async function(type, id) {
-  const msg = lang === 'en' ? 'Delete this entry?' : 'למחוק את הרשומה?';
-  if (!confirm(msg)) return;
-  const collName = type === 'income' ? 'income' : type === 'donation' ? 'donations' : 'schedules';
-  await deleteDoc(doc(db, 'users', currentUser.uid, collName, id));
-  if (type === 'income') { await loadIncome(); updateBalance(); loadRecent(); }
-  else if (type === 'donation') { await loadDonations(); updateBalance(); loadRecent(); }
+window.deleteFromModal = async (type) => {
+  if (!editingId || !confirm(tr('deleteConfirm'))) return;
+  const col = type==='income'?'income':type==='donation'?'donations':'schedules';
+  await deleteDoc(doc(db,'users',currentUser.uid,col,editingId));
+  closeModal(type);
+  if (type==='income') { await loadIncome(); updateBalance(); renderRecent(); }
+  else if (type==='donation') { await loadDonations(); updateBalance(); renderRecent(); }
   else { await loadSchedules(); }
-}
+};
 
-window.showPage = function(page) {
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-  document.getElementById('page-' + page).classList.add('active');
-  document.getElementById('nav-' + page).classList.add('active');
-}
+window.showPage = page => {
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(n=>n.classList.remove('active'));
+  document.getElementById('page-'+page).classList.add('active');
+  document.getElementById('nav-'+page).classList.add('active');
+};
 
-window.openModal = function(type) {
-  // Set today's date as default
+window.openChoice = () => document.getElementById('modal-choice').classList.add('open');
+
+window.openModal = type => {
+  editingId = null; editingType = null;
   const today = new Date().toISOString().split('T')[0];
-  if (type === 'income') document.getElementById('income-date').value = today;
-  if (type === 'donation') document.getElementById('donation-date').value = today;
-  document.getElementById('modal-' + type).classList.add('open');
+  if (type==='income') {
+    document.getElementById('modal-income-title').textContent = tr('addIncome');
+    document.getElementById('f-income-desc').value = '';
+    document.getElementById('f-income-amount').value = '';
+    document.getElementById('f-income-date').value = today;
+    document.getElementById('f-income-paytype').value = 'transfer';
+    document.getElementById('f-income-checknum').value = '';
+    onPayTypeChange();
+    document.getElementById('btn-delete-income').style.display = 'none';
+  }
+  if (type==='donation') {
+    document.getElementById('modal-donation-title').textContent = tr('addDonation');
+    document.getElementById('f-donation-desc').value = '';
+    document.getElementById('f-donation-amount').value = '';
+    document.getElementById('f-donation-date').value = today;
+    document.getElementById('btn-delete-donation').style.display = 'none';
+  }
+  if (type==='schedule') {
+    recurType = 'income';
+    updateRecurUI();
+    document.getElementById('modal-schedule-title').textContent = tr('addSchedule');
+    document.getElementById('f-schedule-name').value = '';
+    document.getElementById('f-schedule-amount').value = '';
+    document.getElementById('f-schedule-day').value = '';
+    document.getElementById('btn-delete-schedule').style.display = 'none';
+  }
+  document.getElementById('modal-'+type).classList.add('open');
+};
+
+window.closeModal = type => {
+  document.getElementById('modal-'+type).classList.remove('open');
+  editingId = null; editingType = null;
+};
+
+window.onPayTypeChange = () => {
+  document.getElementById('check-number-field').style.display = document.getElementById('f-income-paytype').value==='check' ? 'block' : 'none';
+};
+
+window.setRecurType = type => { recurType = type; updateRecurUI(); };
+
+function updateRecurUI() {
+  document.getElementById('recur-type-income').classList.toggle('active', recurType === 'income');
+  document.getElementById('recur-type-donation').classList.toggle('active', recurType === 'donation');
+  document.getElementById('recur-paytype-field').style.display = recurType === 'income' ? 'block' : 'none';
 }
 
-window.closeModal = function(type) {
-  document.getElementById('modal-' + type).classList.remove('open');
-}
-
-// Close modal on overlay click
-document.querySelectorAll('.modal-overlay').forEach(overlay => {
-  overlay.addEventListener('click', function(e) {
-    if (e.target === this) {
-      this.classList.remove('open');
-    }
-  });
-});
+document.querySelectorAll('.overlay').forEach(o => o.addEventListener('click', e => { if (e.target===o) { o.classList.remove('open'); editingId = null; editingType = null; } }));
 
 applyLang();
 </script>
