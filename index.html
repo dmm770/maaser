@@ -470,10 +470,32 @@
   <div class="modal">
     <div class="modal-handle"></div>
     <div class="modal-title" id="modal-menu-title">Menu</div>
-    <button class="menu-item" onclick="closeModal('menu'); exportCSV();"><span class="icon">⬇</span> <span id="menu-export">Export to CSV</span></button>
+    <button class="menu-item" onclick="closeModal('menu'); openExport();"><span class="icon">⬇</span> <span id="menu-export">Export to CSV</span></button>
     <button class="menu-item" onclick="closeModal('menu'); openImport();"><span class="icon">⬆</span> <span id="menu-import">Import from CSV</span></button>
-    <button class="menu-item" onclick="closeModal('menu'); downloadTemplate();"><span class="icon">📋</span> <span id="menu-template">Download Template</span></button>
     <button class="menu-item" onclick="closeModal('menu'); signOut();" id="menu-signout-btn"><span class="icon">↪</span> <span id="menu-signout">Sign out</span></button>
+  </div>
+</div>
+
+<!-- EXPORT MODAL -->
+<div class="overlay" id="modal-export">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title" id="modal-export-title">Export to CSV</div>
+    <p class="modal-sub" id="modal-export-sub">Choose what to export and which fields to include.</p>
+    <div class="field"><label id="lbl-export-type">Data type</label>
+      <select id="export-type" onchange="onExportTypeChange()">
+        <option value="all" id="opt-exp-all">Everything (separate files)</option>
+        <option value="income" id="opt-exp-income">Income only</option>
+        <option value="donations" id="opt-exp-donations">Donations only</option>
+        <option value="schedules" id="opt-exp-schedules">Recurring only</option>
+      </select>
+    </div>
+    <div class="field" id="export-fields-container">
+      <label id="lbl-export-fields">Fields to include</label>
+      <div id="export-fields-list" style="display:flex;flex-direction:column;gap:8px;background:var(--bg);padding:12px;border-radius:8px;border:1px solid var(--border);"></div>
+    </div>
+    <button class="btn-primary" onclick="doExportCSV()" id="btn-export-do">Download CSV</button>
+    <button class="btn-secondary" onclick="closeModal('export')" id="btn-export-cancel">Cancel</button>
   </div>
 </div>
 
@@ -482,14 +504,15 @@
   <div class="modal">
     <div class="modal-handle"></div>
     <div class="modal-title" id="modal-import-title">Import from CSV</div>
-    <p class="modal-sub" id="modal-import-sub">Upload a CSV file with your income or donation data. Download the template first to see the required format.</p>
-    <button class="btn-outline" onclick="downloadTemplate()" id="btn-download-tpl">📋 Download Template</button>
+    <p class="modal-sub" id="modal-import-sub">Choose what to import and upload the matching template file.</p>
     <div class="field"><label id="lbl-import-type">Data type</label>
-      <select id="import-type">
+      <select id="import-type" onchange="onImportTypeChange()">
         <option value="income" id="opt-imp-income">Income</option>
         <option value="donations" id="opt-imp-donations">Donations</option>
       </select>
     </div>
+    <button class="btn-outline" onclick="downloadCurrentTemplate()" id="btn-download-tpl">📋 Download Template for This Type</button>
+    <div style="background:var(--bg);border-radius:8px;padding:10px 12px;margin-bottom:14px;font-size:11px;color:var(--text-muted);line-height:1.6;" id="import-help"></div>
     <div class="field"><label id="lbl-import-file">CSV file</label><input id="import-file" type="file" accept=".csv" /></div>
     <button class="btn-primary" onclick="importCSV()" id="btn-import-do">Import</button>
     <button class="btn-secondary" onclick="closeModal('import')" id="btn-import-cancel">Cancel</button>
@@ -524,8 +547,8 @@ let incomeData = [], donationData = [], scheduleData = [];
 getRedirectResult(auth).catch(() => {});
 
 const T = {
-  en: { appTitle:"Ma'aser", loginTitle:"Welcome back", loginSub:"Sign in to manage your ma'aser obligations", loginBtn:"Sign in with Google", demoBtn:"Try a demo (no sign-in)", demoBanner:"Demo Mode • data is fake and not saved", exitDemo:"Exit", greeting:"Welcome back,", overview:"Overview", totalIncome:"Total Income", obligation:"Ma'aser", totalDonated:"Total Donated", due:"Balance Due", recent:"Recent", incomeTitle:"Income", donationsTitle:"Donations", schedulesTitle:"Recurring", save:"Save", cancel:"Cancel", delete:"Delete", desc:"Description", amount:"Amount ($)", date:"Date", paytype:"Payment Type", checknum:"Check Number", name:"Name", dayOfMonth:"Day of Month", maaserMode:"Ma'aser %", percent:"Percent (%)", fixed:"Fixed Amount ($)", category:"Category", status:"Status", cleared:"Cleared / Paid", pending:"Pending", transfer:"Bank Transfer", check:"Check", cash:"Cash", other:"Other", incomeOpt:"Income", donationOpt:"Donation", addIncome:"Add Income", addDonation:"Add Donation", addSchedule:"Add Recurring Entry", editIncome:"Edit Income", editDonation:"Edit Donation", editSchedule:"Edit Recurring Entry", emptyRecent:"No transactions yet", emptyIncome:"No income entries yet", emptyDonation:"No donations yet", emptySchedule:"No recurring entries yet", navOverview:"Overview", navIncome:"Income", navDonations:"Donations", navRecurring:"Recurring", signout:"Sign out?", fillAll:"Please fill required fields (amount and date)", deleteConfirm:"Delete this entry?", auto:"Auto", everyMonth:"Every month on day", flag:"🇮🇱", choiceTitle:"What to add?", choiceIncome:"Income", choiceIncomeSub:"Salary, bonus, freelance...", choiceDonation:"Donation", choiceDonationSub:"Tzedakah, shul, charity...", choiceRecurring:"Recurring", choiceRecurringSub:"Auto entry every month", search:"Search...", year:"Year", month:"Month", progress:"Progress", monthly:"Monthly Breakdown", alert100:"You've completed your ma'aser for this period!", catNone:"— None —", catShul:"Shul", catTzedakah:"Tzedakah", catEducation:"Education", catChesed:"Chesed", catFamily:"Family", catOther:"Other", menu:"Menu", menuExport:"Export to CSV", menuImport:"Import from CSV", menuTemplate:"Download Template", menuSignout:"Sign out", importTitle:"Import from CSV", importSub:"Upload a CSV file with your income or donation data. Download the template first to see the required format.", downloadTpl:"📋 Download Template", importType:"Data type", importFile:"CSV file", importBtn:"Import", importSuccess:"Imported successfully!", importError:"Import failed. Please check the file format." },
-  he: { appTitle:"מעשרות", loginTitle:"ברוך הבא", loginSub:"התחבר כדי לנהל את המעשרות שלך", loginBtn:"התחבר עם גוגל", demoBtn:"נסה דמו (ללא התחברות)", demoBanner:"מצב דמו • הנתונים מומצאים ולא נשמרים", exitDemo:"יציאה", greeting:"ברוך הבא,", overview:"סיכום", totalIncome:'סה"כ הכנסות', obligation:"מעשר", totalDonated:'סה"כ תרומות', due:"יתרה לתשלום", recent:"אחרון", incomeTitle:"הכנסות", donationsTitle:"תרומות", schedulesTitle:"קבועות", save:"שמור", cancel:"ביטול", delete:"מחיקה", desc:"תיאור", amount:"סכום ($)", date:"תאריך", paytype:"אמצעי תשלום", checknum:"מספר צ'ק", name:"שם", dayOfMonth:"יום בחודש", maaserMode:"אחוז מעשר", percent:"אחוז (%)", fixed:"סכום קבוע ($)", category:"קטגוריה", status:"סטטוס", cleared:"שולם", pending:"ממתין", transfer:"העברה בנקאית", check:"צ'ק", cash:"מזומן", other:"אחר", incomeOpt:"הכנסה", donationOpt:"תרומה", addIncome:"הוספת הכנסה", addDonation:"הוספת תרומה", addSchedule:"הוספת עסקה קבועה", editIncome:"עריכת הכנסה", editDonation:"עריכת תרומה", editSchedule:"עריכת עסקה קבועה", emptyRecent:"אין עדיין פעולות", emptyIncome:"אין עדיין הכנסות", emptyDonation:"אין עדיין תרומות", emptySchedule:"אין עדיין עסקאות קבועות", navOverview:"סיכום", navIncome:"הכנסות", navDonations:"תרומות", navRecurring:"קבועות", signout:"להתנתק?", fillAll:"נא למלא שדות חובה (סכום ותאריך)", deleteConfirm:"למחוק את הרשומה?", auto:"אוטומטי", everyMonth:"כל חודש ב-", flag:"🇺🇸", choiceTitle:"מה להוסיף?", choiceIncome:"הכנסה", choiceIncomeSub:"משכורת, בונוס, פרילנס...", choiceDonation:"תרומה", choiceDonationSub:"צדקה, שיבל, חסד...", choiceRecurring:"קבועה", choiceRecurringSub:"כניסה אוטומטית כל חודש", search:"חיפוש...", year:"שנה", month:"חודש", progress:"התקדמות", monthly:"פילוח חודשי", alert100:"השלמת את המעשר לתקופה זו!", catNone:"— ללא —", catShul:"בית כנסת", catTzedakah:"צדקה", catEducation:"חינוך", catChesed:"חסד", catFamily:"משפחה", catOther:"אחר", menu:"תפריט", menuExport:"ייצוא ל-CSV", menuImport:"ייבוא מ-CSV", menuTemplate:"הורדת תבנית", menuSignout:"התנתקות", importTitle:"ייבוא מ-CSV", importSub:"העלה קובץ CSV עם נתוני הכנסות או תרומות. הורד תחילה את התבנית כדי לראות את הפורמט הנדרש.", downloadTpl:"📋 הורדת תבנית", importType:"סוג נתונים", importFile:"קובץ CSV", importBtn:"ייבוא", importSuccess:"הייבוא בוצע בהצלחה!", importError:"הייבוא נכשל. בדוק את פורמט הקובץ." }
+  en: { appTitle:"Ma'aser", loginTitle:"Welcome back", loginSub:"Sign in to manage your ma'aser obligations", loginBtn:"Sign in with Google", demoBtn:"Try a demo (no sign-in)", demoBanner:"Demo Mode • data is fake and not saved", exitDemo:"Exit", greeting:"Welcome back,", overview:"Overview", totalIncome:"Total Income", obligation:"Ma'aser", totalDonated:"Total Donated", due:"Balance Due", recent:"Recent", incomeTitle:"Income", donationsTitle:"Donations", schedulesTitle:"Recurring", save:"Save", cancel:"Cancel", delete:"Delete", desc:"Description", amount:"Amount ($)", date:"Date", paytype:"Payment Type", checknum:"Check Number", name:"Name", dayOfMonth:"Day of Month", maaserMode:"Ma'aser %", percent:"Percent (%)", fixed:"Fixed Amount ($)", category:"Category", status:"Status", cleared:"Cleared / Paid", pending:"Pending", transfer:"Bank Transfer", check:"Check", cash:"Cash", other:"Other", incomeOpt:"Income", donationOpt:"Donation", addIncome:"Add Income", addDonation:"Add Donation", addSchedule:"Add Recurring Entry", editIncome:"Edit Income", editDonation:"Edit Donation", editSchedule:"Edit Recurring Entry", emptyRecent:"No transactions yet", emptyIncome:"No income entries yet", emptyDonation:"No donations yet", emptySchedule:"No recurring entries yet", navOverview:"Overview", navIncome:"Income", navDonations:"Donations", navRecurring:"Recurring", signout:"Sign out?", fillAll:"Please fill required fields (amount and date)", deleteConfirm:"Delete this entry?", auto:"Auto", everyMonth:"Every month on day", flag:"🇮🇱", choiceTitle:"What to add?", choiceIncome:"Income", choiceIncomeSub:"Salary, bonus, freelance...", choiceDonation:"Donation", choiceDonationSub:"Tzedakah, shul, charity...", choiceRecurring:"Recurring", choiceRecurringSub:"Auto entry every month", search:"Search...", year:"Year", month:"Month", progress:"Progress", monthly:"Monthly Breakdown", alert100:"You've completed your ma'aser for this period!", catNone:"— None —", catShul:"Shul", catTzedakah:"Tzedakah", catEducation:"Education", catChesed:"Chesed", catFamily:"Family", catOther:"Other", menu:"Menu", menuExport:"Export to CSV", menuImport:"Import from CSV", menuSignout:"Sign out", importTitle:"Import from CSV", importSub:"Choose what to import and upload the matching template file.", downloadTpl:"📋 Download Template for This Type", importType:"Data type", importFile:"CSV file", importBtn:"Import", importSuccess:"Imported successfully!", importError:"Import failed. Please check the file format.", exportTitle:"Export to CSV", exportSub:"Choose what to export and which fields to include.", exportType:"Data type", exportFields:"Fields to include", exportAll:"Everything (separate files)", exportIncomeOnly:"Income only", exportDonationsOnly:"Donations only", exportSchedulesOnly:"Recurring only", exportBtn:"Download CSV", selectFields:"Please select at least one field" },
+  he: { appTitle:"מעשרות", loginTitle:"ברוך הבא", loginSub:"התחבר כדי לנהל את המעשרות שלך", loginBtn:"התחבר עם גוגל", demoBtn:"נסה דמו (ללא התחברות)", demoBanner:"מצב דמו • הנתונים מומצאים ולא נשמרים", exitDemo:"יציאה", greeting:"ברוך הבא,", overview:"סיכום", totalIncome:'סה"כ הכנסות', obligation:"מעשר", totalDonated:'סה"כ תרומות', due:"יתרה לתשלום", recent:"אחרון", incomeTitle:"הכנסות", donationsTitle:"תרומות", schedulesTitle:"קבועות", save:"שמור", cancel:"ביטול", delete:"מחיקה", desc:"תיאור", amount:"סכום ($)", date:"תאריך", paytype:"אמצעי תשלום", checknum:"מספר צ'ק", name:"שם", dayOfMonth:"יום בחודש", maaserMode:"אחוז מעשר", percent:"אחוז (%)", fixed:"סכום קבוע ($)", category:"קטגוריה", status:"סטטוס", cleared:"שולם", pending:"ממתין", transfer:"העברה בנקאית", check:"צ'ק", cash:"מזומן", other:"אחר", incomeOpt:"הכנסה", donationOpt:"תרומה", addIncome:"הוספת הכנסה", addDonation:"הוספת תרומה", addSchedule:"הוספת עסקה קבועה", editIncome:"עריכת הכנסה", editDonation:"עריכת תרומה", editSchedule:"עריכת עסקה קבועה", emptyRecent:"אין עדיין פעולות", emptyIncome:"אין עדיין הכנסות", emptyDonation:"אין עדיין תרומות", emptySchedule:"אין עדיין עסקאות קבועות", navOverview:"סיכום", navIncome:"הכנסות", navDonations:"תרומות", navRecurring:"קבועות", signout:"להתנתק?", fillAll:"נא למלא שדות חובה (סכום ותאריך)", deleteConfirm:"למחוק את הרשומה?", auto:"אוטומטי", everyMonth:"כל חודש ב-", flag:"🇺🇸", choiceTitle:"מה להוסיף?", choiceIncome:"הכנסה", choiceIncomeSub:"משכורת, בונוס, פרילנס...", choiceDonation:"תרומה", choiceDonationSub:"צדקה, שיבל, חסד...", choiceRecurring:"קבועה", choiceRecurringSub:"כניסה אוטומטית כל חודש", search:"חיפוש...", year:"שנה", month:"חודש", progress:"התקדמות", monthly:"פילוח חודשי", alert100:"השלמת את המעשר לתקופה זו!", catNone:"— ללא —", catShul:"בית כנסת", catTzedakah:"צדקה", catEducation:"חינוך", catChesed:"חסד", catFamily:"משפחה", catOther:"אחר", menu:"תפריט", menuExport:"ייצוא ל-CSV", menuImport:"ייבוא מ-CSV", menuSignout:"התנתקות", importTitle:"ייבוא מ-CSV", importSub:"בחר מה לייבא והעלה את התבנית המתאימה.", downloadTpl:"📋 הורדת תבנית לסוג זה", importType:"סוג נתונים", importFile:"קובץ CSV", importBtn:"ייבוא", importSuccess:"הייבוא בוצע בהצלחה!", importError:"הייבוא נכשל. בדוק את פורמט הקובץ.", exportTitle:"ייצוא ל-CSV", exportSub:"בחר מה לייצא ואיזה שדות לכלול.", exportType:"סוג נתונים", exportFields:"שדות לכלול", exportAll:"הכל (קבצים נפרדים)", exportIncomeOnly:"רק הכנסות", exportDonationsOnly:"רק תרומות", exportSchedulesOnly:"רק קבועות", exportBtn:"הורדת CSV", selectFields:"נא לבחור לפחות שדה אחד" }
 };
 
 function tr(k) { return T[lang][k] || k; }
@@ -534,7 +557,7 @@ const monthNames = { en: ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep',
 
 function applyLang() {
   document.body.classList.toggle('rtl', lang === 'he');
-  const ids = { 'app-title':'appTitle','login-title':'loginTitle','login-sub':'loginSub','login-btn-text':'loginBtn','btn-demo-text':'demoBtn','demo-banner-text':'demoBanner','btn-exit-demo':'exitDemo','greeting-text':'greeting','lbl-overview':'overview','lbl-income':'totalIncome','lbl-obligation':'obligation','lbl-donated':'totalDonated','lbl-due':'due','lbl-recent':'recent','lbl-income-title':'incomeTitle','lbl-donations-title':'donationsTitle','lbl-schedules-title':'schedulesTitle','nav-lbl-dashboard':'navOverview','nav-lbl-income':'navIncome','nav-lbl-donations':'navDonations','nav-lbl-schedules':'navRecurring','lbl-f-desc':'desc','lbl-f-amount':'amount','lbl-f-date':'date','lbl-f-paytype':'paytype','lbl-f-checknum':'checknum','lbl-f-desc2':'desc','lbl-f-amount2':'amount','lbl-f-date2':'date','lbl-f-sname':'name','lbl-f-samount':'amount','lbl-f-day':'dayOfMonth','lbl-f-recur-paytype':'paytype','lbl-f-maaser-mode':'maaserMode','lbl-f-maaser-pct':'percent','lbl-f-maaser-fixed':'fixed','lbl-f-category':'category','lbl-f-status':'status','btn-save-income':'save','btn-cancel-income':'cancel','btn-delete-income':'delete','btn-save-donation':'save','btn-cancel-donation':'cancel','btn-delete-donation':'delete','btn-save-schedule':'save','btn-cancel-schedule':'cancel','btn-delete-schedule':'delete','opt-transfer':'transfer','opt-check':'check','opt-cash':'cash','opt-other':'other','opt-r-transfer':'transfer','opt-r-check':'check','opt-r-cash':'cash','opt-r-other':'other','lbl-recur-income':'incomeOpt','lbl-recur-donation':'donationOpt','modal-choice-title':'choiceTitle','lbl-choice-income':'choiceIncome','lbl-choice-income-sub':'choiceIncomeSub','lbl-choice-donation':'choiceDonation','lbl-choice-donation-sub':'choiceDonationSub','lbl-choice-recurring':'choiceRecurring','lbl-choice-recurring-sub':'choiceRecurringSub','view-year':'year','view-month':'month','lbl-progress':'progress','lbl-monthly':'monthly','alert-100-text':'alert100','opt-cat-none':'catNone','opt-cat-shul':'catShul','opt-cat-tzedakah':'catTzedakah','opt-cat-education':'catEducation','opt-cat-chesed':'catChesed','opt-cat-family':'catFamily','opt-cat-other':'catOther','opt-status-cleared':'cleared','opt-status-pending':'pending','modal-menu-title':'menu','menu-export':'menuExport','menu-import':'menuImport','menu-template':'menuTemplate','menu-signout':'menuSignout','modal-import-title':'importTitle','modal-import-sub':'importSub','btn-download-tpl':'downloadTpl','lbl-import-type':'importType','lbl-import-file':'importFile','btn-import-do':'importBtn','btn-import-cancel':'cancel','opt-imp-income':'incomeOpt','opt-imp-donations':'donationsTitle' };
+  const ids = { 'app-title':'appTitle','login-title':'loginTitle','login-sub':'loginSub','login-btn-text':'loginBtn','btn-demo-text':'demoBtn','demo-banner-text':'demoBanner','btn-exit-demo':'exitDemo','greeting-text':'greeting','lbl-overview':'overview','lbl-income':'totalIncome','lbl-obligation':'obligation','lbl-donated':'totalDonated','lbl-due':'due','lbl-recent':'recent','lbl-income-title':'incomeTitle','lbl-donations-title':'donationsTitle','lbl-schedules-title':'schedulesTitle','nav-lbl-dashboard':'navOverview','nav-lbl-income':'navIncome','nav-lbl-donations':'navDonations','nav-lbl-schedules':'navRecurring','lbl-f-desc':'desc','lbl-f-amount':'amount','lbl-f-date':'date','lbl-f-paytype':'paytype','lbl-f-checknum':'checknum','lbl-f-desc2':'desc','lbl-f-amount2':'amount','lbl-f-date2':'date','lbl-f-sname':'name','lbl-f-samount':'amount','lbl-f-day':'dayOfMonth','lbl-f-recur-paytype':'paytype','lbl-f-maaser-mode':'maaserMode','lbl-f-maaser-pct':'percent','lbl-f-maaser-fixed':'fixed','lbl-f-category':'category','lbl-f-status':'status','btn-save-income':'save','btn-cancel-income':'cancel','btn-delete-income':'delete','btn-save-donation':'save','btn-cancel-donation':'cancel','btn-delete-donation':'delete','btn-save-schedule':'save','btn-cancel-schedule':'cancel','btn-delete-schedule':'delete','opt-transfer':'transfer','opt-check':'check','opt-cash':'cash','opt-other':'other','opt-r-transfer':'transfer','opt-r-check':'check','opt-r-cash':'cash','opt-r-other':'other','lbl-recur-income':'incomeOpt','lbl-recur-donation':'donationOpt','modal-choice-title':'choiceTitle','lbl-choice-income':'choiceIncome','lbl-choice-income-sub':'choiceIncomeSub','lbl-choice-donation':'choiceDonation','lbl-choice-donation-sub':'choiceDonationSub','lbl-choice-recurring':'choiceRecurring','lbl-choice-recurring-sub':'choiceRecurringSub','view-year':'year','view-month':'month','lbl-progress':'progress','lbl-monthly':'monthly','alert-100-text':'alert100','opt-cat-none':'catNone','opt-cat-shul':'catShul','opt-cat-tzedakah':'catTzedakah','opt-cat-education':'catEducation','opt-cat-chesed':'catChesed','opt-cat-family':'catFamily','opt-cat-other':'catOther','opt-status-cleared':'cleared','opt-status-pending':'pending','modal-menu-title':'menu','menu-export':'menuExport','menu-import':'menuImport','menu-signout':'menuSignout','modal-import-title':'importTitle','modal-import-sub':'importSub','btn-download-tpl':'downloadTpl','lbl-import-type':'importType','lbl-import-file':'importFile','btn-import-do':'importBtn','btn-import-cancel':'cancel','opt-imp-income':'incomeOpt','opt-imp-donations':'donationsTitle','modal-export-title':'exportTitle','modal-export-sub':'exportSub','lbl-export-type':'exportType','lbl-export-fields':'exportFields','opt-exp-all':'exportAll','opt-exp-income':'exportIncomeOnly','opt-exp-donations':'exportDonationsOnly','opt-exp-schedules':'exportSchedulesOnly','btn-export-do':'exportBtn','btn-export-cancel':'cancel' };
   Object.entries(ids).forEach(([id, key]) => { const el = document.getElementById(id); if (el) el.textContent = tr(key); });
   document.getElementById('lang-btn').textContent = tr('flag');
   ['empty-recent-msg','empty-income-msg','empty-donation-msg','empty-schedule-msg'].forEach(id => {
@@ -1031,30 +1054,98 @@ function updateMaaserModeUI() {
 
 document.querySelectorAll('.overlay').forEach(o => o.addEventListener('click', e => { if (e.target === o) { o.classList.remove('open'); editingId = null; editingType = null; } }));
 
-// CSV EXPORT
-window.exportCSV = () => {
-  const inc = incomeData.map(i => ({
-    type: 'income', date: i.date || '', amount: i.amount || '', description: i.desc || '',
-    paytype: i.paytype || '', checknum: i.checknum || '', maaserPct: i.maaserPct != null ? i.maaserPct : '', maaserFixed: i.maaserFixed != null ? i.maaserFixed : ''
-  }));
-  const don = donationData.map(d => ({
-    type: 'donation', date: d.date || '', amount: d.amount || '', description: d.desc || '',
-    category: d.category || '', status: d.status || 'cleared'
-  }));
-  // Build separate CSV files combined into one
-  let csv = 'INCOME\n';
-  csv += 'date,amount,description,paytype,checknum,maaserPct,maaserFixed\n';
-  inc.forEach(i => { csv += [i.date, i.amount, q(i.description), i.paytype, i.checknum, i.maaserPct, i.maaserFixed].join(',') + '\n'; });
-  csv += '\nDONATIONS\n';
-  csv += 'date,amount,description,category,status\n';
-  don.forEach(d => { csv += [d.date, d.amount, q(d.description), d.category, d.status].join(',') + '\n'; });
-  download('maaser-export-' + new Date().toISOString().split('T')[0] + '.csv', csv);
+// ============ FIELD DEFINITIONS ============
+const FIELD_DEFS = {
+  income: [
+    { key:'date', label:'Date', labelHe:'תאריך', required:true },
+    { key:'amount', label:'Amount', labelHe:'סכום', required:true },
+    { key:'description', label:'Description', labelHe:'תיאור' },
+    { key:'paytype', label:'Payment Type', labelHe:'אמצעי תשלום' },
+    { key:'checknum', label:'Check Number', labelHe:"מספר צ'ק" },
+    { key:'maaserPct', label:'Ma\'aser %', labelHe:'אחוז מעשר' },
+    { key:'maaserFixed', label:'Ma\'aser Fixed $', labelHe:'מעשר קבוע' },
+    { key:'createdAt', label:'Created Date', labelHe:'תאריך יצירה' },
+  ],
+  donations: [
+    { key:'date', label:'Date', labelHe:'תאריך', required:true },
+    { key:'amount', label:'Amount', labelHe:'סכום', required:true },
+    { key:'description', label:'Description', labelHe:'תיאור' },
+    { key:'category', label:'Category', labelHe:'קטגוריה' },
+    { key:'status', label:'Status', labelHe:'סטטוס' },
+    { key:'createdAt', label:'Created Date', labelHe:'תאריך יצירה' },
+  ],
+  schedules: [
+    { key:'name', label:'Name', labelHe:'שם', required:true },
+    { key:'amount', label:'Amount', labelHe:'סכום', required:true },
+    { key:'day', label:'Day of Month', labelHe:'יום בחודש', required:true },
+    { key:'type', label:'Type (income/donation)', labelHe:'סוג' },
+    { key:'paytype', label:'Payment Type', labelHe:'אמצעי תשלום' },
+    { key:'startDate', label:'Start Date', labelHe:'תאריך התחלה' },
+  ],
 };
+
+// ============ EXPORT ============
+window.openExport = () => {
+  document.getElementById('export-type').value = 'all';
+  onExportTypeChange();
+  document.getElementById('modal-export').classList.add('open');
+};
+
+window.onExportTypeChange = () => {
+  const type = document.getElementById('export-type').value;
+  const container = document.getElementById('export-fields-container');
+  const list = document.getElementById('export-fields-list');
+  if (type === 'all') {
+    container.style.display = 'none';
+    return;
+  }
+  container.style.display = 'block';
+  const fields = FIELD_DEFS[type];
+  list.innerHTML = fields.map(f => {
+    const lbl = lang === 'he' ? f.labelHe : f.label;
+    const dis = f.required ? 'disabled' : '';
+    return `<label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:13px;font-weight:500;">
+      <input type="checkbox" data-field="${f.key}" checked ${dis} style="width:16px;height:16px;accent-color:var(--accent);"/>
+      <span>${lbl}${f.required ? ' *' : ''}</span>
+    </label>`;
+  }).join('');
+};
+
+window.doExportCSV = () => {
+  const type = document.getElementById('export-type').value;
+  const today = new Date().toISOString().split('T')[0];
+  if (type === 'all') {
+    if (incomeData.length) download(`maaser-income-${today}.csv`, buildCSV('income', FIELD_DEFS.income.map(f => f.key), incomeData));
+    if (donationData.length) download(`maaser-donations-${today}.csv`, buildCSV('donations', FIELD_DEFS.donations.map(f => f.key), donationData));
+    if (scheduleData.length) download(`maaser-recurring-${today}.csv`, buildCSV('schedules', FIELD_DEFS.schedules.map(f => f.key), scheduleData));
+  } else {
+    const checked = Array.from(document.querySelectorAll('#export-fields-list input[type=checkbox]:checked')).map(c => c.dataset.field);
+    if (!checked.length) { alert(tr('selectFields')); return; }
+    const data = type === 'income' ? incomeData : type === 'donations' ? donationData : scheduleData;
+    download(`maaser-${type}-${today}.csv`, buildCSV(type, checked, data));
+  }
+  closeModal('export');
+};
+
+function buildCSV(type, fieldKeys, data) {
+  let csv = fieldKeys.join(',') + '\n';
+  data.forEach(item => {
+    const row = fieldKeys.map(k => {
+      let v = '';
+      if (k === 'description') v = item.desc || '';
+      else if (k === 'createdAt' && item.createdAt) v = new Date(item.createdAt).toISOString();
+      else v = item[k] != null ? item[k] : '';
+      return q(v);
+    });
+    csv += row.join(',') + '\n';
+  });
+  return csv;
+}
 
 function q(s) { if (s == null) return ''; s = String(s); return /[,"\n]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s; }
 
 function download(filename, text) {
-  const blob = new Blob([text], { type: 'text/csv;charset=utf-8;' });
+  const blob = new Blob(['\ufeff' + text], { type: 'text/csv;charset=utf-8;' });
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
   a.href = url; a.download = filename;
@@ -1062,30 +1153,43 @@ function download(filename, text) {
   URL.revokeObjectURL(url);
 }
 
-window.downloadTemplate = () => {
-  const tpl = `INCOME TEMPLATE
-date,amount,description,paytype,checknum,maaserPct,maaserFixed
+// ============ TEMPLATES ============
+window.downloadCurrentTemplate = () => {
+  const type = document.getElementById('import-type').value;
+  if (type === 'income') {
+    const csv = `date,amount,description,paytype,checknum,maaserPct,maaserFixed
 2026-04-26,5000,Salary,check,5182,10,
 2026-04-14,1500,Bonus,transfer,,10,
 2026-03-27,3000,Freelance,cash,,15,
-
-DONATIONS TEMPLATE
-date,amount,description,category,status
+`;
+    download('maaser-income-template.csv', csv);
+  } else {
+    const csv = `date,amount,description,category,status
 2026-04-22,100,Shul membership,shul,cleared
 2026-04-21,360,Yeshivas erev,education,cleared
 2026-04-14,42,Areivim,tzedakah,pending
-
-INSTRUCTIONS:
-- date: YYYY-MM-DD format (e.g., 2026-04-26)
-- amount: numbers only (e.g., 100 or 100.50)
-- paytype options: transfer, check, cash, other
-- category options: shul, tzedakah, education, chesed, family, other-cat
-- status options: cleared, pending
-- maaserPct: percentage (10 = 10%). Leave blank for default 10%
-- maaserFixed: fixed dollar amount instead of percent. Leave blank if using maaserPct
-- Save the file as CSV and import only ONE section at a time (income OR donations)
 `;
-  download('maaser-template.csv', tpl);
+    download('maaser-donations-template.csv', csv);
+  }
+};
+
+window.onImportTypeChange = () => {
+  const type = document.getElementById('import-type').value;
+  const help = document.getElementById('import-help');
+  if (type === 'income') {
+    help.innerHTML = lang === 'he'
+      ? `<b>פורמט:</b> תאריך YYYY-MM-DD, סכום מספר.<br><b>paytype:</b> transfer, check, cash, other<br><b>maaserPct:</b> אחוז (10 = 10%). <b>maaserFixed:</b> סכום קבוע במקום אחוז.<br>חובה: תאריך וסכום בלבד.`
+      : `<b>Format:</b> date YYYY-MM-DD, amount as number.<br><b>paytype:</b> transfer, check, cash, other<br><b>maaserPct:</b> percentage (10 = 10%). <b>maaserFixed:</b> fixed dollar amount instead of percent.<br>Required: date and amount only.`;
+  } else {
+    help.innerHTML = lang === 'he'
+      ? `<b>פורמט:</b> תאריך YYYY-MM-DD, סכום מספר.<br><b>category:</b> shul, tzedakah, education, chesed, family, other-cat<br><b>status:</b> cleared, pending<br>חובה: תאריך וסכום בלבד.`
+      : `<b>Format:</b> date YYYY-MM-DD, amount as number.<br><b>category:</b> shul, tzedakah, education, chesed, family, other-cat<br><b>status:</b> cleared, pending<br>Required: date and amount only.`;
+  }
+};
+
+window.openImport = () => {
+  onImportTypeChange();
+  document.getElementById('modal-import').classList.add('open');
 };
 
 window.importCSV = async () => {
@@ -1094,22 +1198,20 @@ window.importCSV = async () => {
   if (!file) { alert(tr('importError')); return; }
   try {
     const text = await file.text();
-    const lines = text.split('\n').map(l => l.trim()).filter(l => l && !l.startsWith('INCOME') && !l.startsWith('DONATIONS') && !l.startsWith('INSTRUCTIONS') && !l.startsWith('-'));
-    let header = null, count = 0;
-    for (const line of lines) {
-      const cols = parseCSVLine(line);
-      if (!header) {
-        if (cols[0] && cols[0].toLowerCase() === 'date') { header = cols; continue; }
-        continue;
-      }
+    const lines = text.replace(/^\ufeff/, '').split('\n').map(l => l.trim()).filter(l => l);
+    if (!lines.length) { alert(tr('importError')); return; }
+    const header = parseCSVLine(lines[0]).map(h => h.trim().toLowerCase());
+    let count = 0;
+    for (let li = 1; li < lines.length; li++) {
+      const cols = parseCSVLine(lines[li]);
       const row = {};
-      header.forEach((h, i) => { row[h.trim()] = (cols[i] || '').trim(); });
+      header.forEach((h, i) => { row[h] = (cols[i] || '').trim(); });
       if (!row.date || !row.amount) continue;
       if (type === 'income') {
         const d = { date: row.date, amount: parseFloat(row.amount), desc: row.description || '', paytype: row.paytype || 'transfer', createdAt: Date.now() };
         if (row.checknum) d.checknum = row.checknum;
-        if (row.maaserFixed) d.maaserFixed = parseFloat(row.maaserFixed);
-        else d.maaserPct = row.maaserPct ? parseFloat(row.maaserPct) : 10;
+        if (row.maaserfixed) d.maaserFixed = parseFloat(row.maaserfixed);
+        else d.maaserPct = row.maaserpct ? parseFloat(row.maaserpct) : 10;
         if (isDemo) demoData.income.push({ id: 'd'+Date.now()+count, ...d });
         else await addDoc(collection(db,'users',currentUser.uid,'income'), d);
       } else {
