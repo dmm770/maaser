@@ -4,86 +4,131 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Ma'aser Tracker</title>
-<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%231a1f36'/%3E%3Ctext x='50' y='72' font-family='Inter,Arial,sans-serif' font-size='70' font-weight='700' fill='white' text-anchor='middle'%3E%24%3C/text%3E%3C/svg%3E">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%2300875a'/%3E%3Ctext x='50' y='72' font-family='Inter,Arial,sans-serif' font-size='70' font-weight='700' fill='white' text-anchor='middle'%3E%24%3C/text%3E%3C/svg%3E">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root {
     --bg: #f5f6fa;
-    --card: #ffffff;
+    --card: #fff;
     --border: #e8eaed;
-    --accent: #1a1f36;
+    --accent: #00875a;
+    --accent-dark: #006644;
+    --accent-light: #e3f5ef;
     --accent2: #3d5afe;
-    --accent-light: #eef1ff;
+    --accent2-light: #eef1ff;
     --text: #1a1f36;
     --text-muted: #8f95a3;
     --green: #00875a;
     --green-light: #e3f5ef;
     --red: #de350b;
+    --red-light: #ffebe6;
     --gold: #b8860b;
     --gold-light: #fef9e7;
+    --orange: #e67e22;
+    --orange-light: #fff4e0;
     --shadow-sm: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
-    --shadow-lg: 0 10px 30px rgba(26,31,54,0.25);
+    --shadow-lg: 0 10px 30px rgba(0,135,90,0.3);
     --radius: 12px;
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; font-size: 14px; }
 
+  /* LOGIN */
   #login-screen { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 24px; background: #fff; }
   .login-card { max-width: 360px; width: 100%; text-align: center; }
   .login-wordmark { font-size: 12px; font-weight: 600; letter-spacing: 0.15em; color: var(--text-muted); text-transform: uppercase; margin-bottom: 48px; }
   .login-icon { width: 56px; height: 56px; background: var(--accent); border-radius: 14px; display: flex; align-items: center; justify-content: center; margin: 0 auto 24px; font-size: 26px; color: white; font-weight: 700; }
   .login-title { font-size: 24px; font-weight: 700; margin-bottom: 8px; }
   .login-sub { color: var(--text-muted); font-size: 14px; margin-bottom: 40px; line-height: 1.6; }
-  .btn-google { display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; padding: 13px 20px; background: var(--accent); color: white; border: none; border-radius: 10px; font-size: 14px; font-weight: 600; cursor: pointer; font-family: 'Inter', sans-serif; }
+  .btn-google { display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; padding: 13px 20px; background: var(--text); color: white; border: none; border-radius: 10px; font-size: 14px; font-weight: 600; cursor: pointer; font-family: 'Inter', sans-serif; margin-bottom: 10px; }
   .btn-google svg { width: 18px; height: 18px; }
+  .btn-demo { display: block; width: 100%; padding: 12px; background: none; border: 1.5px solid var(--border); border-radius: 10px; font-size: 13px; font-weight: 600; color: var(--text-muted); cursor: pointer; font-family: 'Inter', sans-serif; }
+  .btn-demo:hover { border-color: var(--accent); color: var(--accent); }
 
+  /* APP */
   #app { display: none; max-width: 430px; margin: 0 auto; padding-bottom: 80px; position: relative; }
+
+  .demo-banner { background: var(--orange); color: white; text-align: center; padding: 8px 12px; font-size: 12px; font-weight: 600; }
+  .demo-banner button { background: rgba(255,255,255,0.25); color: white; border: none; border-radius: 4px; padding: 2px 8px; margin-left: 8px; font-size: 11px; font-weight: 600; cursor: pointer; }
 
   .app-header { background: #fff; padding: 14px 20px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 100; }
   .header-left { display: flex; align-items: center; gap: 10px; }
   .header-logo { width: 30px; height: 30px; background: var(--accent); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; font-size: 15px; }
   .header-name { font-weight: 700; font-size: 15px; }
   .header-right { display: flex; align-items: center; gap: 8px; }
-  .lang-flag { background: none; border: none; cursor: pointer; padding: 4px; font-size: 22px; line-height: 1; display: flex; align-items: center; justify-content: center; }
-  .avatar { width: 30px; height: 30px; background: var(--accent2); border-radius: 50%; color: white; font-size: 12px; font-weight: 600; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+  .icon-btn { background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 6px 8px; cursor: pointer; display: flex; align-items: center; }
+  .icon-btn svg { width: 16px; height: 16px; color: var(--text-muted); }
+  .lang-flag { background: none; border: none; cursor: pointer; padding: 4px; font-size: 22px; line-height: 1; }
+  .avatar { width: 30px; height: 30px; background: var(--accent); border-radius: 50%; color: white; font-size: 12px; font-weight: 600; display: flex; align-items: center; justify-content: center; cursor: pointer; }
 
-  .year-bar { background: #fff; border-bottom: 1px solid var(--border); padding: 10px 20px; display: flex; align-items: center; gap: 12px; }
+  .greeting { padding: 16px 20px 8px; }
+  .greeting-text { font-size: 12px; color: var(--text-muted); margin-bottom: 2px; }
+  .greeting-name { font-size: 20px; font-weight: 700; }
+
+  .controls-bar { padding: 8px 16px 16px; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+  .year-pill { background: #fff; border: 1px solid var(--border); border-radius: 10px; padding: 4px 4px 4px 10px; display: flex; align-items: center; gap: 4px; }
   .year-nav { background: none; border: none; cursor: pointer; color: var(--text-muted); font-size: 16px; padding: 2px 6px; }
-  .year-label { font-size: 13px; font-weight: 600; }
+  .year-label { font-size: 13px; font-weight: 600; min-width: 36px; text-align: center; }
+  .view-toggle { display: flex; gap: 2px; background: var(--bg); padding: 3px; border-radius: 10px; border: 1px solid var(--border); }
+  .view-toggle button { background: none; border: none; padding: 5px 10px; border-radius: 7px; font-size: 12px; font-weight: 600; cursor: pointer; color: var(--text-muted); font-family: 'Inter', sans-serif; }
+  .view-toggle button.active { background: #fff; color: var(--text); box-shadow: var(--shadow-sm); }
 
-  .balance-section { padding: 16px; }
-  .balance-card { background: var(--accent); border-radius: var(--radius); padding: 24px 20px; color: white; }
-  .balance-card-label { font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; opacity: 0.6; margin-bottom: 16px; }
-  .bal-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.1); }
+  .balance-section { padding: 0 16px; }
+  .balance-card { background: linear-gradient(135deg, var(--accent) 0%, var(--accent-dark) 100%); border-radius: var(--radius); padding: 24px 20px; color: white; }
+  .balance-card-label { font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; opacity: 0.7; margin-bottom: 16px; }
+  .bal-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.15); }
   .bal-row:last-child { border-bottom: none; }
-  .bal-row-label { font-size: 13px; opacity: 0.75; }
+  .bal-row-label { font-size: 13px; opacity: 0.85; }
   .bal-row-val { font-size: 14px; font-weight: 600; }
-  .due-banner { margin-top: 14px; background: rgba(255,255,255,0.12); border-radius: 8px; padding: 12px 16px; display: flex; justify-content: space-between; align-items: center; }
+  .due-banner { margin-top: 14px; background: rgba(255,255,255,0.15); border-radius: 8px; padding: 12px 16px; display: flex; justify-content: space-between; align-items: center; }
   .due-label { font-size: 13px; font-weight: 600; }
-  .due-amount { font-size: 20px; font-weight: 700; }
-  .due-positive { color: #ff8f73; }
-  .due-credit { color: #79f2c0; }
+  .due-amount { font-size: 22px; font-weight: 700; }
+  .due-positive { color: #ffb8a3; }
+  .due-credit { color: #ffffff; }
 
-  .section { padding: 0 16px 16px; }
-  .section-header { display: flex; align-items: center; justify-content: space-between; padding: 16px 0 10px; }
+  .progress-card { background: #fff; border: 1px solid var(--border); border-radius: var(--radius); padding: 14px 16px; margin-top: 12px; box-shadow: var(--shadow-sm); }
+  .progress-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+  .progress-title { font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.06em; }
+  .progress-pct { font-size: 13px; font-weight: 700; color: var(--accent); }
+  .progress-bar { width: 100%; height: 8px; background: var(--bg); border-radius: 4px; overflow: hidden; }
+  .progress-fill { height: 100%; background: var(--accent); border-radius: 4px; transition: width 0.4s; }
+
+  .alert-100 { background: var(--green-light); border: 1px solid var(--accent); color: var(--accent-dark); border-radius: var(--radius); padding: 12px 14px; margin-top: 12px; font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 8px; }
+
+  /* MONTHLY CHART */
+  .chart-card { background: #fff; border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; margin-top: 12px; box-shadow: var(--shadow-sm); }
+  .chart-title { font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 12px; }
+  .chart-bars { display: flex; align-items: flex-end; gap: 4px; height: 100px; }
+  .chart-bar-col { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; }
+  .chart-bar { width: 100%; background: var(--accent-light); border-radius: 4px 4px 0 0; min-height: 2px; transition: height 0.4s; position: relative; }
+  .chart-bar.has-due { background: var(--orange-light); }
+  .chart-bar-label { font-size: 9px; color: var(--text-muted); font-weight: 500; }
+
+  .section { padding: 0 16px 16px; margin-top: 16px; }
+  .section-header { display: flex; align-items: center; justify-content: space-between; padding: 0 0 10px; }
   .section-title { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-muted); }
-  .btn-add { background: var(--accent2); color: white; border: none; border-radius: 8px; padding: 7px 14px; font-size: 12px; font-weight: 600; cursor: pointer; font-family: 'Inter', sans-serif; display: flex; align-items: center; gap: 4px; }
+
+  .search-bar { background: #fff; border: 1px solid var(--border); border-radius: 10px; padding: 10px 14px; display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+  .search-bar svg { width: 16px; height: 16px; color: var(--text-muted); flex-shrink: 0; }
+  .search-bar input { flex: 1; border: none; outline: none; font-size: 14px; font-family: 'Inter', sans-serif; background: none; color: var(--text); }
+  .search-bar input::placeholder { color: var(--text-muted); }
 
   .card-list { display: flex; flex-direction: column; gap: 6px; }
-  .tx-card { background: #fff; border-radius: var(--radius); padding: 14px 16px; display: flex; align-items: center; justify-content: space-between; box-shadow: var(--shadow-sm); border: 1px solid var(--border); cursor: pointer; transition: transform 0.1s, box-shadow 0.15s; }
+  .tx-card { background: #fff; border-radius: var(--radius); padding: 14px 16px; display: flex; align-items: center; justify-content: space-between; box-shadow: var(--shadow-sm); border: 1px solid var(--border); cursor: pointer; transition: transform 0.1s; }
   .tx-card:active { transform: scale(0.98); }
-  .tx-card.no-tap { cursor: default; }
-  .tx-card.no-tap:active { transform: none; }
   .tx-left { display: flex; align-items: center; gap: 12px; flex: 1; min-width: 0; }
   .tx-dot { width: 36px; height: 36px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 15px; flex-shrink: 0; }
   .tx-dot.income { background: var(--green-light); }
   .tx-dot.donation { background: var(--gold-light); }
-  .tx-dot.recurring { background: var(--accent-light); }
+  .tx-dot.recurring { background: var(--accent2-light); }
   .tx-info { min-width: 0; flex: 1; }
   .tx-desc { font-size: 14px; font-weight: 500; margin-bottom: 2px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .tx-meta { font-size: 11px; color: var(--text-muted); display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
   .tx-badge { background: var(--bg); border-radius: 4px; padding: 1px 6px; font-size: 10px; font-weight: 500; color: var(--text-muted); border: 1px solid var(--border); }
-  .tx-badge.auto { background: var(--accent-light); color: var(--accent2); border-color: transparent; }
+  .tx-badge.auto { background: var(--accent2-light); color: var(--accent2); border-color: transparent; }
+  .tx-badge.pending { background: var(--orange-light); color: var(--orange); border-color: transparent; }
+  .tx-badge.cleared { background: var(--green-light); color: var(--green); border-color: transparent; }
+  .tx-badge.cat { background: var(--accent-light); color: var(--accent); border-color: transparent; }
   .tx-right { display: flex; align-items: center; gap: 10px; }
   .tx-amount { font-size: 14px; font-weight: 700; white-space: nowrap; }
   .tx-amount.income { color: var(--green); }
@@ -91,14 +136,12 @@
   .tx-amount.recurring { color: var(--accent2); }
   .empty-state { background: #fff; border-radius: var(--radius); border: 1px dashed var(--border); padding: 32px; text-align: center; color: var(--text-muted); font-size: 13px; }
 
-  /* FAB */
-  .fab { position: fixed; bottom: 90px; left: 50%; transform: translateX(150px); width: 56px; height: 56px; border-radius: 50%; background: var(--accent2); color: white; border: none; box-shadow: var(--shadow-lg); cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 28px; font-weight: 300; z-index: 99; transition: transform 0.15s; }
-  .fab:active { transform: translateX(150px) scale(0.92); }
-  @media (max-width: 460px) { .fab { transform: translateX(0); right: 20px; left: auto; } .fab:active { transform: scale(0.92); } }
+  .fab { position: fixed; bottom: 90px; left: 50%; transform: translateX(150px); width: 56px; height: 56px; border-radius: 50%; background: var(--accent); color: white; border: none; box-shadow: var(--shadow-lg); cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 28px; font-weight: 300; z-index: 99; }
+  @media (max-width: 460px) { .fab { transform: none; right: 20px; left: auto; } }
 
   .bottom-nav { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 430px; background: #fff; border-top: 1px solid var(--border); display: flex; z-index: 100; }
   .nav-btn { flex: 1; display: flex; flex-direction: column; align-items: center; padding: 10px 0 14px; border: none; background: none; cursor: pointer; font-family: 'Inter', sans-serif; font-size: 10px; font-weight: 500; color: var(--text-muted); gap: 4px; }
-  .nav-btn.active { color: var(--accent2); }
+  .nav-btn.active { color: var(--accent); }
   .nav-btn svg { width: 20px; height: 20px; }
 
   .page { display: none; }
@@ -106,42 +149,57 @@
 
   .overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 200; display: none; align-items: flex-end; justify-content: center; }
   .overlay.open { display: flex; }
-  .modal { background: #fff; border-radius: 20px 20px 0 0; padding: 24px 20px 40px; width: 100%; max-width: 430px; animation: up 0.25s ease; max-height: 90vh; overflow-y: auto; }
+  .modal { background: #fff; border-radius: 20px 20px 0 0; padding: 24px 20px 40px; width: 100%; max-width: 430px; animation: up 0.25s ease; max-height: 92vh; overflow-y: auto; }
   @keyframes up { from { transform: translateY(100%); } to { transform: translateY(0); } }
   .modal-handle { width: 36px; height: 4px; background: var(--border); border-radius: 2px; margin: 0 auto 20px; }
-  .modal-title { font-size: 17px; font-weight: 700; margin-bottom: 20px; }
+  .modal-title { font-size: 17px; font-weight: 700; margin-bottom: 16px; }
+  .modal-sub { font-size: 13px; color: var(--text-muted); margin-bottom: 16px; line-height: 1.5; }
   .field { margin-bottom: 14px; }
+  .field-required label::after { content: " *"; color: var(--red); }
   .field label { display: block; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-muted); margin-bottom: 6px; }
-  .field input, .field select { width: 100%; padding: 11px 14px; border: 1.5px solid var(--border); border-radius: 8px; font-size: 14px; font-family: 'Inter', sans-serif; background: #fff; color: var(--text); outline: none; }
-  .field input:focus, .field select:focus { border-color: var(--accent2); }
+  .field input, .field select, .field textarea { width: 100%; padding: 11px 14px; border: 1.5px solid var(--border); border-radius: 8px; font-size: 14px; font-family: 'Inter', sans-serif; background: #fff; color: var(--text); outline: none; }
+  .field input:focus, .field select:focus { border-color: var(--accent); }
   .field-row { display: flex; gap: 10px; }
   .field-row .field { flex: 1; }
   .btn-primary { width: 100%; padding: 13px; background: var(--accent); color: white; border: none; border-radius: 10px; font-size: 14px; font-weight: 600; cursor: pointer; font-family: 'Inter', sans-serif; margin-top: 6px; }
   .btn-secondary { width: 100%; padding: 11px; background: none; color: var(--text-muted); border: none; border-radius: 10px; font-size: 13px; cursor: pointer; font-family: 'Inter', sans-serif; }
   .btn-danger { width: 100%; padding: 11px; background: none; color: var(--red); border: none; border-radius: 10px; font-size: 13px; font-weight: 600; cursor: pointer; font-family: 'Inter', sans-serif; }
+  .btn-outline { width: 100%; padding: 12px; background: none; color: var(--accent); border: 1.5px solid var(--accent); border-radius: 10px; font-size: 14px; font-weight: 600; cursor: pointer; font-family: 'Inter', sans-serif; margin-bottom: 10px; }
+
   #check-number-field { display: none; }
 
-  /* Choice modal */
   .choice-list { display: flex; flex-direction: column; gap: 8px; }
-  .choice-btn { width: 100%; padding: 16px; background: var(--bg); border: 1.5px solid var(--border); border-radius: 12px; cursor: pointer; display: flex; align-items: center; gap: 14px; font-family: 'Inter', sans-serif; transition: border-color 0.15s, background 0.15s; }
-  .choice-btn:hover { border-color: var(--accent2); background: var(--accent-light); }
+  .choice-btn { width: 100%; padding: 16px; background: var(--bg); border: 1.5px solid var(--border); border-radius: 12px; cursor: pointer; display: flex; align-items: center; gap: 14px; font-family: 'Inter', sans-serif; }
+  .choice-btn:hover { border-color: var(--accent); background: var(--accent-light); }
   .choice-icon { width: 42px; height: 42px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
   .choice-icon.income { background: var(--green-light); }
   .choice-icon.donation { background: var(--gold-light); }
-  .choice-icon.recurring { background: var(--accent-light); }
+  .choice-icon.recurring { background: var(--accent2-light); }
   .choice-text { text-align: left; flex: 1; }
   .choice-title { font-size: 14px; font-weight: 600; margin-bottom: 2px; }
   .choice-sub { font-size: 12px; color: var(--text-muted); }
 
-  body.rtl { direction: rtl; }
-  body.rtl .tx-left, body.rtl .header-left, body.rtl .header-right,
-  body.rtl .bal-row, body.rtl .due-banner, body.rtl .section-header,
-  body.rtl .tx-right, body.rtl .tx-meta { flex-direction: row-reverse; }
-  body.rtl .choice-text { text-align: right; }
-
   .type-toggle { display: flex; gap: 8px; margin-bottom: 16px; background: var(--bg); padding: 4px; border-radius: 10px; }
   .type-toggle button { flex: 1; padding: 8px; border: none; background: none; border-radius: 7px; font-size: 13px; font-weight: 600; cursor: pointer; color: var(--text-muted); font-family: 'Inter', sans-serif; }
   .type-toggle button.active { background: #fff; color: var(--text); box-shadow: var(--shadow-sm); }
+
+  .menu-item { display: flex; align-items: center; gap: 12px; padding: 12px 14px; border-radius: 10px; cursor: pointer; font-size: 14px; font-weight: 500; background: var(--bg); margin-bottom: 6px; border: none; width: 100%; font-family: 'Inter', sans-serif; color: var(--text); text-align: left; }
+  .menu-item:hover { background: var(--accent-light); }
+  .menu-item .icon { font-size: 18px; }
+
+  .maaser-mode-options { display: flex; gap: 8px; }
+  .maaser-mode-options button { flex: 1; padding: 8px 12px; background: var(--bg); border: 1.5px solid var(--border); border-radius: 8px; cursor: pointer; font-family: 'Inter', sans-serif; font-size: 12px; font-weight: 600; color: var(--text-muted); }
+  .maaser-mode-options button.active { background: var(--accent-light); border-color: var(--accent); color: var(--accent); }
+
+  body.rtl { direction: rtl; }
+  body.rtl .tx-left, body.rtl .header-left, body.rtl .header-right,
+  body.rtl .bal-row, body.rtl .due-banner, body.rtl .section-header,
+  body.rtl .tx-right, body.rtl .tx-meta, body.rtl .greeting,
+  body.rtl .progress-header, body.rtl .controls-bar,
+  body.rtl .alert-100, body.rtl .demo-banner { flex-direction: row-reverse; text-align: right; }
+  body.rtl .greeting { text-align: right; }
+  body.rtl .choice-text { text-align: right; }
+  body.rtl .menu-item { text-align: right; }
 </style>
 </head>
 <body>
@@ -156,39 +214,77 @@
       <svg viewBox="0 0 24 24"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
       <span id="login-btn-text">Sign in with Google</span>
     </button>
+    <button class="btn-demo" onclick="enterDemo()" id="btn-demo-text">Try a demo (no sign-in)</button>
   </div>
 </div>
 
 <div id="app">
+  <div class="demo-banner" id="demo-banner" style="display:none">
+    <span id="demo-banner-text">Demo Mode • data is fake and not saved</span>
+    <button onclick="exitDemo()" id="btn-exit-demo">Exit</button>
+  </div>
+
   <header class="app-header">
     <div class="header-left">
       <div class="header-logo">$</div>
       <span class="header-name" id="app-title">Ma'aser</span>
     </div>
     <div class="header-right">
-      <button class="lang-flag" onclick="toggleLang()" id="lang-btn" title="Language">🇮🇱</button>
+      <button class="lang-flag" onclick="toggleLang()" id="lang-btn">🇮🇱</button>
+      <button class="icon-btn" onclick="openMenu()" title="Menu">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="5" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="12" cy="19" r="1.5"/></svg>
+      </button>
       <div class="avatar" id="user-avatar" onclick="signOut()">M</div>
     </div>
   </header>
 
   <div class="page active" id="page-dashboard">
-    <div class="year-bar">
-      <button class="year-nav" onclick="changeYear(-1)">‹</button>
-      <span class="year-label" id="year-display">2026</span>
-      <button class="year-nav" onclick="changeYear(1)">›</button>
+    <div class="greeting">
+      <div class="greeting-text" id="greeting-text">Welcome back,</div>
+      <div class="greeting-name" id="greeting-name">User</div>
     </div>
+
+    <div class="controls-bar">
+      <div class="year-pill">
+        <button class="year-nav" onclick="changeYear(-1)">‹</button>
+        <span class="year-label" id="year-display">2026</span>
+        <button class="year-nav" onclick="changeYear(1)">›</button>
+      </div>
+      <div class="view-toggle">
+        <button onclick="setView('year')" id="view-year" class="active">Year</button>
+        <button onclick="setView('month')" id="view-month">Month</button>
+      </div>
+      <select id="month-selector" style="display:none;padding:6px 10px;border:1px solid var(--border);border-radius:10px;font-family:Inter;font-size:12px;font-weight:600;background:#fff;" onchange="loadAll()"></select>
+    </div>
+
     <div class="balance-section">
       <div class="balance-card">
         <div class="balance-card-label" id="lbl-overview">Overview</div>
         <div class="bal-row"><span class="bal-row-label" id="lbl-income">Total Income</span><span class="bal-row-val" id="bal-income">$0.00</span></div>
-        <div class="bal-row"><span class="bal-row-label" id="lbl-obligation">Ma'aser (10%)</span><span class="bal-row-val" id="bal-obligation">$0.00</span></div>
+        <div class="bal-row"><span class="bal-row-label" id="lbl-obligation">Ma'aser</span><span class="bal-row-val" id="bal-obligation">$0.00</span></div>
         <div class="bal-row"><span class="bal-row-label" id="lbl-donated">Total Donated</span><span class="bal-row-val" id="bal-donated">$0.00</span></div>
         <div class="due-banner">
           <span class="due-label" id="lbl-due">Balance Due</span>
           <span class="due-amount" id="bal-due">$0.00</span>
         </div>
       </div>
+
+      <div class="alert-100" id="alert-100" style="display:none">✓ <span id="alert-100-text">You've completed your ma'aser for this period!</span></div>
+
+      <div class="progress-card">
+        <div class="progress-header">
+          <span class="progress-title" id="lbl-progress">Progress</span>
+          <span class="progress-pct" id="progress-pct">0%</span>
+        </div>
+        <div class="progress-bar"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
+      </div>
+
+      <div class="chart-card" id="chart-section">
+        <div class="chart-title" id="lbl-monthly">Monthly Breakdown</div>
+        <div class="chart-bars" id="chart-bars"></div>
+      </div>
     </div>
+
     <div class="section">
       <div class="section-header"><span class="section-title" id="lbl-recent">Recent</span></div>
       <div class="card-list" id="recent-list"><div class="empty-state" id="empty-recent-msg">No transactions yet</div></div>
@@ -196,33 +292,35 @@
   </div>
 
   <div class="page" id="page-income">
-    <div class="section">
-      <div class="section-header">
-        <span class="section-title" id="lbl-income-title">Income</span>
+    <div class="section" style="margin-top:20px">
+      <div class="section-header"><span class="section-title" id="lbl-income-title">Income</span></div>
+      <div class="search-bar">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+        <input type="text" id="search-income" placeholder="Search..." oninput="loadIncome()" />
       </div>
       <div class="card-list" id="income-list"><div class="empty-state" id="empty-income-msg">No income entries yet</div></div>
     </div>
   </div>
 
   <div class="page" id="page-donations">
-    <div class="section">
-      <div class="section-header">
-        <span class="section-title" id="lbl-donations-title">Donations</span>
+    <div class="section" style="margin-top:20px">
+      <div class="section-header"><span class="section-title" id="lbl-donations-title">Donations</span></div>
+      <div class="search-bar">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+        <input type="text" id="search-donation" placeholder="Search..." oninput="loadDonations()" />
       </div>
       <div class="card-list" id="donation-list"><div class="empty-state" id="empty-donation-msg">No donations yet</div></div>
     </div>
   </div>
 
   <div class="page" id="page-schedules">
-    <div class="section">
-      <div class="section-header">
-        <span class="section-title" id="lbl-schedules-title">Recurring</span>
-      </div>
+    <div class="section" style="margin-top:20px">
+      <div class="section-header"><span class="section-title" id="lbl-schedules-title">Recurring</span></div>
       <div class="card-list" id="schedule-list"><div class="empty-state" id="empty-schedule-msg">No recurring entries yet</div></div>
     </div>
   </div>
 
-  <button class="fab" onclick="openChoice()" title="Add">+</button>
+  <button class="fab" onclick="openChoice()">+</button>
 
   <nav class="bottom-nav">
     <button class="nav-btn active" onclick="showPage('dashboard')" id="nav-dashboard">
@@ -252,24 +350,15 @@
     <div class="choice-list">
       <button class="choice-btn" onclick="closeModal('choice'); openModal('income');">
         <div class="choice-icon income">💰</div>
-        <div class="choice-text">
-          <div class="choice-title" id="lbl-choice-income">Income</div>
-          <div class="choice-sub" id="lbl-choice-income-sub">Salary, bonus, freelance...</div>
-        </div>
+        <div class="choice-text"><div class="choice-title" id="lbl-choice-income">Income</div><div class="choice-sub" id="lbl-choice-income-sub">Salary, bonus, freelance...</div></div>
       </button>
       <button class="choice-btn" onclick="closeModal('choice'); openModal('donation');">
         <div class="choice-icon donation">🤲</div>
-        <div class="choice-text">
-          <div class="choice-title" id="lbl-choice-donation">Donation</div>
-          <div class="choice-sub" id="lbl-choice-donation-sub">Tzedakah, shul, charity...</div>
-        </div>
+        <div class="choice-text"><div class="choice-title" id="lbl-choice-donation">Donation</div><div class="choice-sub" id="lbl-choice-donation-sub">Tzedakah, shul, charity...</div></div>
       </button>
       <button class="choice-btn" onclick="closeModal('choice'); openModal('schedule');">
         <div class="choice-icon recurring">⟳</div>
-        <div class="choice-text">
-          <div class="choice-title" id="lbl-choice-recurring">Recurring</div>
-          <div class="choice-sub" id="lbl-choice-recurring-sub">Auto entry every month</div>
-        </div>
+        <div class="choice-text"><div class="choice-title" id="lbl-choice-recurring">Recurring</div><div class="choice-sub" id="lbl-choice-recurring-sub">Auto entry every month</div></div>
       </button>
     </div>
   </div>
@@ -280,10 +369,21 @@
   <div class="modal">
     <div class="modal-handle"></div>
     <div class="modal-title" id="modal-income-title">Add Income</div>
-    <div class="field"><label id="lbl-f-desc">Description</label><input id="f-income-desc" placeholder="e.g. Spotlight salary..." /></div>
     <div class="field-row">
-      <div class="field"><label id="lbl-f-amount">Amount ($)</label><input id="f-income-amount" type="number" placeholder="0.00" /></div>
-      <div class="field"><label id="lbl-f-date">Date</label><input id="f-income-date" type="date" /></div>
+      <div class="field field-required"><label id="lbl-f-amount">Amount ($)</label><input id="f-income-amount" type="number" step="0.01" placeholder="0.00" /></div>
+      <div class="field field-required"><label id="lbl-f-date">Date</label><input id="f-income-date" type="date" /></div>
+    </div>
+    <div class="field"><label id="lbl-f-desc">Description</label><input id="f-income-desc" placeholder="e.g. Spotlight salary..." /></div>
+    <div class="field">
+      <label id="lbl-f-maaser-mode">Ma'aser %</label>
+      <div class="maaser-mode-options">
+        <button type="button" id="mm-pct" onclick="setMaaserMode('pct')" class="active">% Percent</button>
+        <button type="button" id="mm-fixed" onclick="setMaaserMode('fixed')">$ Fixed</button>
+      </div>
+    </div>
+    <div class="field-row">
+      <div class="field" id="maaser-pct-field"><label id="lbl-f-maaser-pct">Percent (%)</label><input id="f-income-maaser-pct" type="number" step="0.1" value="10" /></div>
+      <div class="field" id="maaser-fixed-field" style="display:none"><label id="lbl-f-maaser-fixed">Fixed Amount ($)</label><input id="f-income-maaser-fixed" type="number" step="0.01" placeholder="0.00" /></div>
     </div>
     <div class="field">
       <label id="lbl-f-paytype">Payment Type</label>
@@ -294,10 +394,7 @@
         <option value="other" id="opt-other">Other</option>
       </select>
     </div>
-    <div class="field" id="check-number-field">
-      <label id="lbl-f-checknum">Check Number</label>
-      <input id="f-income-checknum" placeholder="e.g. 5182" />
-    </div>
+    <div class="field" id="check-number-field"><label id="lbl-f-checknum">Check Number</label><input id="f-income-checknum" placeholder="e.g. 5182" /></div>
     <button class="btn-primary" onclick="saveIncome()" id="btn-save-income">Save</button>
     <button class="btn-danger" onclick="deleteFromModal('income')" id="btn-delete-income" style="display:none">Delete</button>
     <button class="btn-secondary" onclick="closeModal('income')" id="btn-cancel-income">Cancel</button>
@@ -309,10 +406,29 @@
   <div class="modal">
     <div class="modal-handle"></div>
     <div class="modal-title" id="modal-donation-title">Add Donation</div>
-    <div class="field"><label id="lbl-f-desc2">Description</label><input id="f-donation-desc" placeholder="e.g. Shul, Tzedakah..." /></div>
     <div class="field-row">
-      <div class="field"><label id="lbl-f-amount2">Amount ($)</label><input id="f-donation-amount" type="number" placeholder="0.00" /></div>
-      <div class="field"><label id="lbl-f-date2">Date</label><input id="f-donation-date" type="date" /></div>
+      <div class="field field-required"><label id="lbl-f-amount2">Amount ($)</label><input id="f-donation-amount" type="number" step="0.01" placeholder="0.00" /></div>
+      <div class="field field-required"><label id="lbl-f-date2">Date</label><input id="f-donation-date" type="date" /></div>
+    </div>
+    <div class="field"><label id="lbl-f-desc2">Description</label><input id="f-donation-desc" placeholder="e.g. Shul, Tzedakah..." /></div>
+    <div class="field">
+      <label id="lbl-f-category">Category</label>
+      <select id="f-donation-category">
+        <option value="" id="opt-cat-none">— None —</option>
+        <option value="shul" id="opt-cat-shul">Shul</option>
+        <option value="tzedakah" id="opt-cat-tzedakah">Tzedakah</option>
+        <option value="education" id="opt-cat-education">Education</option>
+        <option value="chesed" id="opt-cat-chesed">Chesed</option>
+        <option value="family" id="opt-cat-family">Family</option>
+        <option value="other-cat" id="opt-cat-other">Other</option>
+      </select>
+    </div>
+    <div class="field">
+      <label id="lbl-f-status">Status</label>
+      <select id="f-donation-status">
+        <option value="cleared" id="opt-status-cleared">Cleared / Paid</option>
+        <option value="pending" id="opt-status-pending">Pending</option>
+      </select>
     </div>
     <button class="btn-primary" onclick="saveDonation()" id="btn-save-donation">Save</button>
     <button class="btn-danger" onclick="deleteFromModal('donation')" id="btn-delete-donation" style="display:none">Delete</button>
@@ -329,10 +445,10 @@
       <button id="recur-type-income" onclick="setRecurType('income')" class="active">💰 <span id="lbl-recur-income">Income</span></button>
       <button id="recur-type-donation" onclick="setRecurType('donation')">🤲 <span id="lbl-recur-donation">Donation</span></button>
     </div>
-    <div class="field"><label id="lbl-f-sname">Name</label><input id="f-schedule-name" placeholder="e.g. Salary, Shul membership..." /></div>
+    <div class="field field-required"><label id="lbl-f-sname">Name</label><input id="f-schedule-name" placeholder="e.g. Salary, Shul membership..." /></div>
     <div class="field-row">
-      <div class="field"><label id="lbl-f-samount">Amount ($)</label><input id="f-schedule-amount" type="number" placeholder="0.00" /></div>
-      <div class="field"><label id="lbl-f-day">Day of Month</label><input id="f-schedule-day" type="number" min="1" max="28" placeholder="1-28" /></div>
+      <div class="field field-required"><label id="lbl-f-samount">Amount ($)</label><input id="f-schedule-amount" type="number" step="0.01" placeholder="0.00" /></div>
+      <div class="field field-required"><label id="lbl-f-day">Day of Month</label><input id="f-schedule-day" type="number" min="1" max="28" placeholder="1-28" /></div>
     </div>
     <div class="field" id="recur-paytype-field">
       <label id="lbl-f-recur-paytype">Payment Type</label>
@@ -349,10 +465,41 @@
   </div>
 </div>
 
+<!-- MENU MODAL -->
+<div class="overlay" id="modal-menu">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title" id="modal-menu-title">Menu</div>
+    <button class="menu-item" onclick="closeModal('menu'); exportCSV();"><span class="icon">⬇</span> <span id="menu-export">Export to CSV</span></button>
+    <button class="menu-item" onclick="closeModal('menu'); openImport();"><span class="icon">⬆</span> <span id="menu-import">Import from CSV</span></button>
+    <button class="menu-item" onclick="closeModal('menu'); downloadTemplate();"><span class="icon">📋</span> <span id="menu-template">Download Template</span></button>
+    <button class="menu-item" onclick="closeModal('menu'); signOut();" id="menu-signout-btn"><span class="icon">↪</span> <span id="menu-signout">Sign out</span></button>
+  </div>
+</div>
+
+<!-- IMPORT MODAL -->
+<div class="overlay" id="modal-import">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title" id="modal-import-title">Import from CSV</div>
+    <p class="modal-sub" id="modal-import-sub">Upload a CSV file with your income or donation data. Download the template first to see the required format.</p>
+    <button class="btn-outline" onclick="downloadTemplate()" id="btn-download-tpl">📋 Download Template</button>
+    <div class="field"><label id="lbl-import-type">Data type</label>
+      <select id="import-type">
+        <option value="income" id="opt-imp-income">Income</option>
+        <option value="donations" id="opt-imp-donations">Donations</option>
+      </select>
+    </div>
+    <div class="field"><label id="lbl-import-file">CSV file</label><input id="import-file" type="file" accept=".csv" /></div>
+    <button class="btn-primary" onclick="importCSV()" id="btn-import-do">Import</button>
+    <button class="btn-secondary" onclick="closeModal('import')" id="btn-import-cancel">Cancel</button>
+  </div>
+</div>
+
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import { getAuth, GoogleAuthProvider, signInWithRedirect, signInWithPopup, getRedirectResult, signOut as fbSignOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, updateDoc, orderBy, query } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, updateDoc, orderBy, query, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyDOdbVrMphTHqSnTYB1CipuURAbmj_S5uk",
@@ -368,26 +515,42 @@ const auth = getAuth(app);
 const db = getFirestore(app);
 const provider = new GoogleAuthProvider();
 
-let currentUser = null, currentYear = new Date().getFullYear(), lang = 'en', recurType = 'income';
+let currentUser = null, currentYear = new Date().getFullYear(), currentMonth = null, view = 'year';
+let lang = 'en', recurType = 'income', maaserMode = 'pct';
 let editingId = null, editingType = null;
+let isDemo = false, demoData = { income: [], donations: [], schedules: [] };
+let incomeData = [], donationData = [], scheduleData = [];
 
 getRedirectResult(auth).catch(() => {});
 
 const T = {
-  en: { appTitle:"Ma'aser", loginTitle:"Welcome back", loginSub:"Sign in to manage your ma'aser obligations", loginBtn:"Sign in with Google", overview:"Overview", totalIncome:"Total Income", obligation:"Ma'aser (10%)", totalDonated:"Total Donated", due:"Balance Due", recent:"Recent", incomeTitle:"Income", donationsTitle:"Donations", schedulesTitle:"Recurring", save:"Save", cancel:"Cancel", delete:"Delete", desc:"Description", amount:"Amount ($)", date:"Date", paytype:"Payment Type", checknum:"Check Number", name:"Name", dayOfMonth:"Day of Month", transfer:"Bank Transfer", check:"Check", cash:"Cash", other:"Other", incomeOpt:"Income", donationOpt:"Donation", addIncome:"Add Income", addDonation:"Add Donation", addSchedule:"Add Recurring Entry", editIncome:"Edit Income", editDonation:"Edit Donation", editSchedule:"Edit Recurring Entry", emptyRecent:"No transactions yet", emptyIncome:"No income entries yet", emptyDonation:"No donations yet", emptySchedule:"No recurring entries yet", navOverview:"Overview", navIncome:"Income", navDonations:"Donations", navRecurring:"Recurring", signout:"Sign out?", fillAll:"Please fill all fields", deleteConfirm:"Delete this entry?", auto:"Auto", everyMonth:"Every month on day", flag:"🇮🇱", choiceTitle:"What to add?", choiceIncome:"Income", choiceIncomeSub:"Salary, bonus, freelance...", choiceDonation:"Donation", choiceDonationSub:"Tzedakah, shul, charity...", choiceRecurring:"Recurring", choiceRecurringSub:"Auto entry every month" },
-  he: { appTitle:"מעשרות", loginTitle:"ברוך הבא", loginSub:"התחבר כדי לנהל את המעשרות שלך", loginBtn:"התחבר עם גוגל", overview:"סיכום", totalIncome:'סה"כ הכנסות', obligation:"מעשר (10%)", totalDonated:'סה"כ תרומות', due:"יתרה לתשלום", recent:"אחרון", incomeTitle:"הכנסות", donationsTitle:"תרומות", schedulesTitle:"קבועות", save:"שמור", cancel:"ביטול", delete:"מחיקה", desc:"תיאור", amount:"סכום ($)", date:"תאריך", paytype:"אמצעי תשלום", checknum:"מספר צ'ק", name:"שם", dayOfMonth:"יום בחודש", transfer:"העברה בנקאית", check:"צ'ק", cash:"מזומן", other:"אחר", incomeOpt:"הכנסה", donationOpt:"תרומה", addIncome:"הוספת הכנסה", addDonation:"הוספת תרומה", addSchedule:"הוספת עסקה קבועה", editIncome:"עריכת הכנסה", editDonation:"עריכת תרומה", editSchedule:"עריכת עסקה קבועה", emptyRecent:"אין עדיין פעולות", emptyIncome:"אין עדיין הכנסות", emptyDonation:"אין עדיין תרומות", emptySchedule:"אין עדיין עסקאות קבועות", navOverview:"סיכום", navIncome:"הכנסות", navDonations:"תרומות", navRecurring:"קבועות", signout:"להתנתק?", fillAll:"נא למלא את כל השדות", deleteConfirm:"למחוק את הרשומה?", auto:"אוטומטי", everyMonth:"כל חודש ב-", flag:"🇺🇸", choiceTitle:"מה להוסיף?", choiceIncome:"הכנסה", choiceIncomeSub:"משכורת, בונוס, פרילנס...", choiceDonation:"תרומה", choiceDonationSub:"צדקה, שיבל, חסד...", choiceRecurring:"קבועה", choiceRecurringSub:"כניסה אוטומטית כל חודש" }
+  en: { appTitle:"Ma'aser", loginTitle:"Welcome back", loginSub:"Sign in to manage your ma'aser obligations", loginBtn:"Sign in with Google", demoBtn:"Try a demo (no sign-in)", demoBanner:"Demo Mode • data is fake and not saved", exitDemo:"Exit", greeting:"Welcome back,", overview:"Overview", totalIncome:"Total Income", obligation:"Ma'aser", totalDonated:"Total Donated", due:"Balance Due", recent:"Recent", incomeTitle:"Income", donationsTitle:"Donations", schedulesTitle:"Recurring", save:"Save", cancel:"Cancel", delete:"Delete", desc:"Description", amount:"Amount ($)", date:"Date", paytype:"Payment Type", checknum:"Check Number", name:"Name", dayOfMonth:"Day of Month", maaserMode:"Ma'aser %", percent:"Percent (%)", fixed:"Fixed Amount ($)", category:"Category", status:"Status", cleared:"Cleared / Paid", pending:"Pending", transfer:"Bank Transfer", check:"Check", cash:"Cash", other:"Other", incomeOpt:"Income", donationOpt:"Donation", addIncome:"Add Income", addDonation:"Add Donation", addSchedule:"Add Recurring Entry", editIncome:"Edit Income", editDonation:"Edit Donation", editSchedule:"Edit Recurring Entry", emptyRecent:"No transactions yet", emptyIncome:"No income entries yet", emptyDonation:"No donations yet", emptySchedule:"No recurring entries yet", navOverview:"Overview", navIncome:"Income", navDonations:"Donations", navRecurring:"Recurring", signout:"Sign out?", fillAll:"Please fill required fields (amount and date)", deleteConfirm:"Delete this entry?", auto:"Auto", everyMonth:"Every month on day", flag:"🇮🇱", choiceTitle:"What to add?", choiceIncome:"Income", choiceIncomeSub:"Salary, bonus, freelance...", choiceDonation:"Donation", choiceDonationSub:"Tzedakah, shul, charity...", choiceRecurring:"Recurring", choiceRecurringSub:"Auto entry every month", search:"Search...", year:"Year", month:"Month", progress:"Progress", monthly:"Monthly Breakdown", alert100:"You've completed your ma'aser for this period!", catNone:"— None —", catShul:"Shul", catTzedakah:"Tzedakah", catEducation:"Education", catChesed:"Chesed", catFamily:"Family", catOther:"Other", menu:"Menu", menuExport:"Export to CSV", menuImport:"Import from CSV", menuTemplate:"Download Template", menuSignout:"Sign out", importTitle:"Import from CSV", importSub:"Upload a CSV file with your income or donation data. Download the template first to see the required format.", downloadTpl:"📋 Download Template", importType:"Data type", importFile:"CSV file", importBtn:"Import", importSuccess:"Imported successfully!", importError:"Import failed. Please check the file format." },
+  he: { appTitle:"מעשרות", loginTitle:"ברוך הבא", loginSub:"התחבר כדי לנהל את המעשרות שלך", loginBtn:"התחבר עם גוגל", demoBtn:"נסה דמו (ללא התחברות)", demoBanner:"מצב דמו • הנתונים מומצאים ולא נשמרים", exitDemo:"יציאה", greeting:"ברוך הבא,", overview:"סיכום", totalIncome:'סה"כ הכנסות', obligation:"מעשר", totalDonated:'סה"כ תרומות', due:"יתרה לתשלום", recent:"אחרון", incomeTitle:"הכנסות", donationsTitle:"תרומות", schedulesTitle:"קבועות", save:"שמור", cancel:"ביטול", delete:"מחיקה", desc:"תיאור", amount:"סכום ($)", date:"תאריך", paytype:"אמצעי תשלום", checknum:"מספר צ'ק", name:"שם", dayOfMonth:"יום בחודש", maaserMode:"אחוז מעשר", percent:"אחוז (%)", fixed:"סכום קבוע ($)", category:"קטגוריה", status:"סטטוס", cleared:"שולם", pending:"ממתין", transfer:"העברה בנקאית", check:"צ'ק", cash:"מזומן", other:"אחר", incomeOpt:"הכנסה", donationOpt:"תרומה", addIncome:"הוספת הכנסה", addDonation:"הוספת תרומה", addSchedule:"הוספת עסקה קבועה", editIncome:"עריכת הכנסה", editDonation:"עריכת תרומה", editSchedule:"עריכת עסקה קבועה", emptyRecent:"אין עדיין פעולות", emptyIncome:"אין עדיין הכנסות", emptyDonation:"אין עדיין תרומות", emptySchedule:"אין עדיין עסקאות קבועות", navOverview:"סיכום", navIncome:"הכנסות", navDonations:"תרומות", navRecurring:"קבועות", signout:"להתנתק?", fillAll:"נא למלא שדות חובה (סכום ותאריך)", deleteConfirm:"למחוק את הרשומה?", auto:"אוטומטי", everyMonth:"כל חודש ב-", flag:"🇺🇸", choiceTitle:"מה להוסיף?", choiceIncome:"הכנסה", choiceIncomeSub:"משכורת, בונוס, פרילנס...", choiceDonation:"תרומה", choiceDonationSub:"צדקה, שיבל, חסד...", choiceRecurring:"קבועה", choiceRecurringSub:"כניסה אוטומטית כל חודש", search:"חיפוש...", year:"שנה", month:"חודש", progress:"התקדמות", monthly:"פילוח חודשי", alert100:"השלמת את המעשר לתקופה זו!", catNone:"— ללא —", catShul:"בית כנסת", catTzedakah:"צדקה", catEducation:"חינוך", catChesed:"חסד", catFamily:"משפחה", catOther:"אחר", menu:"תפריט", menuExport:"ייצוא ל-CSV", menuImport:"ייבוא מ-CSV", menuTemplate:"הורדת תבנית", menuSignout:"התנתקות", importTitle:"ייבוא מ-CSV", importSub:"העלה קובץ CSV עם נתוני הכנסות או תרומות. הורד תחילה את התבנית כדי לראות את הפורמט הנדרש.", downloadTpl:"📋 הורדת תבנית", importType:"סוג נתונים", importFile:"קובץ CSV", importBtn:"ייבוא", importSuccess:"הייבוא בוצע בהצלחה!", importError:"הייבוא נכשל. בדוק את פורמט הקובץ." }
 };
 
 function tr(k) { return T[lang][k] || k; }
 
+const monthNames = { en: ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'], he: ['ינו','פבר','מרץ','אפר','מאי','יונ','יול','אוג','ספט','אוק','נוב','דצמ'] };
+
 function applyLang() {
   document.body.classList.toggle('rtl', lang === 'he');
-  const ids = { 'app-title':'appTitle','login-title':'loginTitle','login-sub':'loginSub','login-btn-text':'loginBtn','lbl-overview':'overview','lbl-income':'totalIncome','lbl-obligation':'obligation','lbl-donated':'totalDonated','lbl-due':'due','lbl-recent':'recent','lbl-income-title':'incomeTitle','lbl-donations-title':'donationsTitle','lbl-schedules-title':'schedulesTitle','nav-lbl-dashboard':'navOverview','nav-lbl-income':'navIncome','nav-lbl-donations':'navDonations','nav-lbl-schedules':'navRecurring','lbl-f-desc':'desc','lbl-f-amount':'amount','lbl-f-date':'date','lbl-f-paytype':'paytype','lbl-f-checknum':'checknum','lbl-f-desc2':'desc','lbl-f-amount2':'amount','lbl-f-date2':'date','lbl-f-sname':'name','lbl-f-samount':'amount','lbl-f-day':'dayOfMonth','lbl-f-recur-paytype':'paytype','btn-save-income':'save','btn-cancel-income':'cancel','btn-delete-income':'delete','btn-save-donation':'save','btn-cancel-donation':'cancel','btn-delete-donation':'delete','btn-save-schedule':'save','btn-cancel-schedule':'cancel','btn-delete-schedule':'delete','opt-transfer':'transfer','opt-check':'check','opt-cash':'cash','opt-other':'other','opt-r-transfer':'transfer','opt-r-check':'check','opt-r-cash':'cash','opt-r-other':'other','lbl-recur-income':'incomeOpt','lbl-recur-donation':'donationOpt','modal-choice-title':'choiceTitle','lbl-choice-income':'choiceIncome','lbl-choice-income-sub':'choiceIncomeSub','lbl-choice-donation':'choiceDonation','lbl-choice-donation-sub':'choiceDonationSub','lbl-choice-recurring':'choiceRecurring','lbl-choice-recurring-sub':'choiceRecurringSub' };
+  const ids = { 'app-title':'appTitle','login-title':'loginTitle','login-sub':'loginSub','login-btn-text':'loginBtn','btn-demo-text':'demoBtn','demo-banner-text':'demoBanner','btn-exit-demo':'exitDemo','greeting-text':'greeting','lbl-overview':'overview','lbl-income':'totalIncome','lbl-obligation':'obligation','lbl-donated':'totalDonated','lbl-due':'due','lbl-recent':'recent','lbl-income-title':'incomeTitle','lbl-donations-title':'donationsTitle','lbl-schedules-title':'schedulesTitle','nav-lbl-dashboard':'navOverview','nav-lbl-income':'navIncome','nav-lbl-donations':'navDonations','nav-lbl-schedules':'navRecurring','lbl-f-desc':'desc','lbl-f-amount':'amount','lbl-f-date':'date','lbl-f-paytype':'paytype','lbl-f-checknum':'checknum','lbl-f-desc2':'desc','lbl-f-amount2':'amount','lbl-f-date2':'date','lbl-f-sname':'name','lbl-f-samount':'amount','lbl-f-day':'dayOfMonth','lbl-f-recur-paytype':'paytype','lbl-f-maaser-mode':'maaserMode','lbl-f-maaser-pct':'percent','lbl-f-maaser-fixed':'fixed','lbl-f-category':'category','lbl-f-status':'status','btn-save-income':'save','btn-cancel-income':'cancel','btn-delete-income':'delete','btn-save-donation':'save','btn-cancel-donation':'cancel','btn-delete-donation':'delete','btn-save-schedule':'save','btn-cancel-schedule':'cancel','btn-delete-schedule':'delete','opt-transfer':'transfer','opt-check':'check','opt-cash':'cash','opt-other':'other','opt-r-transfer':'transfer','opt-r-check':'check','opt-r-cash':'cash','opt-r-other':'other','lbl-recur-income':'incomeOpt','lbl-recur-donation':'donationOpt','modal-choice-title':'choiceTitle','lbl-choice-income':'choiceIncome','lbl-choice-income-sub':'choiceIncomeSub','lbl-choice-donation':'choiceDonation','lbl-choice-donation-sub':'choiceDonationSub','lbl-choice-recurring':'choiceRecurring','lbl-choice-recurring-sub':'choiceRecurringSub','view-year':'year','view-month':'month','lbl-progress':'progress','lbl-monthly':'monthly','alert-100-text':'alert100','opt-cat-none':'catNone','opt-cat-shul':'catShul','opt-cat-tzedakah':'catTzedakah','opt-cat-education':'catEducation','opt-cat-chesed':'catChesed','opt-cat-family':'catFamily','opt-cat-other':'catOther','opt-status-cleared':'cleared','opt-status-pending':'pending','modal-menu-title':'menu','menu-export':'menuExport','menu-import':'menuImport','menu-template':'menuTemplate','menu-signout':'menuSignout','modal-import-title':'importTitle','modal-import-sub':'importSub','btn-download-tpl':'downloadTpl','lbl-import-type':'importType','lbl-import-file':'importFile','btn-import-do':'importBtn','btn-import-cancel':'cancel','opt-imp-income':'incomeOpt','opt-imp-donations':'donationsTitle' };
   Object.entries(ids).forEach(([id, key]) => { const el = document.getElementById(id); if (el) el.textContent = tr(key); });
   document.getElementById('lang-btn').textContent = tr('flag');
-  const empties = { 'empty-recent-msg':'emptyRecent','empty-income-msg':'emptyIncome','empty-donation-msg':'emptyDonation','empty-schedule-msg':'emptySchedule' };
-  Object.entries(empties).forEach(([id, key]) => { const el = document.getElementById(id); if (el) el.textContent = tr(key); });
-  if (currentUser) loadAll();
+  ['empty-recent-msg','empty-income-msg','empty-donation-msg','empty-schedule-msg'].forEach(id => {
+    const map = { 'empty-recent-msg':'emptyRecent','empty-income-msg':'emptyIncome','empty-donation-msg':'emptyDonation','empty-schedule-msg':'emptySchedule' };
+    const el = document.getElementById(id); if (el) el.textContent = tr(map[id]);
+  });
+  document.getElementById('search-income').placeholder = tr('search');
+  document.getElementById('search-donation').placeholder = tr('search');
+  populateMonthSelector();
+  if (currentUser || isDemo) loadAll();
+}
+
+function populateMonthSelector() {
+  const sel = document.getElementById('month-selector');
+  sel.innerHTML = monthNames[lang].map((m, i) => `<option value="${i}">${m}</option>`).join('');
+  if (currentMonth !== null) sel.value = currentMonth;
 }
 
 window.toggleLang = () => { lang = lang === 'en' ? 'he' : 'en'; applyLang(); };
@@ -395,20 +558,73 @@ window.toggleLang = () => { lang = lang === 'en' ? 'he' : 'en'; applyLang(); };
 window.signIn = async () => {
   const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
   try {
-    if (isMobile) { await signInWithRedirect(auth, provider); }
-    else { await signInWithPopup(auth, provider); }
+    if (isMobile) await signInWithRedirect(auth, provider);
+    else await signInWithPopup(auth, provider);
   } catch(e) { alert('Sign in failed: ' + e.message); }
 };
 
-window.signOut = async () => { if (confirm(tr('signout'))) await fbSignOut(auth); };
+window.signOut = async () => {
+  if (!confirm(tr('signout'))) return;
+  if (isDemo) { exitDemo(); return; }
+  await fbSignOut(auth);
+};
+
+window.enterDemo = () => {
+  isDemo = true;
+  const today = new Date();
+  const y = today.getFullYear();
+  demoData = {
+    income: [
+      { id:'d1', desc:'Spotlight salary', amount:5000, date:`${y}-04-24`, paytype:'check', checknum:'5182', maaserPct:10, createdAt:Date.now() },
+      { id:'d2', desc:'Spotlight salary', amount:5000, date:`${y}-04-14`, paytype:'check', checknum:'5179', maaserPct:10, createdAt:Date.now() },
+      { id:'d3', desc:'Spotlight salary', amount:5000, date:`${y}-03-27`, paytype:'check', checknum:'5174', maaserPct:10, createdAt:Date.now() },
+      { id:'d4', desc:'Bnos Menachem', amount:927.36, date:`${y}-03-25`, paytype:'check', checknum:'47172', maaserPct:10, createdAt:Date.now() },
+      { id:'d5', desc:'Freelance project', amount:1500, date:`${y}-02-15`, paytype:'transfer', maaserPct:10, createdAt:Date.now() },
+      { id:'d6', desc:'Spotlight bonus', amount:2500, date:`${y}-01-10`, paytype:'transfer', maaserPct:10, createdAt:Date.now() },
+    ],
+    donations: [
+      { id:'g1', desc:'Shul membership', amount:100, date:`${y}-04-22`, category:'shul', status:'cleared', createdAt:Date.now() },
+      { id:'g2', desc:'Yeshivas erev', amount:360, date:`${y}-04-21`, category:'education', status:'cleared', createdAt:Date.now() },
+      { id:'g3', desc:'Keren Yesomim', amount:18, date:`${y}-04-21`, category:'chesed', status:'cleared', createdAt:Date.now() },
+      { id:'g4', desc:'Yaras', amount:100, date:`${y}-04-14`, category:'tzedakah', status:'cleared', createdAt:Date.now() },
+      { id:'g5', desc:'Areivim', amount:42, date:`${y}-04-14`, category:'tzedakah', status:'cleared', createdAt:Date.now() },
+      { id:'g6', desc:'Chasdei Lev', amount:210, date:`${y}-04-14`, category:'chesed', status:'cleared', createdAt:Date.now() },
+      { id:'g7', desc:'Shul aliya', amount:60, date:`${y}-03-16`, category:'shul', status:'cleared', createdAt:Date.now() },
+      { id:'g8', desc:'Yaras', amount:100, date:`${y}-03-26`, category:'tzedakah', status:'cleared', createdAt:Date.now() },
+    ],
+    schedules: [
+      { id:'s1', name:'Shul membership', amount:100, day:1, type:'donation', startDate:`${y}-01-01` },
+    ]
+  };
+  document.getElementById('demo-banner').style.display = 'block';
+  document.getElementById('login-screen').style.display = 'none';
+  document.getElementById('app').style.display = 'block';
+  document.getElementById('greeting-name').textContent = lang === 'en' ? 'Demo User' : 'משתמש דמו';
+  document.getElementById('user-avatar').textContent = 'D';
+  document.getElementById('year-display').textContent = currentYear;
+  populateMonthSelector();
+  loadAll();
+};
+
+window.exitDemo = () => {
+  isDemo = false;
+  demoData = { income: [], donations: [], schedules: [] };
+  document.getElementById('demo-banner').style.display = 'none';
+  document.getElementById('login-screen').style.display = 'flex';
+  document.getElementById('app').style.display = 'none';
+};
 
 onAuthStateChanged(auth, async user => {
+  if (isDemo) return;
   currentUser = user;
   if (user) {
     document.getElementById('login-screen').style.display = 'none';
     document.getElementById('app').style.display = 'block';
-    document.getElementById('user-avatar').textContent = (user.displayName || 'M').charAt(0).toUpperCase();
+    const firstName = (user.displayName || 'User').split(' ')[0];
+    document.getElementById('greeting-name').textContent = firstName;
+    document.getElementById('user-avatar').textContent = firstName.charAt(0).toUpperCase();
     document.getElementById('year-display').textContent = currentYear;
+    populateMonthSelector();
     await processSchedules();
     await loadAll();
   } else {
@@ -419,40 +635,81 @@ onAuthStateChanged(auth, async user => {
 
 window.changeYear = d => { currentYear += d; document.getElementById('year-display').textContent = currentYear; loadAll(); };
 
-let incomeData = [], donationData = [], scheduleData = [];
+window.setView = v => {
+  view = v;
+  document.getElementById('view-year').classList.toggle('active', v === 'year');
+  document.getElementById('view-month').classList.toggle('active', v === 'month');
+  const sel = document.getElementById('month-selector');
+  if (v === 'month') {
+    if (currentMonth === null) currentMonth = new Date().getMonth();
+    sel.value = currentMonth;
+    sel.style.display = 'block';
+    document.getElementById('chart-section').style.display = 'none';
+  } else {
+    currentMonth = null;
+    sel.style.display = 'none';
+    document.getElementById('chart-section').style.display = 'block';
+  }
+  loadAll();
+};
+
+document.getElementById('month-selector').addEventListener('change', e => { currentMonth = parseInt(e.target.value); loadAll(); });
 
 async function loadAll() {
   await Promise.all([loadIncome(), loadDonations(), loadSchedules()]);
-  updateBalance(); renderRecent();
+  updateBalance(); renderRecent(); renderChart();
+}
+
+function inDateRange(item) {
+  const d = new Date(item.date + 'T00:00:00');
+  if (d.getFullYear() !== currentYear) return false;
+  if (view === 'month' && currentMonth !== null && d.getMonth() !== currentMonth) return false;
+  return true;
 }
 
 async function loadIncome() {
-  const snap = await getDocs(query(collection(db,'users',currentUser.uid,'income'), orderBy('date','desc')));
-  incomeData = [];
-  snap.forEach(d => incomeData.push({id:d.id,...d.data()}));
-  incomeData = incomeData.filter(i => new Date(i.date+'T00:00:00').getFullYear() === currentYear);
-  renderTxList('income-list', incomeData, 'income', 'emptyIncome');
+  if (isDemo) {
+    incomeData = [...demoData.income].sort((a,b) => new Date(b.date) - new Date(a.date));
+  } else if (currentUser) {
+    const snap = await getDocs(query(collection(db,'users',currentUser.uid,'income'), orderBy('date','desc')));
+    incomeData = [];
+    snap.forEach(d => incomeData.push({id:d.id,...d.data()}));
+  }
+  const filtered = incomeData.filter(inDateRange);
+  const search = document.getElementById('search-income').value.trim().toLowerCase();
+  const visible = search ? filtered.filter(i => (i.desc||'').toLowerCase().includes(search) || (i.checknum||'').toLowerCase().includes(search)) : filtered;
+  renderTxList('income-list', visible, 'income', 'emptyIncome');
 }
 
 async function loadDonations() {
-  const snap = await getDocs(query(collection(db,'users',currentUser.uid,'donations'), orderBy('date','desc')));
-  donationData = [];
-  snap.forEach(d => donationData.push({id:d.id,...d.data()}));
-  donationData = donationData.filter(i => new Date(i.date+'T00:00:00').getFullYear() === currentYear);
-  renderTxList('donation-list', donationData, 'donation', 'emptyDonation');
+  if (isDemo) {
+    donationData = [...demoData.donations].sort((a,b) => new Date(b.date) - new Date(a.date));
+  } else if (currentUser) {
+    const snap = await getDocs(query(collection(db,'users',currentUser.uid,'donations'), orderBy('date','desc')));
+    donationData = [];
+    snap.forEach(d => donationData.push({id:d.id,...d.data()}));
+  }
+  const filtered = donationData.filter(inDateRange);
+  const search = document.getElementById('search-donation').value.trim().toLowerCase();
+  const visible = search ? filtered.filter(i => (i.desc||'').toLowerCase().includes(search)) : filtered;
+  renderTxList('donation-list', visible, 'donation', 'emptyDonation');
 }
 
 async function loadSchedules() {
-  const snap = await getDocs(collection(db,'users',currentUser.uid,'schedules'));
-  scheduleData = [];
-  snap.forEach(d => scheduleData.push({id:d.id,...d.data()}));
+  if (isDemo) {
+    scheduleData = [...demoData.schedules];
+  } else if (currentUser) {
+    const snap = await getDocs(collection(db,'users',currentUser.uid,'schedules'));
+    scheduleData = [];
+    snap.forEach(d => scheduleData.push({id:d.id,...d.data()}));
+  }
   renderSchedules();
 }
 
 async function processSchedules() {
+  if (isDemo || !currentUser) return;
   const snap = await getDocs(collection(db,'users',currentUser.uid,'schedules'));
-  const today = new Date();
-  today.setHours(0,0,0,0);
+  const today = new Date(); today.setHours(0,0,0,0);
   for (const d of snap.docs) {
     const sched = { id: d.id, ...d.data() };
     let lastProcessed = sched.lastProcessed ? new Date(sched.lastProcessed+'T00:00:00') : null;
@@ -465,8 +722,10 @@ async function processSchedules() {
     for (const dt of dueDates) {
       const dateStr = dt.toISOString().split('T')[0];
       const targetCol = sched.type === 'income' ? 'income' : 'donations';
-      const data = { desc: sched.name, amount: sched.amount, date: dateStr, fromSchedule: sched.id, auto: true };
+      const data = { desc: sched.name, amount: sched.amount, date: dateStr, fromSchedule: sched.id, auto: true, createdAt: Date.now() };
       if (sched.type === 'income' && sched.paytype) data.paytype = sched.paytype;
+      if (sched.type === 'income') data.maaserPct = 10;
+      if (sched.type === 'donation') data.status = 'cleared';
       await addDoc(collection(db,'users',currentUser.uid,targetCol), data);
     }
     if (dueDates.length > 0) {
@@ -486,15 +745,15 @@ function renderTxList(containerId, data, type, emptyKey) {
   el.innerHTML = data.map(item => {
     const badges = [];
     if (item.paytype) badges.push(`<span class="tx-badge">${tr(item.paytype)}${item.checknum ? ' #'+item.checknum : ''}</span>`);
+    if (item.category) badges.push(`<span class="tx-badge cat">${tr('cat'+item.category.charAt(0).toUpperCase()+item.category.slice(1).replace('-cat',''))}</span>`);
+    if (item.status === 'pending') badges.push(`<span class="tx-badge pending">⏳ ${tr('pending')}</span>`);
     if (item.auto) badges.push(`<span class="tx-badge auto">⟳ ${tr('auto')}</span>`);
     return `<div class="tx-card" onclick="editItem('${type}','${item.id}')">
       <div class="tx-left">
         <div class="tx-dot ${type}">${icon}</div>
-        <div class="tx-info"><div class="tx-desc">${item.desc}</div><div class="tx-meta">${fmtDate(item.date)} ${badges.join(' ')}</div></div>
+        <div class="tx-info"><div class="tx-desc">${item.desc || '—'}</div><div class="tx-meta">${fmtDate(item.date)} ${badges.join(' ')}</div></div>
       </div>
-      <div class="tx-right">
-        <span class="tx-amount ${type}">${fmt(item.amount)}</span>
-      </div>
+      <div class="tx-right"><span class="tx-amount ${type}">${fmt(item.amount)}</span></div>
     </div>`;
   }).join('');
 }
@@ -509,38 +768,74 @@ function renderSchedules() {
       <div class="tx-dot ${item.type}">${icon}</div>
       <div class="tx-info"><div class="tx-desc">${item.name}</div><div class="tx-meta">${tr('everyMonth')} ${item.day} • ${tr(item.type === 'income' ? 'incomeOpt' : 'donationOpt')}</div></div>
     </div>
-    <div class="tx-right">
-      <span class="tx-amount ${item.type}">${fmt(item.amount)}</span>
-    </div>
+    <div class="tx-right"><span class="tx-amount ${item.type}">${fmt(item.amount)}</span></div>
   </div>`;
   }).join('');
 }
 
 function renderRecent() {
-  const all = [...incomeData.map(i=>({...i,type:'income'})),...donationData.map(i=>({...i,type:'donation'}))].sort((a,b)=>new Date(b.date)-new Date(a.date)).slice(0,8);
+  const all = [...incomeData.filter(inDateRange).map(i=>({...i,type:'income'})), ...donationData.filter(inDateRange).map(i=>({...i,type:'donation'}))]
+    .sort((a,b)=>new Date(b.date)-new Date(a.date)).slice(0,8);
   const el = document.getElementById('recent-list');
   if (!all.length) { el.innerHTML = `<div class="empty-state">${tr('emptyRecent')}</div>`; return; }
   const icons = {income:'💰',donation:'🤲'};
   el.innerHTML = all.map(item => {
     const badge = item.auto ? `<span class="tx-badge auto">⟳ ${tr('auto')}</span>` : '';
     return `<div class="tx-card" onclick="editItem('${item.type}','${item.id}')">
-    <div class="tx-left"><div class="tx-dot ${item.type}">${icons[item.type]}</div><div class="tx-info"><div class="tx-desc">${item.desc}</div><div class="tx-meta">${fmtDate(item.date)} ${badge}</div></div></div>
+    <div class="tx-left"><div class="tx-dot ${item.type}">${icons[item.type]}</div><div class="tx-info"><div class="tx-desc">${item.desc || '—'}</div><div class="tx-meta">${fmtDate(item.date)} ${badge}</div></div></div>
     <div class="tx-right"><span class="tx-amount ${item.type}">${fmt(item.amount)}</span></div>
   </div>`;
   }).join('');
 }
 
+function calcMaaserObligation(item) {
+  const amount = parseFloat(item.amount);
+  if (item.maaserFixed != null && item.maaserFixed !== '' && !isNaN(item.maaserFixed)) return parseFloat(item.maaserFixed);
+  const pct = item.maaserPct != null ? parseFloat(item.maaserPct) : 10;
+  return amount * (pct / 100);
+}
+
 function updateBalance() {
-  const income = incomeData.reduce((s,i)=>s+parseFloat(i.amount),0);
-  const donated = donationData.reduce((s,i)=>s+parseFloat(i.amount),0);
-  const obligation = income * 0.1;
+  const filteredIncome = incomeData.filter(inDateRange);
+  const filteredDonations = donationData.filter(inDateRange);
+  const income = filteredIncome.reduce((s,i)=>s+parseFloat(i.amount),0);
+  const obligation = filteredIncome.reduce((s,i)=>s+calcMaaserObligation(i),0);
+  const donated = filteredDonations.filter(d => d.status !== 'pending').reduce((s,i)=>s+parseFloat(i.amount),0);
   const due = obligation - donated;
   document.getElementById('bal-income').textContent = fmt(income);
   document.getElementById('bal-obligation').textContent = fmt(obligation);
   document.getElementById('bal-donated').textContent = fmt(donated);
   const dueEl = document.getElementById('bal-due');
   dueEl.textContent = due < 0 ? '+'+fmt(Math.abs(due)) : fmt(due);
-  dueEl.className = 'due-amount ' + (due > 0 ? 'due-positive' : 'due-credit');
+  dueEl.className = 'due-amount ' + (due > 0.01 ? 'due-positive' : 'due-credit');
+  // Progress
+  const pct = obligation > 0 ? Math.min(100, (donated / obligation) * 100) : 0;
+  document.getElementById('progress-pct').textContent = Math.round(pct) + '%';
+  document.getElementById('progress-fill').style.width = pct + '%';
+  // 100% Alert
+  document.getElementById('alert-100').style.display = (obligation > 0 && donated >= obligation) ? 'flex' : 'none';
+}
+
+function renderChart() {
+  if (view !== 'year') return;
+  const months = Array(12).fill(0).map(() => ({ income: 0, donated: 0, obligation: 0 }));
+  incomeData.filter(i => new Date(i.date+'T00:00:00').getFullYear() === currentYear).forEach(i => {
+    const m = new Date(i.date+'T00:00:00').getMonth();
+    months[m].income += parseFloat(i.amount);
+    months[m].obligation += calcMaaserObligation(i);
+  });
+  donationData.filter(i => new Date(i.date+'T00:00:00').getFullYear() === currentYear && i.status !== 'pending').forEach(i => {
+    const m = new Date(i.date+'T00:00:00').getMonth();
+    months[m].donated += parseFloat(i.amount);
+  });
+  const max = Math.max(...months.map(m => Math.max(m.income, m.obligation)), 1);
+  const el = document.getElementById('chart-bars');
+  el.innerHTML = months.map((m, i) => {
+    const h = (m.income / max) * 80;
+    const due = m.obligation - m.donated;
+    const cls = due > 0.01 ? 'has-due' : '';
+    return `<div class="chart-bar-col"><div class="chart-bar ${cls}" style="height:${h}px" title="${monthNames[lang][i]}: ${fmt(m.income)}"></div><div class="chart-bar-label">${monthNames[lang][i].charAt(0)}</div></div>`;
+  }).join('');
 }
 
 window.editItem = (type, id) => {
@@ -554,6 +849,14 @@ window.editItem = (type, id) => {
     document.getElementById('f-income-date').value = item.date || '';
     document.getElementById('f-income-paytype').value = item.paytype || 'transfer';
     document.getElementById('f-income-checknum').value = item.checknum || '';
+    if (item.maaserFixed != null && item.maaserFixed !== '') {
+      maaserMode = 'fixed';
+      document.getElementById('f-income-maaser-fixed').value = item.maaserFixed;
+    } else {
+      maaserMode = 'pct';
+      document.getElementById('f-income-maaser-pct').value = item.maaserPct != null ? item.maaserPct : 10;
+    }
+    updateMaaserModeUI();
     onPayTypeChange();
     document.getElementById('btn-delete-income').style.display = 'block';
     document.getElementById('modal-income').classList.add('open');
@@ -564,6 +867,8 @@ window.editItem = (type, id) => {
     document.getElementById('f-donation-desc').value = item.desc || '';
     document.getElementById('f-donation-amount').value = item.amount || '';
     document.getElementById('f-donation-date').value = item.date || '';
+    document.getElementById('f-donation-category').value = item.category || '';
+    document.getElementById('f-donation-status').value = item.status || 'cleared';
     document.getElementById('btn-delete-donation').style.display = 'block';
     document.getElementById('modal-donation').classList.add('open');
   } else if (type === 'schedule') {
@@ -582,36 +887,49 @@ window.editItem = (type, id) => {
 };
 
 window.saveIncome = async () => {
-  const desc = document.getElementById('f-income-desc').value.trim();
   const amount = document.getElementById('f-income-amount').value;
   const date = document.getElementById('f-income-date').value;
+  if (!amount || !date) { alert(tr('fillAll')); return; }
+  const desc = document.getElementById('f-income-desc').value.trim();
   const paytype = document.getElementById('f-income-paytype').value;
   const checknum = document.getElementById('f-income-checknum').value.trim();
-  if (!desc||!amount||!date) { alert(tr('fillAll')); return; }
-  const data = {desc, amount:parseFloat(amount), date, paytype};
-  if (paytype==='check'&&checknum) data.checknum = checknum;
-  if (editingId && editingType === 'income') {
-    await updateDoc(doc(db,'users',currentUser.uid,'income',editingId), data);
+  const data = { amount: parseFloat(amount), date, desc: desc || '', paytype };
+  if (paytype === 'check' && checknum) data.checknum = checknum;
+  if (maaserMode === 'pct') {
+    data.maaserPct = parseFloat(document.getElementById('f-income-maaser-pct').value) || 10;
   } else {
-    await addDoc(collection(db,'users',currentUser.uid,'income'), data);
+    const f = document.getElementById('f-income-maaser-fixed').value;
+    if (f) data.maaserFixed = parseFloat(f);
+  }
+  if (isDemo) {
+    if (editingId) Object.assign(demoData.income.find(i=>i.id===editingId) || {}, data);
+    else demoData.income.push({ id: 'd'+Date.now(), createdAt: Date.now(), ...data });
+  } else {
+    if (editingId && editingType === 'income') await updateDoc(doc(db,'users',currentUser.uid,'income',editingId), data);
+    else { data.createdAt = Date.now(); await addDoc(collection(db,'users',currentUser.uid,'income'), data); }
   }
   closeModal('income');
-  await loadIncome(); updateBalance(); renderRecent();
+  await loadAll();
 };
 
 window.saveDonation = async () => {
-  const desc = document.getElementById('f-donation-desc').value.trim();
   const amount = document.getElementById('f-donation-amount').value;
   const date = document.getElementById('f-donation-date').value;
-  if (!desc||!amount||!date) { alert(tr('fillAll')); return; }
-  const data = {desc, amount:parseFloat(amount), date};
-  if (editingId && editingType === 'donation') {
-    await updateDoc(doc(db,'users',currentUser.uid,'donations',editingId), data);
+  if (!amount || !date) { alert(tr('fillAll')); return; }
+  const desc = document.getElementById('f-donation-desc').value.trim();
+  const category = document.getElementById('f-donation-category').value;
+  const status = document.getElementById('f-donation-status').value;
+  const data = { amount: parseFloat(amount), date, desc: desc || '', status };
+  if (category) data.category = category;
+  if (isDemo) {
+    if (editingId) Object.assign(demoData.donations.find(i=>i.id===editingId) || {}, data);
+    else demoData.donations.push({ id: 'g'+Date.now(), createdAt: Date.now(), ...data });
   } else {
-    await addDoc(collection(db,'users',currentUser.uid,'donations'), data);
+    if (editingId && editingType === 'donation') await updateDoc(doc(db,'users',currentUser.uid,'donations',editingId), data);
+    else { data.createdAt = Date.now(); await addDoc(collection(db,'users',currentUser.uid,'donations'), data); }
   }
   closeModal('donation');
-  await loadDonations(); updateBalance(); renderRecent();
+  await loadAll();
 };
 
 window.saveSchedule = async () => {
@@ -619,30 +937,31 @@ window.saveSchedule = async () => {
   const amount = document.getElementById('f-schedule-amount').value;
   const day = parseInt(document.getElementById('f-schedule-day').value);
   const paytype = document.getElementById('f-recur-paytype').value;
-  if (!name||!amount||!day||day<1||day>28) { alert(tr('fillAll')); return; }
-  const data = { name, amount:parseFloat(amount), day, type: recurType };
+  if (!name || !amount || !day || day < 1 || day > 28) { alert(tr('fillAll')); return; }
+  const data = { name, amount: parseFloat(amount), day, type: recurType };
   if (recurType === 'income') data.paytype = paytype;
-  if (editingId && editingType === 'schedule') {
-    await updateDoc(doc(db,'users',currentUser.uid,'schedules',editingId), data);
+  if (isDemo) {
+    if (editingId) Object.assign(demoData.schedules.find(i=>i.id===editingId) || {}, data);
+    else demoData.schedules.push({ id: 's'+Date.now(), startDate: new Date().toISOString().split('T')[0], ...data });
   } else {
-    const today = new Date().toISOString().split('T')[0];
-    data.startDate = today;
-    data.createdAt = today;
-    await addDoc(collection(db,'users',currentUser.uid,'schedules'), data);
+    if (editingId && editingType === 'schedule') await updateDoc(doc(db,'users',currentUser.uid,'schedules',editingId), data);
+    else { const today = new Date().toISOString().split('T')[0]; data.startDate = today; data.createdAt = Date.now(); await addDoc(collection(db,'users',currentUser.uid,'schedules'), data); }
   }
   closeModal('schedule');
-  await processSchedules();
+  if (!isDemo) await processSchedules();
   await loadAll();
 };
 
 window.deleteFromModal = async (type) => {
   if (!editingId || !confirm(tr('deleteConfirm'))) return;
-  const col = type==='income'?'income':type==='donation'?'donations':'schedules';
-  await deleteDoc(doc(db,'users',currentUser.uid,col,editingId));
+  const colName = type === 'income' ? 'income' : type === 'donation' ? 'donations' : 'schedules';
+  if (isDemo) {
+    demoData[colName] = demoData[colName].filter(i => i.id !== editingId);
+  } else {
+    await deleteDoc(doc(db,'users',currentUser.uid,colName,editingId));
+  }
   closeModal(type);
-  if (type==='income') { await loadIncome(); updateBalance(); renderRecent(); }
-  else if (type==='donation') { await loadDonations(); updateBalance(); renderRecent(); }
-  else { await loadSchedules(); }
+  await loadAll();
 };
 
 window.showPage = page => {
@@ -653,34 +972,34 @@ window.showPage = page => {
 };
 
 window.openChoice = () => document.getElementById('modal-choice').classList.add('open');
+window.openMenu = () => document.getElementById('modal-menu').classList.add('open');
+window.openImport = () => document.getElementById('modal-import').classList.add('open');
 
 window.openModal = type => {
   editingId = null; editingType = null;
   const today = new Date().toISOString().split('T')[0];
-  if (type==='income') {
+  if (type === 'income') {
     document.getElementById('modal-income-title').textContent = tr('addIncome');
-    document.getElementById('f-income-desc').value = '';
-    document.getElementById('f-income-amount').value = '';
+    ['f-income-desc','f-income-amount','f-income-checknum','f-income-maaser-fixed'].forEach(id => document.getElementById(id).value = '');
     document.getElementById('f-income-date').value = today;
     document.getElementById('f-income-paytype').value = 'transfer';
-    document.getElementById('f-income-checknum').value = '';
+    document.getElementById('f-income-maaser-pct').value = 10;
+    maaserMode = 'pct'; updateMaaserModeUI();
     onPayTypeChange();
     document.getElementById('btn-delete-income').style.display = 'none';
   }
-  if (type==='donation') {
+  if (type === 'donation') {
     document.getElementById('modal-donation-title').textContent = tr('addDonation');
-    document.getElementById('f-donation-desc').value = '';
-    document.getElementById('f-donation-amount').value = '';
+    ['f-donation-desc','f-donation-amount'].forEach(id => document.getElementById(id).value = '');
     document.getElementById('f-donation-date').value = today;
+    document.getElementById('f-donation-category').value = '';
+    document.getElementById('f-donation-status').value = 'cleared';
     document.getElementById('btn-delete-donation').style.display = 'none';
   }
-  if (type==='schedule') {
-    recurType = 'income';
-    updateRecurUI();
+  if (type === 'schedule') {
+    recurType = 'income'; updateRecurUI();
     document.getElementById('modal-schedule-title').textContent = tr('addSchedule');
-    document.getElementById('f-schedule-name').value = '';
-    document.getElementById('f-schedule-amount').value = '';
-    document.getElementById('f-schedule-day').value = '';
+    ['f-schedule-name','f-schedule-amount','f-schedule-day'].forEach(id => document.getElementById(id).value = '');
     document.getElementById('btn-delete-schedule').style.display = 'none';
   }
   document.getElementById('modal-'+type).classList.add('open');
@@ -692,18 +1011,133 @@ window.closeModal = type => {
 };
 
 window.onPayTypeChange = () => {
-  document.getElementById('check-number-field').style.display = document.getElementById('f-income-paytype').value==='check' ? 'block' : 'none';
+  document.getElementById('check-number-field').style.display = document.getElementById('f-income-paytype').value === 'check' ? 'block' : 'none';
 };
 
 window.setRecurType = type => { recurType = type; updateRecurUI(); };
-
 function updateRecurUI() {
   document.getElementById('recur-type-income').classList.toggle('active', recurType === 'income');
   document.getElementById('recur-type-donation').classList.toggle('active', recurType === 'donation');
   document.getElementById('recur-paytype-field').style.display = recurType === 'income' ? 'block' : 'none';
 }
 
-document.querySelectorAll('.overlay').forEach(o => o.addEventListener('click', e => { if (e.target===o) { o.classList.remove('open'); editingId = null; editingType = null; } }));
+window.setMaaserMode = m => { maaserMode = m; updateMaaserModeUI(); };
+function updateMaaserModeUI() {
+  document.getElementById('mm-pct').classList.toggle('active', maaserMode === 'pct');
+  document.getElementById('mm-fixed').classList.toggle('active', maaserMode === 'fixed');
+  document.getElementById('maaser-pct-field').style.display = maaserMode === 'pct' ? 'block' : 'none';
+  document.getElementById('maaser-fixed-field').style.display = maaserMode === 'fixed' ? 'block' : 'none';
+}
+
+document.querySelectorAll('.overlay').forEach(o => o.addEventListener('click', e => { if (e.target === o) { o.classList.remove('open'); editingId = null; editingType = null; } }));
+
+// CSV EXPORT
+window.exportCSV = () => {
+  const inc = incomeData.map(i => ({
+    type: 'income', date: i.date || '', amount: i.amount || '', description: i.desc || '',
+    paytype: i.paytype || '', checknum: i.checknum || '', maaserPct: i.maaserPct != null ? i.maaserPct : '', maaserFixed: i.maaserFixed != null ? i.maaserFixed : ''
+  }));
+  const don = donationData.map(d => ({
+    type: 'donation', date: d.date || '', amount: d.amount || '', description: d.desc || '',
+    category: d.category || '', status: d.status || 'cleared'
+  }));
+  // Build separate CSV files combined into one
+  let csv = 'INCOME\n';
+  csv += 'date,amount,description,paytype,checknum,maaserPct,maaserFixed\n';
+  inc.forEach(i => { csv += [i.date, i.amount, q(i.description), i.paytype, i.checknum, i.maaserPct, i.maaserFixed].join(',') + '\n'; });
+  csv += '\nDONATIONS\n';
+  csv += 'date,amount,description,category,status\n';
+  don.forEach(d => { csv += [d.date, d.amount, q(d.description), d.category, d.status].join(',') + '\n'; });
+  download('maaser-export-' + new Date().toISOString().split('T')[0] + '.csv', csv);
+};
+
+function q(s) { if (s == null) return ''; s = String(s); return /[,"\n]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s; }
+
+function download(filename, text) {
+  const blob = new Blob([text], { type: 'text/csv;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = filename;
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
+window.downloadTemplate = () => {
+  const tpl = `INCOME TEMPLATE
+date,amount,description,paytype,checknum,maaserPct,maaserFixed
+2026-04-26,5000,Salary,check,5182,10,
+2026-04-14,1500,Bonus,transfer,,10,
+2026-03-27,3000,Freelance,cash,,15,
+
+DONATIONS TEMPLATE
+date,amount,description,category,status
+2026-04-22,100,Shul membership,shul,cleared
+2026-04-21,360,Yeshivas erev,education,cleared
+2026-04-14,42,Areivim,tzedakah,pending
+
+INSTRUCTIONS:
+- date: YYYY-MM-DD format (e.g., 2026-04-26)
+- amount: numbers only (e.g., 100 or 100.50)
+- paytype options: transfer, check, cash, other
+- category options: shul, tzedakah, education, chesed, family, other-cat
+- status options: cleared, pending
+- maaserPct: percentage (10 = 10%). Leave blank for default 10%
+- maaserFixed: fixed dollar amount instead of percent. Leave blank if using maaserPct
+- Save the file as CSV and import only ONE section at a time (income OR donations)
+`;
+  download('maaser-template.csv', tpl);
+};
+
+window.importCSV = async () => {
+  const file = document.getElementById('import-file').files[0];
+  const type = document.getElementById('import-type').value;
+  if (!file) { alert(tr('importError')); return; }
+  try {
+    const text = await file.text();
+    const lines = text.split('\n').map(l => l.trim()).filter(l => l && !l.startsWith('INCOME') && !l.startsWith('DONATIONS') && !l.startsWith('INSTRUCTIONS') && !l.startsWith('-'));
+    let header = null, count = 0;
+    for (const line of lines) {
+      const cols = parseCSVLine(line);
+      if (!header) {
+        if (cols[0] && cols[0].toLowerCase() === 'date') { header = cols; continue; }
+        continue;
+      }
+      const row = {};
+      header.forEach((h, i) => { row[h.trim()] = (cols[i] || '').trim(); });
+      if (!row.date || !row.amount) continue;
+      if (type === 'income') {
+        const d = { date: row.date, amount: parseFloat(row.amount), desc: row.description || '', paytype: row.paytype || 'transfer', createdAt: Date.now() };
+        if (row.checknum) d.checknum = row.checknum;
+        if (row.maaserFixed) d.maaserFixed = parseFloat(row.maaserFixed);
+        else d.maaserPct = row.maaserPct ? parseFloat(row.maaserPct) : 10;
+        if (isDemo) demoData.income.push({ id: 'd'+Date.now()+count, ...d });
+        else await addDoc(collection(db,'users',currentUser.uid,'income'), d);
+      } else {
+        const d = { date: row.date, amount: parseFloat(row.amount), desc: row.description || '', status: row.status || 'cleared', createdAt: Date.now() };
+        if (row.category) d.category = row.category;
+        if (isDemo) demoData.donations.push({ id: 'g'+Date.now()+count, ...d });
+        else await addDoc(collection(db,'users',currentUser.uid,'donations'), d);
+      }
+      count++;
+    }
+    closeModal('import');
+    document.getElementById('import-file').value = '';
+    alert(tr('importSuccess') + ' (' + count + ')');
+    await loadAll();
+  } catch (e) { console.error(e); alert(tr('importError')); }
+};
+
+function parseCSVLine(line) {
+  const result = []; let cur = ''; let inQ = false;
+  for (let i = 0; i < line.length; i++) {
+    const c = line[i];
+    if (c === '"' && line[i+1] === '"') { cur += '"'; i++; }
+    else if (c === '"') { inQ = !inQ; }
+    else if (c === ',' && !inQ) { result.push(cur); cur = ''; }
+    else { cur += c; }
+  }
+  result.push(cur); return result;
+}
 
 applyLang();
 </script>
